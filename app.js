@@ -26,7 +26,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-// index即为routes脚本地址
+//index鍗充负routes鑴氭湰鍦板潃
 routes.index(app);
 
 http.createServer(app).listen(app.get('port'), function(){
