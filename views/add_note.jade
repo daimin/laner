@@ -1,0 +1,119 @@
+extends layout
+
+block content
+  div.navbar.navbar-fixed-top
+    div.navbar-inner
+      div.container
+        a.btn.btn-navbar(data-target=".nav-collapse",data-toggle="collapse")
+          span.icon-bar
+          span.icon-bar
+          span.icon-bar
+        a.brand(href="#") Laner.dm
+        div.nav-collapse
+          ul.nav
+            li.active
+              a(href="#") 主页
+            li
+              a(href="#") 我的日志
+            li
+              a(href="#") 所有日志
+            li
+              a(href="#") 关注日志
+        form.navbar-form.pull-left
+          input.search-query.span3(type="text",placeholder="Search")
+        ul.nav.pull-right
+          li.dropdown
+            a.dropdown-toggle(data-toggle="dropdown",href="#") 设置
+              b.caret
+            ul.dropdown-menu
+              li
+                a(href="#") 登录
+              li.divider
+              li
+                a(href="#") 注册
+  div.container
+    div.row.show-grid
+      div.span8
+        div.row.well
+          h2 公告区
+          h3 我最爱的女孩--兰儿
+        div.row
+          div.ul
+          div.post
+            h3.entry-title
+              a(rel="bookmark",title="链向 丁当的童年 的固定链接",href="http://localhost/wordpress/?p=4") 丁当的童年
+            div.entry-meta
+              span.author.vcard
+                a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1") admin 于
+              a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
+                span.entry-date 2012-8-21 13:11:33
+              说到
+            div.entry-content
+              img.entry-img(src="/images/avatar/xiaolan.png")
+              p 大叶子路，是丁当的童年。
+              p 夏天，她穿着肮脏的背带裤，背着肮脏的书包，从一群男孩中间穿过。他们一起扯着嗓子喊：“大肥妞，小气鬼，回家跟老婆亲亲嘴！”
+              p 然后，一起笑得七倒八歪。
+            div.entry-utility
+              span.cat-links
+                a(rel="category",title="查看 未分类 中的全部文章",href="http://localhost/wordpress/?cat=1") 未分类
+              span.meta-sep |
+              span.comments-link
+                a(title="《丁当的童年》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应
+              span.meta-sep |
+              span.edit-link
+                a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
+          div.ul
+          div.post
+            h3.entry-title
+              a(rel="bookmark",title="链向 丁当的童年 的固定链接",href="http://localhost/wordpress/?p=4") 丁当的童年
+            div.entry-meta
+              span.author.vcard
+                a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1") admin 于
+              a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
+                span.entry-date 2012-8-21 13:11:33
+              说到
+            div.entry-content
+              img.entry-img(src="/images/avatar/xiaolan.png")
+              p 大叶子路，是丁当的童年。
+              p 夏天，她穿着肮脏的背带裤，背着肮脏的书包，从一群男孩中间穿过。他们一起扯着嗓子喊：“大肥妞，小气鬼，回家跟老婆亲亲嘴！”
+              p 然后，一起笑得七倒八歪。
+            div.entry-utility
+              span.cat-links
+                a(rel="category",title="查看 未分类 中的全部文章",href="http://localhost/wordpress/?cat=1") 未分类
+              span.meta-sep |
+              span.comments-link
+                a(title="《丁当的童年》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应
+              span.meta-sep |
+              span.edit-link
+                a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
+      div.span4
+        form.well.form-vertical
+          h4 登录
+          hr
+          input.input-large(type="text",placeholder="Email")
+          input.input-large(type="password",placeholder="Password")
+          label.checkbox Remember me
+            input(type="checkbox") 
+          button.btn(type="sumbit") 登录
+          a(href="#") &nbsp;注册
+        div
+          div.well 
+            h4 热门日志
+            hr
+            ul.unstyled
+              li 
+                a(href="#") Node.js简单介绍并实现一个简单的Web MVC框架
+              li
+                a(href="#") websocket与node.js的完美结合                
+        div.well
+          h4 活跃用户 
+        div.well
+          h4 相关站点
+    hr
+    footer
+      p &copy; Company 2012
+          
+
+                
+
+    
