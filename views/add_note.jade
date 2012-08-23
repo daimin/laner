@@ -33,82 +33,37 @@ block content
                 a(href="#") 注册
   div.container
     div.row.show-grid
+      ul.breadcrumb
+        li
+          a(href="#") 首页
+          span.divider /
+        li.active 添加笔记
+    div.row.show-grid
       div.span8
-        div.row.well
-          h2 公告区
-          h3 我最爱的女孩--兰儿
-        div.row
-          div.ul
-          div.post
-            h3.entry-title
-              a(rel="bookmark",title="链向 丁当的童年 的固定链接",href="http://localhost/wordpress/?p=4") 丁当的童年
-            div.entry-meta
-              span.author.vcard
-                a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1") admin 于
-              a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
-                span.entry-date 2012-8-21 13:11:33
-              说到
-            div.entry-content
-              img.entry-img(src="/images/avatar/xiaolan.png")
-              p 大叶子路，是丁当的童年。
-              p 夏天，她穿着肮脏的背带裤，背着肮脏的书包，从一群男孩中间穿过。他们一起扯着嗓子喊：“大肥妞，小气鬼，回家跟老婆亲亲嘴！”
-              p 然后，一起笑得七倒八歪。
-            div.entry-utility
-              span.cat-links
-                a(rel="category",title="查看 未分类 中的全部文章",href="http://localhost/wordpress/?cat=1") 未分类
-              span.meta-sep |
-              span.comments-link
-                a(title="《丁当的童年》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应
-              span.meta-sep |
-              span.edit-link
-                a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
-          div.ul
-          div.post
-            h3.entry-title
-              a(rel="bookmark",title="链向 丁当的童年 的固定链接",href="http://localhost/wordpress/?p=4") 丁当的童年
-            div.entry-meta
-              span.author.vcard
-                a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1") admin 于
-              a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
-                span.entry-date 2012-8-21 13:11:33
-              说到
-            div.entry-content
-              img.entry-img(src="/images/avatar/xiaolan.png")
-              p 大叶子路，是丁当的童年。
-              p 夏天，她穿着肮脏的背带裤，背着肮脏的书包，从一群男孩中间穿过。他们一起扯着嗓子喊：“大肥妞，小气鬼，回家跟老婆亲亲嘴！”
-              p 然后，一起笑得七倒八歪。
-            div.entry-utility
-              span.cat-links
-                a(rel="category",title="查看 未分类 中的全部文章",href="http://localhost/wordpress/?cat=1") 未分类
-              span.meta-sep |
-              span.comments-link
-                a(title="《丁当的童年》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应
-              span.meta-sep |
-              span.edit-link
-                a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
+        form.form-horizontal
+        fieldset
+          div.control-group
+            label.control-label(for="title") 标题
+            div.controls
+              input.input-xlarge(type="text",id="title",name="title",placeholder="你的标题")
+              p.help-block 字数控制在10到100个之间
+            label.control-label(for="title") 内容
+            div.controls
+              textarea.input-xlarge(rows="15",id="content",name="content",placeholder="笔记内容")
+              p.help-block 字数控制在10到100个之间
+              
       div.span4
-        form.well.form-vertical
-          h4 登录
+        div.well 
+          h4 markdown 语法参考
           hr
-          input.input-large(type="text",placeholder="Email")
-          input.input-large(type="password",placeholder="Password")
-          label.checkbox Remember me
-            input(type="checkbox") 
-          button.btn(type="sumbit") 登录
-          a(href="#") &nbsp;注册
-        div
-          div.well 
-            h4 热门日志
-            hr
-            ul.unstyled
-              li 
-                a(href="#") Node.js简单介绍并实现一个简单的Web MVC框架
-              li
-                a(href="#") websocket与node.js的完美结合                
-        div.well
-          h4 活跃用户 
-        div.well
-          h4 相关站点
+          ul.unstyled
+            li 换行：两个空格
+            li 分段：一个空行
+            li 斜体：*斜体*
+            li 粗体：**粗体**
+            li 代码：行首四个空格
+            li 链接：[文字](url)
+            li 图片：![alt 文字](url)热门日志
     hr
     footer
       p &copy; Company 2012

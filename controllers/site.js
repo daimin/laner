@@ -4,8 +4,8 @@ var DB = require("../models"),
 var ObjID = DB.ObjID;
 
 exports.index = function(req, res, next){
-	// ²ÎÊı1ÊÇviewµØÖ·
-	// ²ÎÊı2ÊÇ´«¹ıÈ¥µÄ²ÎÊıÖµ
+	// å‚æ•°1æ˜¯viewåœ°å€
+	// å‚æ•°2æ˜¯ä¼ è¿‡å»çš„å‚æ•°å€¼
 	res.render('index', { title: 'Laner.dm' });
 };
 

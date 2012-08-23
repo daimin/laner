@@ -27,7 +27,7 @@ app.configure('development', function(){
 });
 
 //index即为routes脚本地址
-routes.index(app);
+routes(app);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
