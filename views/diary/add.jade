@@ -1,0 +1,58 @@
+extends ../head
+
+block content-detail
+  script(charset="utf-8",src="/kindeditor/kindeditor-min.js")
+  script(charset="utf-8",src="/kindeditor/lang/zh_CN.js")
+  script(charset="utf-8",src="/javascripts/qq_editor.js")
+  div.container
+    div.row.show-grid
+      ul.breadcrumb
+        li
+          a(href="#") 首页
+          span.divider /
+        li.active 添加日记
+    div.row.show-grid
+      div.span8
+        if (error_msg)
+          div.alert.alert-error #{error_msg}
+        div(style="text-align:right")
+          span.label.label-info
+            strong 2012年8月26日 星期日 多云
+        hr
+        form(method="POST",action="")
+          fieldset
+            input(type="hidden",name="action",value="add",value="!title")
+            div.control-group
+              div.controls
+                input.input-xlarge(type="text",id="title",name="title",style="width:82%",placeholder="你的标题")
+                small.help-block 字数控制在#{config.diary_title_size[0]}到#{config.diary_title_size[1]}个之间
+            div.control-group
+              div.controls
+                textarea.input-xlarge(id="content",name="content",placeholder="笔记内容",style="width:100%;height:250px;visibility:hidden;")
+                small.help-block 字数控制在#{config.diary_content_size[0]}到#{config.diary_content_size[1]}个之间
+              label.control-label(for="up_img") 
+            div.control-group
+              div.controls
+                input.input-file(id="up_img",name="up_img",type="file",placeholder="上传图片")
+                small.help-block 图片大小控制在#{config.diary_img_size/1024/1024}M以内
+            div.form-actions
+              button.btn.btn-primary(type="submit") 发 表
+              &nbsp;&nbsp;
+              button.btn 取 消
+      div.span4
+        div.well 
+          h4 markdown 语法参考
+          hr
+          ul
+            li 标题必填
+            li 内容必填
+            li 图片可以选择上传，或者不上传
+            li 上传图片应该选择一张能说明你的日志主旨的图片
+    hr
+    footer
+      p &copy; Company 2012
+          
+
+                
+
+    

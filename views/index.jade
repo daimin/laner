@@ -1,36 +1,6 @@
-extends layout
+extends head
 
-block content
-  div.navbar.navbar-fixed-top
-    div.navbar-inner
-      div.container
-        a.btn.btn-navbar(data-target=".nav-collapse",data-toggle="collapse")
-          span.icon-bar
-          span.icon-bar
-          span.icon-bar
-        a.brand(href="#") Laner.dm
-        div.nav-collapse
-          ul.nav
-            li.active
-              a(href="#") 主页
-            li
-              a(href="#") 我的日志
-            li
-              a(href="#") 所有日志
-            li
-              a(href="#") 关注日志
-        form.navbar-form.pull-left
-          input.search-query.span3(type="text",placeholder="Search")
-        ul.nav.pull-right
-          li.dropdown
-            a.dropdown-toggle(data-toggle="dropdown",href="#") 设置
-              b.caret
-            ul.dropdown-menu
-              li
-                a(href="#") 登录
-              li.divider
-              li
-                a(href="#") 注册
+block content-detail
   div.container
     div.row.show-grid
       div.span8
@@ -98,7 +68,7 @@ block content
           a(href="#") &nbsp;注册
         div
           div.well 
-            h4 热门日志
+            h4 热门日记
             hr
             ul.unstyled
               li 

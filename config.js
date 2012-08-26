@@ -2,26 +2,26 @@
  * config
  */
 exports.config = {
-	name: '·Éô~+',
-	description: 'Node Blog',
+	name: 'æ™“çŸ¥+',
+	description: 'Diary',
 	version: '0.1.2',
 	// site settings
 	site_headers: [
-		'<meta name="author" content="·Éô~+" />',
-		'<meta name="description" content="Node Blog">'
+		'<meta name="author" content="æ™“çŸ¥+" />',
+		'<meta name="description" content="laner diary">'
 	],
-	host: 'flyfish.cnodejs.net', // host ½áÎ²²»ÒªÌí¼Ó'/'
+	host: '', // host ç»“å°¾ä¸è¦æ·»åŠ '/'
 	site_logo: '', // default is `name`
 	site_navs: [
 		[  ]
 	],
-	site_static_host: '', // ¾²Ì¬ÎÄ¼ş´æ´¢ÓòÃû  dbUserName:dbPassword@127.0.0.1:20088/dbName
+	site_static_host: '', // é™æ€æ–‡ä»¶å­˜å‚¨åŸŸå  dbUserName:dbPassword@127.0.0.1:20088/dbName
 	db: 'localhost:27017/laner',
-	session_secret: 'node_blog',
-	auth_cookie_name: 'node_blog',
+	session_secret: 'laner_diary',
+	auth_cookie_name: 'laner_diary',
 	port: 80,
     
-      // »°ÌâÁĞ±íÏÔÊ¾µÄ»°ÌâÊıÁ¿
+    // è¯é¢˜åˆ—è¡¨æ˜¾ç¤ºçš„è¯é¢˜æ•°é‡
     list_topic_count: 10,
     recent_topic_count: 10,
     
@@ -31,22 +31,30 @@ exports.config = {
 		link: '',
 		language: 'zh-cn',
 		description: '',
-		//×î¶à»ñÈ¡µÄRSS ItemÊıÁ¿
+		//æœ€å¤šè·å–çš„RSS Itemæ•°é‡
 		max_rss_items: 50
 	},
 	// mail SMTP
 	mail_port: 25,
-	mail_user: 'nodeblog@126.com',
-	mail_pass: 'node123',
+	mail_user: 'daiming253685@126.com',
+	mail_pass: '',
 	mail_host: 'smtp.126.com',
-	mail_sender: 'nodeblog@126.com',
+	mail_sender: 'daiming253685@126.com',
 	mail_use_authentication: true,
 	
-	// admin ¿ÉÉ¾³ı»°Ìâ£¬±à¼­±êÇ©
+	// admin å¯åˆ é™¤è¯é¢˜ï¼Œç¼–è¾‘æ ‡ç­¾
 	admins: { admin: true },
 	// [ [ plugin_name, options ], ... ]
-	plugins: [['clean']]
+	plugins: [['clean']],
+	
+	// æ—¥è®°é…ç½®
+	diary_title_size : [2,40],
+	diary_content_size : [10,2000],
+	diary_img_size : 1024 * 1024 *2
+	
 };
+
+
 var host = exports.config.host;
 if (host[host.length - 1] === '/') {
 	exports.config.host = host.substring(0, host.length - 1);
