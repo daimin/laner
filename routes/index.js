@@ -13,7 +13,7 @@ exports.index = function(req, res){
  * module.exports是require返回真正的东东。
  * exports.xxx只是一种helper，他最后所有的东西都将赋值给module.exports。
  */
-module.exports = function(app){
+exports = module.exports = function(app){
 	// 参数1是GET的URL地址
 	// 参数2是控制器地址
 	app.get('/', site.index);

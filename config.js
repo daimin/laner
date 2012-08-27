@@ -19,7 +19,7 @@ exports.config = {
 	db: 'localhost:27017/laner',
 	session_secret: 'laner_diary',
 	auth_cookie_name: 'laner_diary',
-	port: 80,
+	port: 3000,
     
     // 话题列表显示的话题数量
     list_topic_count: 10,
