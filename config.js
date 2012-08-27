@@ -16,7 +16,7 @@ exports.config = {
 		[  ]
 	],
 	site_static_host: '', // 静态文件存储域名  dbUserName:dbPassword@127.0.0.1:20088/dbName
-	db: 'localhost:27017/laner',
+	db: 'localhost:27017/laner?auto_reconnect=true',
 	session_secret: 'laner_diary',
 	auth_cookie_name: 'laner_diary',
 	port: 3000,
@@ -49,8 +49,11 @@ exports.config = {
 	
 	// 日记配置
 	diary_title_size : [2,40],
-	diary_content_size : [10,2000],
-	diary_img_size : 1024 * 1024 *2
+	diary_content_size : [2,2000],
+	diary_img_size : 512 * 1024,
+	// 上传日记说明图片的目录
+	diary_img : '.public/images/upload/',
+	all_img:['png','gif','jpg']
 	
 };
 
