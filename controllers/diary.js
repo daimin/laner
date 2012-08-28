@@ -12,7 +12,8 @@ var diary_config = {
 	diary_title_size : config.diary_title_size,
 	diary_content_size : config.diary_content_size,
 	diary_img_size : config.diary_img_size,
-    allow_img : config.allow_img.join(", ")
+    allow_img : config.allow_img.join(", "),
+    diary_type:config.diary_type
 };
 
 exports.add = function(req, res, next){
@@ -31,7 +32,8 @@ exports.add = function(req, res, next){
 	if(method == "post"){
 		var title = sanitize(req.body.title).trim();
 		var content = sanitize(req.body.content).trim();
-
+        var weather = sanitize(req.body.weather).trim();
+        var diary_type = sanitize(req.body.type).trim();
 		var err_msg = "";
 		// 检测控制
 		if(title == ""){
@@ -59,49 +61,50 @@ exports.add = function(req, res, next){
 		    return;
 		}
 		
-		// 验证文件的大小
-		if(req.files.up_img.size >= config.diary_img_size){
-		   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
-		   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
-		   return;
-		}
-		
-		 // 获得文件的临时路径
-        var tmp_path = req.files.up_img.path;
-        
-        var up_img_name = req.files.up_img.name;
-        var fileext = path.extname(up_img_name)
-        
-        var is_allow_img = false;
-        fileext = fileext.toLowerCase();
-        for(var i = 0; i < config.allow_img.length;i++){
-            var aimg = config.allow_img[i].toLowerCase();
-            if(fileext == aimg){
-               is_allow_img = true;
-            }
-            
+		 var target_path = "";
+		if(req.files.up_img.size > 0){
+			// 验证文件的大小
+			if(req.files.up_img.size >= config.diary_img_size){
+			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
+			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
+			   return;
+			}
+			
+			 // 获得文件的临时路径
+	        var tmp_path = req.files.up_img.path;
+	        
+	        var up_img_name = req.files.up_img.name;
+	        var fileext = path.extname(up_img_name)
+	        
+	        var is_allow_img = false;
+	        fileext = fileext.toLowerCase();
+	        for(var i = 0; i < config.allow_img.length;i++){
+	            var aimg = config.allow_img[i].toLowerCase();
+	            if(fileext == aimg){
+	               is_allow_img = true;
+	            }
+	            
+	        }
+	        
+	        if(is_allow_img == false){
+			   err_msg += "上传图片类型只能是" + config.allow_img.join(",")+"之一";
+			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
+	           return;
+	        }
+	        // 指定文件上传后的目录 
+	        target_path = config.diary_img + new Date().getTime() + fileext;
+	        var full_img_path = config.site_dir + target_path;
+	        
+	        // 移动文件
+	        fs.rename(tmp_path, full_img_path, function(err) {
+	           if (err) throw err;
+	           // 删除临时文件夹文件, 
+	           fs.unlink(tmp_path, function() {
+	           if (err) throw err;
+	          // res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
+	         });
+	        });
         }
-        
-        if(is_allow_img == false){
-		   err_msg += "上传图片类型只能是" + config.allow_img.join(",")+"之一";
-		   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
-           return;
-        }
-        // 指定文件上传后的目录 
-        var target_path = config.diary_img + new Date().getTime() + fileext;
-        var full_img_path = config.site_dir + target_path;
-        
-        console.log(target_path);
-        
-        // 移动文件
-        fs.rename(tmp_path, full_img_path, function(err) {
-           if (err) throw err;
-           // 删除临时文件夹文件, 
-           fs.unlink(tmp_path, function() {
-           if (err) throw err;
-          // res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
-         });
-        });
 
         //保存日志
 		var diary = {};
@@ -109,9 +112,10 @@ exports.add = function(req, res, next){
 		diary.content = title;
 		diary.create_date = new Date();
 		diary.edit_date = new Date();
+		diary.weather = weather;
 		diary.up_img = target_path;
 		diary.author = 'daimin';
-		diary.type = config.diary_type.public;
+		diary.type = diary_type;
 		
 		Diary.save(diary, function(err){
 		    if(err) return next(err);
