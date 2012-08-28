@@ -17,7 +17,7 @@ app.configure(function(){
   app.set('view engine', 'jade');
   app.use(express.favicon());
   app.use(express.logger('dev'));
-  app.use(express.bodyParser({uploadDir:'../upload'}));
+  app.use(express.bodyParser({uploadDir:config.upload_dir}));
   app.use(express.methodOverride());
   app.use(app.router);
   app.use(express.static(path.join(__dirname, 'public')));

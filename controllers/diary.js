@@ -10,7 +10,8 @@ var DB = require("../models")
 var diary_config = {
 	diary_title_size : config.diary_title_size,
 	diary_content_size : config.diary_content_size,
-	diary_img_size : config.diary_img_size
+	diary_img_size : config.diary_img_size,
+    allow_img : config.allow_img.join(", ")
 };
 
 exports.add = function(req, res, next){
@@ -70,11 +71,26 @@ exports.add = function(req, res, next){
         var up_img_name = req.files.up_img.name;
         var fileext = up_img_name.substring(up_img_name.lastIndexOf('.')+1);
         
-        for()
-        // 指定文件上传后的目录 
-        var target_path = config.diary_img + new Date().time() + '.' + fileext;
+        var is_allow_img = false;
+        fileext = fileext.toLowerCase();
+        for(var i = 0; i < config.allow_img.length;i++){
+            var aimg = config.allow_img[i].toLowerCase();
+            if(fileext == aimg){
+               is_allow_img = true;
+            }
+            
+        }
         
-        console.log(target_path);
+        if(is_allow_img == false){
+		   err_msg += "上传图片类型只能是" + config.allow_img.join(",")+"之一";
+		   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
+           return;
+        }
+        // 指定文件上传后的目录 
+        var target_path = config.diary_img + new Date().getTime() + '.' + fileext;
+        
+        console.log(__dirname);
+        
         // 移动文件
         fs.rename(tmp_path, target_path, function(err) {
            if (err) throw err;
