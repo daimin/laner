@@ -5,7 +5,8 @@ var DB = require("../models")
     ,check = require('validator').check
     ,sanitize = require('validator').sanitize
     ,common = require('./common')
-    ,fs = require('fs');
+    ,fs = require('fs')
+    ,path = require('path');
 
 var diary_config = {
 	diary_title_size : config.diary_title_size,
@@ -69,7 +70,7 @@ exports.add = function(req, res, next){
         var tmp_path = req.files.up_img.path;
         
         var up_img_name = req.files.up_img.name;
-        var fileext = up_img_name.substring(up_img_name.lastIndexOf('.')+1);
+        var fileext = path.extname(up_img_name)
         
         var is_allow_img = false;
         fileext = fileext.toLowerCase();
@@ -87,33 +88,35 @@ exports.add = function(req, res, next){
            return;
         }
         // 指定文件上传后的目录 
-        var target_path = config.diary_img + new Date().getTime() + '.' + fileext;
+        var target_path = config.diary_img + new Date().getTime() + fileext;
+        var full_img_path = config.site_dir + target_path;
         
-        console.log(__dirname);
+        console.log(target_path);
         
         // 移动文件
-        fs.rename(tmp_path, target_path, function(err) {
+        fs.rename(tmp_path, full_img_path, function(err) {
            if (err) throw err;
            // 删除临时文件夹文件, 
            fs.unlink(tmp_path, function() {
            if (err) throw err;
-           res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
+          // res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
          });
         });
-		
-		
-		Diary.save(diary, function(err){
-		    if(err) return next(err);
-		    res.end("OK");
-		
-		});
+
+        //保存日志
 		var diary = {};
 		diary.title = title;
 		diary.content = title;
 		diary.create_date = new Date();
 		diary.edit_date = new Date();
+		diary.up_img = target_path;
+		diary.author = 'daimin';
+		diary.type = config.diary_type.public;
 		
-		// 检验图片的长度
+		Diary.save(diary, function(err){
+		    if(err) return next(err);
+		    res.end("OK");
+		});
 	}
 	
 };

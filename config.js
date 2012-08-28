@@ -15,6 +15,7 @@ exports.config = {
 	site_navs: [
 		[  ]
 	],
+	site_dir:'d:/nodework/laner',
 	site_static_host: '', // 静态文件存储域名  dbUserName:dbPassword@127.0.0.1:20088/dbName
 	db: 'localhost:27017/laner?auto_reconnect=true',
 	session_secret: 'laner_diary',
@@ -56,7 +57,13 @@ exports.config = {
 	diary_img_size : 512 * 1024,
 	// 上传日记说明图片的目录
 	diary_img : '/public/images/upload/',
-	allow_img:['png','gif','jpg']
+	allow_img:['.png','.gif','.jpg'],
+	
+	// 日志类型(公开，私密)
+	diary_type:{
+	   public : 1,
+	   private:0
+	}
 	
 };
 
