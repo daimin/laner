@@ -21,10 +21,13 @@ block content-detail
               span.author.vcard
                 a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
               a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
-                span.entry-date #{Date} 说到
+                span.entry-date #{diary.create_date} 说到
             div.entry-content
+            - if(diary.up_img){
               img.entry-img(src='#{diary.up_img}')
-              #{diary.content}
+            -  } 
+              !{diary.content}
+              
             div.entry-utility
               span.comments-link
                 a(title='《#{diary.title}》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应

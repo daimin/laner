@@ -6,7 +6,8 @@ var DB = require("../models")
     ,sanitize = require('validator').sanitize
     ,common = require('./common')
     ,fs = require('fs')
-    ,path = require('path');
+    ,path = require('path')
+    ,canvas = require('canvas');
 
 var diary_config = {
 	diary_title_size : config.diary_title_size,
@@ -91,8 +92,8 @@ exports.add = function(req, res, next){
 	           return;
 	        }
 	        // 指定文件上传后的目录 
-	        target_path = config.diary_img + new Date().getTime() + fileext;
-	        var full_img_path = config.site_dir + target_path;
+	        target_path =  new Date().getTime() + fileext;
+	        var full_img_path = config.site_dir + config.diary_img + target_path;
 	        
 	        // 移动文件
 	        fs.rename(tmp_path, full_img_path, function(err) {
@@ -132,8 +133,13 @@ exports.list = function(req, res, next){
 	        if(err) return next(err);
 	            //console.log(docs);
 	            for(var i = 0 ; i < diarys.length;i++){
-	               console.log(diarys[i]);
+	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
+	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);
+	               if(diarys[i].up_img){
+	                   diarys[i].up_img = config.diary_url + diarys[i].up_img;
+	               }
 	            }
+	            
 		        res.render('diary/list', {
 		    	title:config.name,
 		    	diarys:diarys,

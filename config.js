@@ -57,6 +57,8 @@ exports.config = {
 	diary_img_size : 512 * 1024,
 	// 上传日记说明图片的目录
 	diary_img : '/public/images/upload/',
+	// url中访问日记说明图片的目录
+	diary_url : '/images/upload/',
 	allow_img:['.png','.gif','.jpg'],
 	
 	// 日志类型(公开，私密)

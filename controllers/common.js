@@ -32,3 +32,11 @@ exports.randomString = function (size) {
   }
   return new_pass;
 };
+
+exports.dateFormat = function(cd){
+   if(cd){
+      var df = cd.getFullYear()+"-"+(cd.getMonth()+1) + "-" + cd.getDate() + " " + cd.getHours() + ":"+cd.getMinutes()+":"+cd.getSeconds();
+      return df;
+   }
+   return "";
+};
