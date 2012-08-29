@@ -28,7 +28,6 @@ exports.add = function(req, res, next){
 	    	});
 	}
 	
-	
 	if(method == "post"){
 		var title = sanitize(req.body.title).trim();
 		var content = sanitize(req.body.content).trim();
@@ -109,7 +108,7 @@ exports.add = function(req, res, next){
         //保存日志
 		var diary = {};
 		diary.title = title;
-		diary.content = title;
+		diary.content = content;
 		diary.create_date = new Date();
 		diary.edit_date = new Date();
 		diary.weather = weather;
@@ -119,9 +118,32 @@ exports.add = function(req, res, next){
 		
 		Diary.save(diary, function(err){
 		    if(err) return next(err);
-		    res.end("OK");
+		    res.redirect('diary/list');
 		});
 	}
 	
 };
 
+
+exports.list = function(req, res, next){
+   var method = req.method.toLowerCase();
+	if(method == "get"){
+	   Diary.find({},{sort:[['create_date', -1]]}).toArray(function(err, diarys){
+	        if(err) return next(err);
+	            //console.log(docs);
+	            for(var i = 0 ; i < diarys.length;i++){
+	               console.log(diarys[i]);
+	            }
+		        res.render('diary/list', {
+		    	title:config.name,
+		    	diarys:diarys,
+	            config:diary_config
+		    });
+	        
+	        
+            DB.close();
+
+        });
+
+	}
+};

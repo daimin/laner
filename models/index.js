@@ -6,6 +6,10 @@ exports.Table = function(con){
   return clt;
 };
 
+exports.close = function(){
+   db.close();
+};
+
 exports.ObjID = function(id){
   return db.ObjectID.createFromHexString(id);
 };

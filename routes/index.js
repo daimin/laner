@@ -19,4 +19,5 @@ exports = module.exports = function(app){
 	app.get('/', site.index);
 	app.get('/diary/add', diary.add);
 	app.post('/diary/add', diary.add);
+	app.get('/diary/list', diary.list);
 };

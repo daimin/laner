@@ -1,0 +1,42 @@
+extends ../head
+
+block content-detail
+  div.container
+    div.row.show-grid
+      div.span12
+        div.row.show-grid
+          ul.breadcrumb
+            li
+              a(href="/") 首页
+              span.divider /
+              li.active 日记列表
+        div.row
+        - if (diarys.length)
+        - diarys.forEach(function(diary){
+          div.ul
+          div.post
+            h3.entry-title
+              a(rel="bookmark",title='链向 #{diary.title} 的固定链接',href="http://localhost/wordpress/?p=4")  #{diary.title}
+            div.entry-meta
+              span.author.vcard
+                a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
+              a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
+                span.entry-date #{Date} 说到
+            div.entry-content
+              img.entry-img(src='#{diary.up_img}')
+              #{diary.content}
+            div.entry-utility
+              span.comments-link
+                a(title='《#{diary.title}》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应
+              span.meta-sep |
+              span.edit-link
+                a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
+         - })
+    hr
+    footer
+      p &copy; Company 2012
+          
+
+                
+
+    
