@@ -1,5 +1,5 @@
-var crypto = require('crypto');
-    
+var crypto = require('crypto')
+    ,config = require('../config').config;
 exports.encrypt = function(str,secret) {
    var cipher = crypto.createCipher('aes192', secret);
    var enc = cipher.update(str,'utf8','hex');
@@ -39,4 +39,13 @@ exports.dateFormat = function(cd){
       return df;
    }
    return "";
+};
+
+exports.index_cut_cont = function(cont){
+   if(!cont) return "";
+   if(cont.length > config.diary_size){
+      return cont.substring(0,config.diary_size);
+   }else{
+      return cont;
+   }
 };

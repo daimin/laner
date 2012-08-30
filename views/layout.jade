@@ -5,12 +5,12 @@ html
     title= title
     meta(name="viewport",content="width=device-width, initial-scale=1.0")
     link(rel='stylesheet', href='/stylesheets/bootstrap.css')
-    style
-      body {
-        padding-top: 60px;
-        padding-bottom: 40px;
-      }
+    link(rel='stylesheet', href='/stylesheets/style.css')
   body
     block content
     script(src='/javascripts/jquery-1.8.0.min.js')
     script(src='/javascripts/bootstrap-dropdown.js')
+    script(src='/javascripts/common.js')
+    script
+      set_thumbs('.thumbs_block100', 100, 100);
+      set_thumbs('.thumbs_block250', 250, 250);

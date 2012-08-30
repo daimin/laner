@@ -157,7 +157,7 @@ textarea {
 
 body {
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 18px;
   color: #333333;
@@ -4988,7 +4988,7 @@ a.badge:hover {
    clear: both;
    line-height: 100%;
    margin-bottom:6px;
-   margin-top:12px;
+   margin-top:6px;
 }
 .post{
 }

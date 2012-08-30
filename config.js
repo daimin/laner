@@ -54,7 +54,7 @@ exports.config = {
 	// 日记配置
 	diary_title_size : [2,40],
 	diary_content_size : [2,2000],
-	diary_img_size : 512 * 1024,
+	diary_img_size : 128 * 1024,
 	// 上传日记说明图片的目录
 	diary_img : '/public/images/upload/',
 	// url中访问日记说明图片的目录
@@ -65,7 +65,9 @@ exports.config = {
 	diary_type:{
 	   public : 1,
 	   private:0
-	}
+	},
+	// 首页日志的内容显示字数
+	diary_size:120
 	
 };
 

@@ -6,11 +6,12 @@ block content-detail
   script(charset="utf-8",src="/javascripts/qq_editor.js")
   div.container
     div.row.show-grid
-      ul.breadcrumb
-        li
-          a(href="/") 首页
-          span.divider /
-        li.active 添加日记
+      div.span12
+        ul.breadcrumb
+          li
+            a(href="/") 首页
+            span.divider /
+          li.active 添加日记
     div.row.show-grid
       div.span8
         if (error_msg)
@@ -53,6 +54,7 @@ block content-detail
             li 标题必填
             li 内容必填
             li 图片可以选择上传，或者不上传
+            li 图片存储在其它的PHP空间(暂时放在本服务器中，使用缩略图的方式显示)
             li 上传图片应该选择一张能说明你的日志主旨的图片
             li 上传图片类型只能是 #{config.allow_img} 之一
             li 公开日记所有用户将可以浏览，私密日记只有你自己品尝

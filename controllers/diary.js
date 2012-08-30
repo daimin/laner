@@ -6,8 +6,7 @@ var DB = require("../models")
     ,sanitize = require('validator').sanitize
     ,common = require('./common')
     ,fs = require('fs')
-    ,path = require('path')
-    ,canvas = require('canvas');
+    ,path = require('path');
 
 var diary_config = {
 	diary_title_size : config.diary_title_size,
@@ -138,6 +137,7 @@ exports.list = function(req, res, next){
 	               if(diarys[i].up_img){
 	                   diarys[i].up_img = config.diary_url + diarys[i].up_img;
 	               }
+	               diarys[i].content = common.index_cut_cont( diarys[i].content);
 	            }
 	            
 		        res.render('diary/list', {
