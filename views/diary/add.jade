@@ -14,41 +14,42 @@ block content-detail
           li.active 添加日记
     div.row.show-grid
       div.span8
-        if (error_msg)
-          div.alert.alert-error #{error_msg}
-        div(style="text-align:right")
-          span.label.label-info
-            strong 2012年8月26日 星期日 多云
-        hr
-        form(method="POST",action="",enctype="multipart/form-data")
-          fieldset
-            input(type="hidden",name="action",value="add")
-            input(type="hidden",name="weather",value="多云")
-            div.control-group
-              div.controls
-                input.input-xlarge(type="text",id="title",name="title",style="width:82%",placeholder="你的标题",value='#{diary_title}')
-                small.help-block 字数控制在#{config.diary_title_size[0]}到#{config.diary_title_size[1]}个之间
-            div.control-group
-              div.controls
-                textarea.input-xlarge(id="content",name="content",placeholder="笔记内容",style="width:100%;height:250px;visibility:hidden;") #{content}
-                small.help-block 字数控制在#{config.diary_content_size[0]}到#{config.diary_content_size[1]}个之间
-            div.control-group
-              div.controls
-                select(name="type")
-                  option(value='#{config.diary_type.public}') 公开
-                  option(value='#{config.diary_type.private}') 私密
-                small.help-block 公开日记所有用户将可以浏览，私密日记只有你自己品尝
-            div.control-group
-              div.controls
-                input.input-file(id="up_img",name="up_img",type="file",placeholder="上传图片")
-                small.help-block 图片大小控制在#{config.diary_img_size/1024/1024}M以内
-            div.form-actions
-              button.btn.btn-primary(type="submit") 发 表
-              &nbsp;&nbsp;
-              button.btn 取 消
+        div.panel
+          - if (error_msg)
+            div.alert.alert-error #{error_msg}
+          div(style="text-align:right")
+            span.label.label-info
+              strong 2012年8月26日 星期日 多云
+          hr
+          form(method="POST",action="",enctype="multipart/form-data")
+            fieldset
+              input(type="hidden",name="action",value="add")
+              input(type="hidden",name="weather",value="多云")
+              div.control-group
+                div.controls
+                  input.input-xlarge(type="text",id="title",name="title",style="width:82%",placeholder="你的标题",value='#{diary_title}')
+                  small.help-block 字数控制在#{config.diary_title_size[0]}到#{config.diary_title_size[1]}个之间
+              div.control-group
+                div.controls
+                  textarea.input-xlarge(id="content",name="content",placeholder="笔记内容",style="width:100%;height:250px;visibility:hidden;") #{content}
+                  small.help-block 字数控制在#{config.diary_content_size[0]}到#{config.diary_content_size[1]}个之间
+              div.control-group
+                div.controls
+                  select(name="type")
+                    option(value='#{config.diary_type.public}') 公开
+                    option(value='#{config.diary_type.private}') 私密
+                  small.help-block 公开日记所有用户将可以浏览，私密日记只有你自己品尝
+              div.control-group
+                div.controls
+                  input.input-file(id="up_img",name="up_img",type="file",placeholder="上传图片")
+                  small.help-block 图片大小控制在#{config.diary_img_size/1024/1024}M以内
+              div.form-actions
+                button.btn.btn-primary(type="submit") 发 表
+                &nbsp;&nbsp;
+                button.btn 取 消
       div.span4
-        div.well 
-          h4 日志须知
+        div.panel 
+          h4 日记须知
           hr
           ul
             li 标题必填

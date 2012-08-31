@@ -20,4 +20,5 @@ exports = module.exports = function(app){
 	app.get('/diary/add', diary.add);
 	app.post('/diary/add', diary.add);
 	app.get('/diary/list', diary.list);
+	app.get('/diary/view', diary.view);
 };

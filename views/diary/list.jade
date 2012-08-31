@@ -2,21 +2,22 @@ extends ../head
 
 block content-detail
   div.container
-    div.row
-      div.span12
-        ul.breadcrumb
-          li
-            a(href="/") 首页
-            span.divider /
-            li.active 日记列表
-        div.row
-          div.span10
-            div.row
+    div.row.show-grid
+      div.row
+        div.span12
+          ul.breadcrumb
+            li
+              a(href="/") 首页
+              span.divider /
+              li.active 日记列表
+      div.row
+        div.span8
+          div.panel
             - if (diarys.length)
             - diarys.forEach(function(diary){
               div.post
                 h3.entry-title
-                  a(rel="bookmark",title='链向 #{diary.title} 的固定链接',href="http://localhost/wordpress/?p=4")  #{diary.title}
+                  a(rel="bookmark",title='链向 #{diary.title} 的固定链接',href="view")  #{diary.title}
                 div.entry-meta
                   span.author.vcard
                     a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
@@ -36,25 +37,36 @@ block content-detail
                   span.meta-sep |
                   span.edit-link
                     a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
-            div.ul
+                  span.meta-sep |
+                  span.edit-link
+                    a.post-edit-link(title="阅读全文",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 阅读全文
+              div.ul
             - })
-            div.pagination
-              ul
-                li
-                  a(href="#") Prev
-                li.active
-                  a(href="#") 1
-                li
-                  a(href="#") 2
-                li
-                  a(href="#") 3
-                li
-                  a(href="#") 4
-                li
-                  a(href="#") Next
-          div.span2.show-grid
-            div.pull-right
-              button.btn-large.btn-primary(type='button',onclick='add_diary()') 写一篇吧
+              div.pagination
+                ul
+                  li
+                    a(href="#") Prev
+                  li.active
+                    a(href="#") 1
+                  li
+                    a(href="#") 2
+                  li
+                    a(href="#") 3
+                  li
+                    a(href="#") 4
+                  li
+                    a(href="#") Next
+        div.span4
+          div.panel
+            h4 作者 
+            hr
+          div.panel
+            h4 作者其它日志 
+            hr
+          div.panel
+            h4 作者感兴趣的日志 
+            hr
+            
     hr
     footer
       p &copy; Company 2012

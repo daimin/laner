@@ -153,3 +153,13 @@ exports.list = function(req, res, next){
 
 	}
 };
+
+exports.view = function(req, res, next){
+    var method = req.method.toLowerCase();
+	if(method == "get"){
+	   res.render('diary/view', {
+		    	title:config.name,
+	            config:diary_config
+	    });
+	}
+};

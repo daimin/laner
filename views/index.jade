@@ -4,41 +4,40 @@ block content-detail
   div.container
     div.row.show-grid
       div.span8
-        div.row.well
+        div.row.panel
           h2 公告区
-          h3 我最爱的女孩--兰儿
-        div.row
-          div.span8
-            div.row
-            - if (diarys.length)
-            - diarys.forEach(function(diary){
-              div.post
-                h3.entry-title
-                  a(rel="bookmark",title='链向 #{diary.title} 的固定链接',href="http://localhost/wordpress/?p=4")  #{diary.title}
-                div.entry-meta
-                  span.author.vcard
-                    a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
-                  a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
-                    span.entry-date #{diary.create_date} 
-                    说到
-                  div.entry-content
-                  - if(diary.up_img){
-                    div.thumbs_block100
-                      a(href='#{diary.up_img}')
-                        img.entry-img(src='#{diary.up_img}')
-                  - } 
-                  !{diary.content}
-                div.entry-utility.pull-right
-                  span.comments-link
-                    a(title='《#{diary.title}》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应
-                  span.meta-sep |
-                  span.edit-link
-                    a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
-                  span.meta-sep |
-                  span.edit-link
-                    a.post-edit-link(title="阅读全文",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 阅读全文
-            div.ul
-            - })
+          h3 公告还有广告就加在这里
+        div.row.panel
+          div.row
+          - if (diarys.length)
+          - diarys.forEach(function(diary){
+            div.post
+              h3.entry-title
+                a(rel="bookmark",title='链向 #{diary.title} 的固定链接',href="http://localhost/wordpress/?p=4")  #{diary.title}
+              div.entry-meta
+                span.author.vcard
+                  a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
+                a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
+                  span.entry-date #{diary.create_date} 
+                  说到
+                div.entry-content
+                - if(diary.up_img){
+                  div.thumbs_block100
+                    a(href='#{diary.up_img}')
+                      img.entry-img(src='#{diary.up_img}')
+                - } 
+                !{diary.content}
+              div.entry-utility.pull-right
+                span.comments-link
+                  a(title='《#{diary.title}》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应
+                span.meta-sep |
+                span.edit-link
+                  a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
+                span.meta-sep |
+                span.edit-link
+                  a.post-edit-link(title="阅读全文",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 阅读全文
+          div.ul
+          - })
             div.pagination
               ul
                 li
@@ -54,7 +53,7 @@ block content-detail
                 li
                   a(href="#") Next
       div.span4
-        form.well.form-vertical
+        form.panel.form-vertical
           h4 登录
           hr
           input.input-large(type="text",placeholder="Email")
@@ -64,7 +63,7 @@ block content-detail
           button.btn(type="sumbit") 登录
           a(href="#") &nbsp;注册
         div
-          div.well 
+          div.panel 
             h4 热门日记
             hr
             ul.unstyled
@@ -72,9 +71,9 @@ block content-detail
                 a(href="#") Node.js简单介绍并实现一个简单的Web MVC框架
               li
                 a(href="#") websocket与node.js的完美结合                
-        div.well
+        div.panel
           h4 活跃用户 
-        div.well
+        div.panel
           h4 相关站点
     hr
     footer
