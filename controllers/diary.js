@@ -130,7 +130,7 @@ exports.list = function(req, res, next){
 	if(method == "get"){
 	   Diary.find({},{sort:[['create_date', -1]]}).toArray(function(err, diarys){
 	        if(err) return next(err);
-	            //console.log(docs);
+	            console.log(diarys);
 	            for(var i = 0 ; i < diarys.length;i++){
 	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
 	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);
@@ -139,7 +139,6 @@ exports.list = function(req, res, next){
 	               }
 	               diarys[i].content = common.index_cut_cont( diarys[i].content);
 	            }
-	            
 		        res.render('diary/list', {
 		    	title:config.name,
 		    	diarys:diarys,
