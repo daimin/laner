@@ -26,3 +26,16 @@ function set_thumbs(obj, W, H) {
 function add_diary(){
     window.location="add";
 }
+
+
+function del_diary(did){
+	art.dialog({
+	    content: '确定删除该篇日志？',
+	    ok: function () {
+	        window.location = did; 
+	        return false;
+	    },
+	    cancelVal: '取消',
+	    cancel: true
+	});
+}

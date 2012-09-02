@@ -73,7 +73,7 @@ exports.add = function(req, res, next){
 	        var tmp_path = req.files.up_img.path;
 	        
 	        var up_img_name = req.files.up_img.name;
-	        var fileext = path.extname(up_img_name)
+	        var fileext = path.extname(up_img_name);
 	        
 	        var is_allow_img = false;
 	        fileext = fileext.toLowerCase();
@@ -130,7 +130,7 @@ exports.list = function(req, res, next){
 	if(method == "get"){
 	   Diary.find({},{sort:[['create_date', -1]]}).toArray(function(err, diarys){
 	        if(err) return next(err);
-	            console.log(diarys);
+	            // console.log(diarys);
 	            for(var i = 0 ; i < diarys.length;i++){
 	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
 	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);
@@ -161,4 +161,27 @@ exports.view = function(req, res, next){
 	            config:diary_config
 	    });
 	}
+};
+
+exports.del = function(req, res, next){
+    var diary_id = ObjID(req.params.did);
+
+    // 先删图片，所以要先查图片的链接
+    Diary.findOne({"_id":diary_id}, function(err, diary){
+        if(err) return next(err);
+        // 删除图片啊个
+        var tar_img_path = config.site_dir + config.diary_img + diary.up_img;
+        fs.unlink(tar_img_path, function() {
+	        if (err) throw err;
+	        console.log('remove img ' + tar_img_path);
+	    });
+	    if(diary){
+		    Diary.remove({"_id":diary_id}, function(err){
+		       if(err) return next(err);
+			    res.redirect('diary/list');
+		    }); 
+        } 
+    });  
+
+
 };
