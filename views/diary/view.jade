@@ -13,20 +13,30 @@ block content-detail
           li.active 浏览日记
     div.row.show-grid
       div.span8
-        div.panel 
-          !{diary.content}
         div.panel
-          comment 
+          div.diary-title !{diary.title}
+          div.content !{diary.content}
+          div.entry-meta
+            span.author.vcard
+              a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
+                a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
+                  span.entry-date #{diary.create_date} 
+                  发表
+          div.entry-meta
+            span.author.vcard
+              a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
+                a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
+                  span.entry-date #{diary.create_date} 
+                  编辑
+        div.panel
+          div.comment 评论0
       div.span4
         div.panel
-          h4 作者 
-          hr
+          header 作者 
         div.panel
-          h4 作者其它日志 
-          hr
+          header 作者其它日志 
         div.panel
-          h4 作者感兴趣的日志 
-          hr
+          header 作者感兴趣的日志 
     hr
     footer
       p &copy; Company 2012

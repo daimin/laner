@@ -53,7 +53,8 @@ exports.config = {
 	
 	// 日记配置
 	diary_title_size : [2,40],
-	diary_content_size : [2,2000],
+	diary_content_size : [2,4000],
+    diary_summary_size : [2,400],
 	diary_img_size : 128 * 1024,
 	// 上传日记说明图片的目录
 	diary_img : '/public/images/upload/',

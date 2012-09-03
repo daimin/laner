@@ -31,7 +31,12 @@ block content-detail
                   small.help-block 字数控制在#{config.diary_title_size[0]}到#{config.diary_title_size[1]}个之间
               div.control-group
                 div.controls
-                  textarea.input-xlarge(id="content",name="content",placeholder="笔记内容",style="width:100%;height:250px;visibility:hidden;") #{content}
+                  textarea.input-xlarge(id="summary",name="summary",placeholder="日记摘要",style="width:98%;height:60px;")
+                  !{summary}
+                  small.help-block 字数控制在#{config.diary_summary_size[0]}到#{config.diary_summary_size[1]}个之间
+              div.control-group
+                div.controls
+                  textarea.input-xlarge(id="content",name="content",placeholder="日记内容",style="width:100%;height:250px;visibility:hidden;") #{content}
                   small.help-block 字数控制在#{config.diary_content_size[0]}到#{config.diary_content_size[1]}个之间
               div.control-group
                 div.controls
@@ -53,6 +58,7 @@ block content-detail
           ul
             li 标题必填
             li 内容必填
+            li 摘要必填(摘要显示在日记列表中)
             li 图片可以选择上传，或者不上传
             li 图片存储在其它的PHP空间(暂时放在本服务器中，使用缩略图的方式显示)
             li 上传图片应该选择一张能说明你的日志主旨的图片

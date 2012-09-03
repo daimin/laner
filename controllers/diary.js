@@ -11,6 +11,7 @@ var DB = require("../models")
 var diary_config = {
 	diary_title_size : config.diary_title_size,
 	diary_content_size : config.diary_content_size,
+    diary_summary_size : config.diary_summary_size,
 	diary_img_size : config.diary_img_size,
     allow_img : config.allow_img.join(", "),
     diary_type:config.diary_type
@@ -23,6 +24,7 @@ exports.add = function(req, res, next){
 	    	title:config.name,
 	    	error_msg:"",
 	    	content:"",
+            summary:"",
 	    	diary_title:"",
             config:diary_config
 	    	});
@@ -31,6 +33,7 @@ exports.add = function(req, res, next){
 	if(method == "post"){
 		var title = sanitize(req.body.title).trim();
 		var content = sanitize(req.body.content).trim();
+        var summary = sanitize(req.body.summary).trim();
         var weather = sanitize(req.body.weather).trim();
         var diary_type = sanitize(req.body.type).trim();
 		var err_msg = "";
@@ -39,11 +42,14 @@ exports.add = function(req, res, next){
 			err_msg += "标题不能是空的。 ";
 		}
 		if(content == ""){
-			err_msg += "笔记内容不能是空的。";
+			err_msg += "日记内容不能是空的。";
+		}
+        if(summary == ""){
+			err_msg += "日记摘要不能是空的。";
 		}
 		
 		if(err_msg != ""){
-		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
+		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,config:diary_config});
 		    return;
 		}
 		// 检验文本的长度
@@ -54,9 +60,13 @@ exports.add = function(req, res, next){
 		if(content.length < config.diary_content_size[0] || content.length > config.diary_content_size[1]){
 			err_msg += "日志内容的长度必须是" + config.diary_content_size[0] + "到" + config.diary_content_size[1] + "个之间。 ";
 		}
+        
+        if(content.length < config.diary_content_size[0] || content.length > config.diary_content_size[1]){
+			err_msg += "日志内容的长度必须是" + config.diary_content_size[0] + "到" + config.diary_content_size[1] + "个之间。 ";
+		}
 		
 		if(err_msg != ""){
-		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
+		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,config:diary_config});
 		    return;
 		}
 		
@@ -65,7 +75,7 @@ exports.add = function(req, res, next){
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
 			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
-			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
+			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,config:diary_config});
 			   return;
 			}
 			
@@ -87,7 +97,7 @@ exports.add = function(req, res, next){
 	        
 	        if(is_allow_img == false){
 			   err_msg += "上传图片类型只能是" + config.allow_img.join(",")+"之一";
-			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,diary_title:title,config:diary_config});
+			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,config:diary_config});
 	           return;
 	        }
 	        // 指定文件上传后的目录 
@@ -109,6 +119,7 @@ exports.add = function(req, res, next){
 		var diary = {};
 		diary.title = title;
 		diary.content = content;
+        diary.summary = summary;
 		diary.create_date = new Date();
 		diary.edit_date = new Date();
 		diary.weather = weather;
@@ -137,7 +148,7 @@ exports.list = function(req, res, next){
 	               if(diarys[i].up_img){
 	                   diarys[i].up_img = config.diary_url + diarys[i].up_img;
 	               }
-	               diarys[i].content = common.index_cut_cont( diarys[i].content);
+	               diarys[i].content = diarys[i].summary;
 	            }
 		        res.render('diary/list', {
 		    	title:config.name,
