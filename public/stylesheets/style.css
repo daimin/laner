@@ -201,3 +201,9 @@ header{
    font-weight:bold;
    color:#bbb;
 }
+
+comment{
+   border-bottom:1px solid #ddd;
+   height:24px;
+   margin-bottom:12px;
+}

@@ -156,10 +156,17 @@ exports.list = function(req, res, next){
 exports.view = function(req, res, next){
     var method = req.method.toLowerCase();
 	if(method == "get"){
-	   res.render('diary/view', {
+	   var diary_id = ObjID(req.params.did);
+	    Diary.findOne({"_id":diary_id}, function(err, diary){
+	    console.log(diary);
+            if(err) return next(err);
+	        res.render('diary/view', {
 		    	title:config.name,
+		    	diary:diary,
 	            config:diary_config
-	    });
+	        });
+    }); 
+
 	}
 };
 

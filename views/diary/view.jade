@@ -3,7 +3,6 @@ extends ../head
 block content-detail
   script(charset="utf-8",src="/kindeditor/kindeditor-min.js")
   script(charset="utf-8",src="/kindeditor/lang/zh_CN.js")
-  script(charset="utf-8",src="/javascripts/qq_editor.js")
   div.container
     div.row.show-grid
       div.span12
@@ -14,7 +13,10 @@ block content-detail
           li.active 浏览日记
     div.row.show-grid
       div.span8
-        div.panel 123123123123123123123
+        div.panel 
+          !{diary.content}
+        div.panel
+          comment 
       div.span4
         div.panel
           h4 作者 

@@ -20,7 +20,7 @@ exports = module.exports = function(app){
 	app.get('/diary/add', diary.add);
 	app.post('/diary/add', diary.add);
 	app.get('/diary/list', diary.list);
-	app.get('/diary/view', diary.view);
 	app.get('/diary/:did', diary.index);
 	app.get('/diary/:did/del', diary.del);
+	app.get('/diary/:did/view', diary.view);
 };
