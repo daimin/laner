@@ -73,7 +73,7 @@ exports.add = function(req, res, next){
 		}
 		
 		var target_path = "";
-		var target_path_thumb = "";
+        var target_path_thumb = "";
 		if(req.files.up_img.size > 0){
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
@@ -136,12 +136,12 @@ exports.add = function(req, res, next){
 		            });
 	             }
              ]);
-         }
-            //保存日志
+        }
+
+        //保存日志
 		var diary = {};
 		diary.title = title;
 		diary.content = content;
-        diary.summary = summary;
 		diary.create_date = new Date();
 		diary.edit_date = new Date();
 		diary.weather = weather;
@@ -153,10 +153,7 @@ exports.add = function(req, res, next){
 		Diary.save(diary, function(err){
 		    if(err) return next(err);
 		    res.redirect('diary/list');
-		}); 
-
-
-        
+		});
 	}
 	
 };
@@ -215,14 +212,9 @@ exports.del = function(req, res, next){
         if(err) return next(err);
         // 删除图片啊个
         var tar_img_path = config.site_dir + config.diary_img + diary.up_img;
-        var tar_img_path_thumb = config.site_dir + config.diary_img + diary.up_img_thumb;
-        fs.unlink(tar_img_path, function(err) {
-	        if (err) next(err);
+        fs.unlink(tar_img_path, function() {
+	        if (err) throw err;
 	        console.log('remove img ' + tar_img_path);
-	    });
-	    fs.unlink(tar_img_path_thumb, function(err) {
-	        if (err) next(err);
-	        console.log('remove img ' + tar_img_path_thumb);
 	    });
 	    if(diary){
 		    Diary.remove({"_id":diary_id}, function(err){
