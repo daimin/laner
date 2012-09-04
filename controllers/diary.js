@@ -6,7 +6,9 @@ var DB = require("../models")
     ,sanitize = require('validator').sanitize
     ,common = require('./common')
     ,fs = require('fs')
-    ,path = require('path');
+    ,path = require('path')
+    ,gm = require('gm')
+    ,async = require('async');
 
 var diary_config = {
 	diary_title_size : config.diary_title_size,
@@ -70,7 +72,8 @@ exports.add = function(req, res, next){
 		    return;
 		}
 		
-		 var target_path = "";
+		var target_path = "";
+		var target_path_thumb = "";
 		if(req.files.up_img.size > 0){
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
@@ -103,19 +106,38 @@ exports.add = function(req, res, next){
 	        // 指定文件上传后的目录 
 	        target_path =  new Date().getTime() + fileext;
 	        var full_img_path = config.site_dir + config.diary_img + target_path;
+	        target_path_thumb =  new Date().getTime() + "_thumb" + fileext;
+	        var full_img_path_thumb = config.site_dir + config.diary_img + target_path_thumb;
 	        
-	        // 移动文件
-	        fs.rename(tmp_path, full_img_path, function(err) {
-	           if (err) throw err;
-	           // 删除临时文件夹文件, 
-	           fs.unlink(tmp_path, function() {
-	           if (err) throw err;
-	               // res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
-	           });
-	        });
-        }
-
-        //保存日志
+	        // 上传后上传两张图片
+	        async.series([
+		         function(callback){
+		             gm(tmp_path)
+	                 .resize(config.img_size.thumb, config.img_size.thumb, '%')
+	                 .write(full_img_path_thumb, function(err){
+	                    if (err) return console.dir(arguments);
+	                    // 必须要调用callback，参数1是err,参数2是结果，如果err不能与null，那么后面的函数就不会执行
+	                    callback(null,1); 
+	                 });
+	             },
+	             function(callback){
+	               gm(tmp_path)
+	              .resize(config.img_size.cont, config.img_size.cont, '%')
+	              .write(full_img_path, function(err){
+	                  if (err) return console.dir(arguments);
+	                  callback(null,2);
+	               });
+	             },
+	             function(callback){
+	             	fs.unlink(tmp_path, function(err) {
+		                 if (err) throw err;
+		                 callback(null,3);
+		                 // res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
+		            });
+	             }
+             ]);
+         }
+            //保存日志
 		var diary = {};
 		diary.title = title;
 		diary.content = content;
@@ -124,13 +146,17 @@ exports.add = function(req, res, next){
 		diary.edit_date = new Date();
 		diary.weather = weather;
 		diary.up_img = target_path;
+		diary.up_img_thumb = target_path_thumb;
 		diary.author = 'daimin';
 		diary.type = diary_type;
 		
 		Diary.save(diary, function(err){
 		    if(err) return next(err);
 		    res.redirect('diary/list');
-		});
+		}); 
+
+
+        
 	}
 	
 };
@@ -145,8 +171,8 @@ exports.list = function(req, res, next){
 	            for(var i = 0 ; i < diarys.length;i++){
 	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
 	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);
-	               if(diarys[i].up_img){
-	                   diarys[i].up_img = config.diary_url + diarys[i].up_img;
+	               if(diarys[i].up_img_thumb){
+	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
 	               }
 	               diarys[i].content = diarys[i].summary;
 	            }
@@ -189,9 +215,14 @@ exports.del = function(req, res, next){
         if(err) return next(err);
         // 删除图片啊个
         var tar_img_path = config.site_dir + config.diary_img + diary.up_img;
-        fs.unlink(tar_img_path, function() {
-	        if (err) throw err;
+        var tar_img_path_thumb = config.site_dir + config.diary_img + diary.up_img_thumb;
+        fs.unlink(tar_img_path, function(err) {
+	        if (err) next(err);
 	        console.log('remove img ' + tar_img_path);
+	    });
+	    fs.unlink(tar_img_path_thumb, function(err) {
+	        if (err) next(err);
+	        console.log('remove img ' + tar_img_path_thumb);
 	    });
 	    if(diary){
 		    Diary.remove({"_id":diary_id}, function(err){

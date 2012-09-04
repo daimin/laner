@@ -61,6 +61,12 @@ exports.config = {
 	// url中访问日记说明图片的目录
 	diary_url : '/images/upload/',
 	allow_img:['.png','.gif','.jpg'],
+	img_size : {
+	   thumb:80,
+	   cont:400,
+	   header:40,
+	},
+	
 	
 	// 日志类型(公开，私密)
 	diary_type:{
