@@ -48,6 +48,8 @@ block content-detail
                       div.comment-header 
                         &nbsp;在 !{comment.comment_date} &nbsp;&nbsp;
                         a(href='javascript:void(0)') !{comment.commenter}
+                        span.comment-floor
+                          !{comment.floor}
                       div.comment-cont !{comment.content}
                 - })
           div.alert.alert-error#alert-error(style='display:none')

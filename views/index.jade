@@ -53,26 +53,32 @@ block content-detail
                 li
                   a(href="#") Next
       div.span4
-        form.panel.form-vertical
-          header 登录
-          input.input-large(type="text",placeholder="Email")
-          input.input-large(type="password",placeholder="Password")
+        form.panel.form-vertical(action='/user/login',method='post',onsubmit='return dologin("/user/login")')
+          div.header 登录
+          div.alert.alert-error#alert-error(style='display:none')
+          i.icon-user
+          &nbsp;
+          input.input-large(type="text",placeholder="Email",name="email",id="email")
+          br
+          i.icon-lock
+          &nbsp;
+          input.input-large(type="password",placeholder="Password",name="password",id="password")
           label.checkbox Remember me
             input(type="checkbox") 
           button.btn(type="sumbit") 登录
           a(href="#") &nbsp;注册
         div
           div.panel 
-            header 热门日记
+            div.header 热门日记
             ul.unstyled
               li 
                 a(href="#") Node.js简单介绍并实现一个简单的Web MVC框架
               li
                 a(href="#") websocket与node.js的完美结合                
         div.panel
-          header 活跃用户 
+          div.header 活跃用户 
         div.panel
-          header 相关站点
+          div.header 相关站点
     hr
     footer
       p &copy; Company 2012

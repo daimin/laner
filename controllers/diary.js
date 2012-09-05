@@ -212,10 +212,22 @@ exports.view = function(req, res, next){
        });
        
        proxy.once("get_comment_list", function (img) {
-	       Comment.find({'diary_id':diary_id},{sort:[['comment_date', -1]]}).toArray(function(err, comments){
+	       Comment.find({'diary_id':diary_id},{sort:[['comment_date', 1]]}).toArray(function(err, comments){
 	           if(err) return next(err);
 	           for(var i = 0 ; i < comments.length;i++){
 	               comments[i].comment_date = common.dateFormat(comments[i].comment_date);
+	               /*
+	               if(i == 0){
+	                  comments[i].floor = "沙发";
+	               }else if(i == 1){
+	                  comments[i].floor = "板凳";
+	               }else if(i == 2){
+	                  comments[i].floor = "地板";
+	               }else{
+	                  comments[i].floor = (i + 1) + "楼";
+	               }*/
+	               comments[i].floor = "#" + (i + 1);
+	               
 	           }
 	           
 	           res.render('diary/view', {
@@ -247,10 +259,15 @@ exports.del = function(req, res, next){
 	    if(diary){
 		    Diary.remove({"_id":diary_id}, function(err){
 		       if(err) return next(err);
-			    res.redirect('diary/list');
-		    }); 
+		       // 删评论
+		       Comment.remove({"diary_id":diary_id}, function(err){
+		         if(err) return next(err);
+			      res.redirect('diary/list');
+		       });
+		    }); 		    
         } 
     });  
+ 
 
 
 };

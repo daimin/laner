@@ -4,7 +4,8 @@
 
 var diary = require('../controllers/diary')
     ,site = require('../controllers/site')
-    ,comment = require('../controllers/comment');
+    ,comment = require('../controllers/comment')
+    ,user = require('../controllers/user');
 
 exports.index = function(req, res){
 };
@@ -25,4 +26,5 @@ exports = module.exports = function(app){
 	app.get('/diary/:did/del', diary.del);
 	app.get('/diary/:did/view', diary.view);
     app.post('/comment/add', comment.add);
+    app.post('/user/login', user.login);
 };

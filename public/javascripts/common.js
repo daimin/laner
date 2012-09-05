@@ -54,3 +54,18 @@ function doCommentSubmit(url){
     );
     return false;
 }
+
+function dologin(url){
+    var param = {password:$("#password").val(),email:$("#email").val()};
+    $.post(url, param,
+        function(data){
+           if(data == 1){
+              window.location.reload();
+           }else{
+              $("#alert-error").css({"display":"block"});
+              $("#alert-error").html(data);
+           }
+        }
+    );
+    return false;
+}
