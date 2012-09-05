@@ -13,7 +13,7 @@ block content-detail
           - diarys.forEach(function(diary){
             div.post
               h3.entry-title
-                a(rel="bookmark",title='链向 #{diary.title} 的固定链接',href="http://localhost/wordpress/?p=4")  #{diary.title}
+                a(rel="bookmark",title='链向 #{diary.title} 的链接',href='/diary/#{diary._id}/view')  #{diary.title}
               div.entry-meta
                 span.author.vcard
                   a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
@@ -23,8 +23,8 @@ block content-detail
                 div.entry-content
                 - if(diary.up_img){
                   div.thumbs_block100
-                    a(href='#{diary.up_img}')
-                      img.entry-img(src='#{diary.up_img}')
+                    a(href='#{diary.up_img_thumb}')
+                      img.entry-img(src='#{diary.up_img_thumb}')
                 - } 
                 !{diary.summary}
               div.entry-utility.pull-right

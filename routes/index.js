@@ -2,8 +2,9 @@
  * GET home page.
  */
 
-var diary = require('../controllers/diary'),
-    site = require('../controllers/site');
+var diary = require('../controllers/diary')
+    ,site = require('../controllers/site')
+    ,comment = require('../controllers/comment');
 
 exports.index = function(req, res){
 };
@@ -23,4 +24,5 @@ exports = module.exports = function(app){
 	app.get('/diary/:did', diary.index);
 	app.get('/diary/:did/del', diary.del);
 	app.get('/diary/:did/view', diary.view);
+    app.post('/comment/add', comment.add);
 };

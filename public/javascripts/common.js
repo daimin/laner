@@ -39,3 +39,18 @@ function del_diary(did){
 	    cancel: true
 	});
 }
+
+function doCommentSubmit(url){
+    var param = {commenter:$("#commenter").val(),diary_id:$("#diary_id").val(),comment:$("#comment").val()};
+    $.post(url, param,
+        function(data){
+           if(data == 1){
+              window.location.reload();
+           }else{
+              $("#alert-error").css({"display":"block"});
+              $("#alert-error").html(data);
+           }
+        }
+    );
+    return false;
+}

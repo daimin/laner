@@ -22,10 +22,10 @@ exports.index = function(req, res, next){
 	            for(var i = 0 ; i < diarys.length;i++){
 	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
 	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);
-	               if(diarys[i].up_img){
-	                   diarys[i].up_img = config.diary_url + diarys[i].up_img;
+	               if(diarys[i].up_img_thumb){
+	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
 	               }
-	               diarys[i].content = common.index_cut_cont( diarys[i].content);
+	               diarys[i].content = diarys[i].summary;
 	            }
 	            
 		        res.render('index', {

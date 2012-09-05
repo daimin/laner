@@ -1,12 +1,15 @@
 doctype 5
-html
+html(xmlns:wb="http://open.weibo.com/wb")
   head
     meta(charset="utf-8")
     title= title
     meta(name="viewport",content="width=device-width, initial-scale=1.0")
+    link(href="/images/favicon.ico",type="image/x-icon",rel='icon')
+    link(href="/images/favicon.ico",type="image/x-icon",rel='shortcut icon')
     link(rel='stylesheet', href='/stylesheets/bootstrap.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
     script(src='/javascripts/jquery-1.8.0.min.js')
+    script(src='http://tjs.sjs.sinajs.cn/open/api/js/wb.js?appkey=',charset='utf-8')
   body
     block content
     script(src='/javascripts/bootstrap-dropdown.js')

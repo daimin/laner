@@ -1,5 +1,6 @@
 var DB = require("../models")
     ,Diary = DB.Table('Diary')
+    ,Comment = DB.Table('Comment')
     ,ObjID = DB.ObjID
     ,config = require('../config').config
     ,check = require('validator').check
@@ -8,12 +9,13 @@ var DB = require("../models")
     ,fs = require('fs')
     ,path = require('path')
     ,gm = require('gm')
-    ,async = require('async');
+    ,EventProxy = require("eventproxy").EventProxy;
 
 var diary_config = {
 	diary_title_size : config.diary_title_size,
 	diary_content_size : config.diary_content_size,
     diary_summary_size : config.diary_summary_size,
+    comment_size : config.comment_size,
 	diary_img_size : config.diary_img_size,
     allow_img : config.allow_img.join(", "),
     diary_type:config.diary_type
@@ -34,7 +36,7 @@ exports.add = function(req, res, next){
 	
 	if(method == "post"){
 		var title = sanitize(req.body.title).trim();
-		var content = sanitize(req.body.content).trim();
+		var content = sanitize(common.html_entries(req.body.content)).xss();
         var summary = sanitize(req.body.summary).trim();
         var weather = sanitize(req.body.weather).trim();
         var diary_type = sanitize(req.body.type).trim();
@@ -63,8 +65,8 @@ exports.add = function(req, res, next){
 			err_msg += "日志内容的长度必须是" + config.diary_content_size[0] + "到" + config.diary_content_size[1] + "个之间。 ";
 		}
         
-        if(content.length < config.diary_content_size[0] || content.length > config.diary_content_size[1]){
-			err_msg += "日志内容的长度必须是" + config.diary_content_size[0] + "到" + config.diary_content_size[1] + "个之间。 ";
+        if(summary.length < config.diary_summary_size[0] || summary.length > config.diary_summary_size[1]){
+			err_msg += "日志摘要的长度必须是" + config.diary_summary_size[0] + "到" + config.diary_summary_size[1] + "个之间。 ";
 		}
 		
 		if(err_msg != ""){
@@ -108,40 +110,42 @@ exports.add = function(req, res, next){
 	        var full_img_path = config.site_dir + config.diary_img + target_path;
 	        target_path_thumb =  new Date().getTime() + "_thumb" + fileext;
 	        var full_img_path_thumb = config.site_dir + config.diary_img + target_path_thumb;
-	        
+
 	        // 上传后上传两张图片
-	        async.series([
-		         function(callback){
-		             gm(tmp_path)
-	                 .resize(config.img_size.thumb, config.img_size.thumb, '%')
-	                 .write(full_img_path_thumb, function(err){
+             
+             var proxy = new EventProxy();
+             var render = function (thumb_img, img, del_img){
+             };
+             proxy.assign("thumb_img", "img", "del_img", render);
+             proxy.once("thumb_img", function (thumb_img) {
+                 gm(tmp_path)
+	             .resize(config.img_size.thumb, config.img_size.thumb, '%')
+	             .write(full_img_path_thumb, function(err){
 	                    if (err) return console.dir(arguments);
-	                    // 必须要调用callback，参数1是err,参数2是结果，如果err不能与null，那么后面的函数就不会执行
-	                    callback(null,1); 
-	                 });
-	             },
-	             function(callback){
-	               gm(tmp_path)
-	              .resize(config.img_size.cont, config.img_size.cont, '%')
-	              .write(full_img_path, function(err){
-	                  if (err) return console.dir(arguments);
-	                  callback(null,2);
-	               });
-	             },
-	             function(callback){
-	             	fs.unlink(tmp_path, function(err) {
-		                 if (err) throw err;
-		                 callback(null,3);
-		                 // res.send('File uploaded to: ' + target_path + ' - ' + req.files.thumbnail.size + ' bytes');
-		            });
-	             }
-             ]);
+	                    proxy.trigger('img');
+	             });
+             });
+             proxy.once("img", function (img) {
+                 gm(tmp_path)
+	             .resize(config.img_size.cont, config.img_size.cont, '%')
+	             .write(full_img_path, function(err){
+	                if (err) return console.dir(arguments);
+	                proxy.trigger('del_img');
+	             });
+             });
+             proxy.once("del_img", function (del_img) {
+                fs.unlink(tmp_path, function(err) {
+		            if (err) throw err;
+		        });
+             });
+             proxy.trigger('thumb_img');
         }
 
         //保存日志
 		var diary = {};
 		diary.title = title;
 		diary.content = content;
+        diary.summary = summary;
 		diary.create_date = new Date();
 		diary.edit_date = new Date();
 		diary.weather = weather;
@@ -190,16 +194,40 @@ exports.list = function(req, res, next){
 exports.view = function(req, res, next){
     var method = req.method.toLowerCase();
 	if(method == "get"){
-	   var diary_id = ObjID(req.params.did);
-	    Diary.findOne({"_id":diary_id}, function(err, diary){
-	    console.log(diary);
-            if(err) return next(err);
-	        res.render('diary/view', {
+	   var gdiary = null;
+	   var proxy = new EventProxy();
+       var render = function (diary,comments){
+       		
+       };
+       var diary_id = ObjID(req.params.did);
+       proxy.assign("get_diary", "get_comment_list","render", render);
+	   proxy.once("get_diary", function (img) {
+	       Diary.findOne({"_id":diary_id}, function(err, diary){
+	           diary.create_date = common.dateFormat(diary.create_date);
+               diary.edit_date = common.dateFormat(diary.edit_date);
+               gdiary = diary;
+               if(err) return next(err);
+               proxy.trigger('get_comment_list');
+          }); 
+       });
+       
+       proxy.once("get_comment_list", function (img) {
+	       Comment.find({'diary_id':diary_id},{sort:[['comment_date', -1]]}).toArray(function(err, comments){
+	           if(err) return next(err);
+	           for(var i = 0 ; i < comments.length;i++){
+	               comments[i].comment_date = common.dateFormat(comments[i].comment_date);
+	           }
+	           
+	           res.render('diary/view', {
 		    	title:config.name,
-		    	diary:diary,
+		    	diary:gdiary,
+		    	comments:comments,
 	            config:diary_config
-	        });
-    }); 
+		      });
+           });
+       });
+       
+       proxy.trigger('get_diary');
 
 	}
 };

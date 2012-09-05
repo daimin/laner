@@ -20,6 +20,23 @@
 	position:relative;
 }
 
+.thumbs_block48{
+    width: 48px;
+	height: 48px;
+	overflow: hidden;
+	float:left;
+}
+.thumbs_block48 a {
+	width: 48px;
+	height: 48px;
+	display: block;
+	position:relative;
+	overflow: hidden;
+}
+.thumbs_block48 img {
+	position:relative;
+}
+
 .thumbs_block250{
     width: 250px;
 	height: 250px;
@@ -210,6 +227,13 @@ header{
    color:#666;
 }
 
+.diary-subtitle{
+   font-size:11px;
+   font-weight:normal;
+   color:#4455A6;
+   float:right;
+}
+
 .summary{
    height:24px;
    margin-bottom:12px;
@@ -219,15 +243,51 @@ header{
 }
 
 .content{
+  border-bottom:1px solid #ddd;
+  margin-bottom:12px;
+  padding-bottom:12px;
+}
+
+.diary-tail{
+  min-height:24px;
 }
 
 .diary-meta{
 }
 
 .comment{
-   border-bottom:1px solid #ddd;
-   height:24px;
    margin-bottom:12px;
    font-weight:bold;
    color:#666;
+}
+
+.comment-list{
+  font-size:12px;
+  padding-top:12px;
+  font-weight:normal;
+}
+
+.comment-item{
+   border-bottom:1px solid #eee;
+   margin-top:12px;
+   margin-bottom:12px;
+   padding-bottom:6px;
+}
+.comment-left{
+
+}
+.comment-right{
+
+}
+
+.comment-cont{
+  padding-top:6px;
+}
+
+.comment-header{
+  background:#ecf0ff;
+  font-size:11px;
+  font-weight:normal;
+  text-align:left;
+  padding-left:12px;
 }

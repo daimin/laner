@@ -18,7 +18,7 @@ block content-detail
             - diarys.forEach(function(diary){
               div.post
                 h3.entry-title
-                  a(rel="bookmark",title='链向 #{diary.title} 的固定链接',href='#{diary._id}/view')  #{diary.title}
+                  a(rel="bookmark",title='链向 #{diary.title} 的链接',href='#{diary._id}/view')  #{diary.title}
                 div.entry-meta
                   span.author.vcard
                     a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于

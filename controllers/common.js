@@ -35,7 +35,17 @@ exports.randomString = function (size) {
 
 exports.dateFormat = function(cd){
    if(cd){
-      var df = cd.getFullYear()+"-"+(cd.getMonth()+1) + "-" + cd.getDate() + " " + cd.getHours() + ":"+cd.getMinutes()+":"+cd.getSeconds();
+      var m = (cd.getMonth()+1);
+      if(m < 10) m = '0'+m;
+      var d = cd.getDate();
+      if(d < 10) d = '0'+d;
+      var h = cd.getHours();
+      if(h < 10) h = '0'+h;
+      var min = cd.getMinutes();
+      if(min < 10) min = '0'+min;
+      var s = cd.getSeconds();
+      if(s < 10) s = '0'+s;
+      var df = cd.getFullYear()+"-"+m + "-" + d + " " + h + ":"+min+":"+s;
       return df;
    }
    return "";
@@ -48,4 +58,11 @@ exports.index_cut_cont = function(cont){
    }else{
       return cont;
    }
+};
+
+exports.html_entries = function(str){
+  var s = str.replace(/\n/g,'<br/>');
+  s = s.replace(/\n\r/g,'<br/>');
+  s = s.replace(/' '/g,'&nbsp;');
+  return s;
 };
