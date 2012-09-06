@@ -17,7 +17,7 @@ block content-detail
           div.diary-title !{diary.title}
             span.diary-subtitle 来自：&nbsp;
               a(href='javascript:void(0)') #{diary.author}
-              &nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;
               span.entry-date #{diary.create_date}
           div.content !{diary.content}
           div.diary-tail
@@ -43,7 +43,7 @@ block content-detail
                   div.comment-item.row
                     div.comment-left.span1.thumbs_block48
                       a(href="javascript:void(0)")
-                        img(src='/images/upload/1346829570347_thumb.jpg')
+                        img(src='/images/avatar/default.jpg')
                     div.comment-right.span6
                       div.comment-header 
                         &nbsp;在 !{comment.comment_date} &nbsp;&nbsp;

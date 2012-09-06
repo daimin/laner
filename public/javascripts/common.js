@@ -69,3 +69,29 @@ function dologin(url){
     );
     return false;
 }
+
+function doregister(url){
+    var param = {
+                 password:$("#password").val(),
+                 email:$("#email").val(),
+                 repassword:$("#repassword").val(),
+                 nickname:$("#nickname").val()
+                 };
+
+    $.post(url, param,
+        function(data){
+        alert(data);
+           if(data == 1){
+              window.location.href='/';
+           }else{
+              $("#alert-error").css({"display":"block"});
+              $("#error_msg").html(data);
+           }
+        }
+    );
+    return false;
+}
+
+function close_alter_error(alter_error){
+    $(".alert-error").first().css({"display":"none"});
+}

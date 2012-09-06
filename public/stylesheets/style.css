@@ -224,13 +224,14 @@ body.page .edit-link {
    height:24px;
    margin-bottom:12px;
    font-weight:bold;
+   font-size:large;
    color:#666;
 }
 
 .diary-subtitle{
-   font-size:11px;
+   font-size:10px;
    font-weight:normal;
-   color:#4455A6;
+   color:#99BBF6;
    float:right;
 }
 

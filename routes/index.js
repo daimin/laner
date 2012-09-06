@@ -27,4 +27,6 @@ exports = module.exports = function(app){
 	app.get('/diary/:did/view', diary.view);
     app.post('/comment/add', comment.add);
     app.post('/user/login', user.login);
+    app.get('/user/register', user.register);
+    app.post('/user/register', user.register);
 };
