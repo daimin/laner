@@ -3,18 +3,12 @@ var DB = require("../models")
     ,common = require('./common')
     ,config = require('../config').config;
 
-var diary_config = {
-	diary_title_size : config.diary_title_size,
-	diary_content_size : config.diary_content_size,
-	diary_img_size : config.diary_img_size,
-    allow_img : config.allow_img.join(", "),
-    diary_type:config.diary_type
-};
-
 var ObjID = DB.ObjID;
 
 exports.index = function(req, res, next){
- var method = req.method.toLowerCase();
+    var loguser = common.verify(req, res);
+    
+    var method = req.method.toLowerCase();
 	if(method == "get"){
 	   Diary.find({},{sort:[['create_date', -1]]}).toArray(function(err, diarys){
 	        if(err) return next(err);
@@ -30,8 +24,8 @@ exports.index = function(req, res, next){
 	            
 		        res.render('index', {
 		    	title:config.name,
-		    	diarys:diarys,
-	            config:diary_config
+		    	config:config,
+		    	diarys:diarys
 		    });
 	        
 	        

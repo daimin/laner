@@ -62,15 +62,15 @@ block content-detail
                 div.controls
                   textarea.input-xlarge(id="comment",name="comment",placeholder="发表你的评论",style="width:98%;height:80px;")
                 button.btn.btn-success(type="submit") 发表评论
-                span.small.help-inline 字数控制在#{config.comment_size[0]}到#{config.comment_size[1]}个之间
+                span.small.help-inline 字数控制在#{comment_config.comment_size[0]}到#{comment_config.comment_size[1]}个之间
 
       div.span4
         div.panel
-          header 作者 
+          div.header 作者 
         div.panel
-          header 作者其它日志 
+          div.header 作者其它日志 
         div.panel
-          header 作者感兴趣的日志 
+          div.header 作者感兴趣的日志 
     hr
     footer
       p &copy; Company 2012

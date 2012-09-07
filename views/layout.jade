@@ -4,6 +4,9 @@ html(xmlns:wb="http://open.weibo.com/wb")
     meta(charset="utf-8")
     title= title
     meta(name="viewport",content="width=device-width, initial-scale=1.0")
+    - config.site_headers.meta.forEach(function(mt){
+      !{mt}
+    - })
     link(href="/images/favicon.ico",type="image/x-icon",rel='icon')
     link(href="/images/favicon.ico",type="image/x-icon",rel='shortcut icon')
     link(rel='stylesheet', href='/stylesheets/bootstrap.css')
@@ -13,4 +16,4 @@ html(xmlns:wb="http://open.weibo.com/wb")
   body
     block content
     script(src='/javascripts/bootstrap-dropdown.js')
-    script(src='/javascripts/common.js')
+    script(src='/javascripts/laner.js')

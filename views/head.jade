@@ -11,14 +11,10 @@ block content
         a.brand(href="/") #{title}
         div.nav-collapse
           ul.nav
-            li.active
-              a(href="/") 主页
-            li
-              a(href="/diary/add") 我的日记
-            li
-              a(href="/diary/list") 所有日记
-            li
-              a(href="#") 喜欢日记
+            - config.site_headers.menu.forEach(function(menu){
+              li
+                a(href='!{menu.url}') !{menu.name}
+            - })
         form.navbar-form.pull-left
           input.search-query.span3(type="text",placeholder="Search")
         ul.nav.pull-right
@@ -31,6 +27,8 @@ block content
               li.divider
               li
                 a(href="/user/register") 注册
+              li
+                a(href="/user/logout") 注销
   block content-detail
           
 

@@ -14,8 +14,16 @@ var DB = require("../models")
 
 exports.login = function(req, res, next){
     var method = req.method.toLowerCase();
-	if(method == "post"){
-	    var email = sanitize(req.body.email).trim();
+    if(method == "get"){
+        res.render('user/login', {
+            title:config.name,
+            error_msg:"",
+            email:"",
+            config:config,
+            user_config:config.user_config
+        });
+    }else if(method == "post"){
+        var email = sanitize(req.body.email).trim();
         var password = sanitize(req.body.password).trim();
         try{
             check(email,'Email不能是空的! ').notEmpty();
@@ -39,6 +47,7 @@ exports.login = function(req, res, next){
 		    if(user == null){
 		       res.send('用户名或密码错误!');
 		    }else{
+		       gen_session(user, res);
 		       res.send('1');
 		    }
 		});
@@ -47,9 +56,14 @@ exports.login = function(req, res, next){
 	}
 };
 
+exports.logout = function(req, res, next){
+    res.clearCookie(config.auth_cookie_name, { path: '/' });
+    res.redirect('/');
+};
+
 function gen_session(user,res) {
-  var auth_token = common.encrypt(user.password +'\t' + user.email, config.session_secret);
-  res.cookie(config.auth_cookie_name, auth_token, {path: '/',maxAge: 1000*60*60*24*10}); //cookie 有效期30天      
+  var auth_token = common.encrypt(user.email, config.session_secret);
+  res.cookie(config.auth_cookie_name, auth_token, { expires: new Date(Date.now() + 1000*60*60*2), httpOnly: true }); //cookie 有效期2个小时      
 }
 
 exports.register = function(req, res, next){
@@ -60,6 +74,7 @@ exports.register = function(req, res, next){
 	    	error_msg:"",
 	    	email:"",
             nickname:"",
+            config:config,
             user_config:config.user_config
         });
 	}else if(method == "post"){
@@ -129,7 +144,7 @@ exports.register = function(req, res, next){
 				
 			User.save(user, function(err){
 				if(err) return next(err);
-				    gen_session(user,res);
+				    gen_session(user, res);
 				});
 		    }
 	    });

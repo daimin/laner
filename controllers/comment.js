@@ -11,7 +11,7 @@ var DB = require("../models")
     ,EventProxy = require("eventproxy").EventProxy;
 
     
-var diary_config = {
+var comment_config = {
 	diary_title_size : config.diary_title_size,
 	diary_content_size : config.diary_content_size,
     diary_summary_size : config.diary_summary_size,
@@ -94,7 +94,7 @@ exports.list = function(req, res, next){
 		        res.render('diary/list', {
 		    	title:config.name,
 		    	diarys:diarys,
-	            config:diary_config
+	            comment_config:comment_config
 		    });
 	        
 	        

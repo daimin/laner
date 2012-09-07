@@ -21,7 +21,8 @@ block content-detail
                   a(rel="bookmark",title='链向 #{diary.title} 的链接',href='#{diary._id}/view')  #{diary.title}
                 div.entry-meta
                   span.author.vcard
-                    a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author} 于
+                    a.url.fn.n(title="查看所有由 admin 发布的文章",href="http://localhost/wordpress/?author=1")  #{diary.author}
+                  &nbsp;于
                   a(href="bookmark",title="下午 1:11",href="http://localhost/wordpress/?p=4")
                     span.entry-date #{diary.create_date} 
                     说到

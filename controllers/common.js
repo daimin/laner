@@ -66,3 +66,22 @@ exports.html_entries = function(str){
   s = s.replace(/' '/g,'&nbsp;');
   return s;
 };
+
+
+
+exports.verify = function(req,res){
+    if(config.path_access[req.path] == 1){
+        return true;
+    }
+    if(req.cookies[(config.auth_cookie_name)]){
+        var email = exports.decrypt(req.cookies[(config.auth_cookie_name)],config.session_secret);
+        if(email){
+           return email;
+        }else{
+           res.redirect("/user/login");
+        }
+    }else{
+        res.redirect("/user/login");
+    }
+    return true;
+};

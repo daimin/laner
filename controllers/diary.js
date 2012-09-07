@@ -22,6 +22,7 @@ var diary_config = {
 };
 
 exports.add = function(req, res, next){
+    var loguser = common.verify(req, res);
 	var method = req.method.toLowerCase();
 	if(method == "get"){
 	    res.render('diary/add', {
@@ -30,7 +31,8 @@ exports.add = function(req, res, next){
 	    	content:"",
             summary:"",
 	    	diary_title:"",
-            config:diary_config
+            diary_config:diary_config,
+            config:config
 	    	});
 	}
 	
@@ -164,6 +166,7 @@ exports.add = function(req, res, next){
 
 
 exports.list = function(req, res, next){
+
    var method = req.method.toLowerCase();
 	if(method == "get"){
 	   Diary.find({},{sort:[['create_date', -1]]}).toArray(function(err, diarys){
@@ -180,7 +183,8 @@ exports.list = function(req, res, next){
 		        res.render('diary/list', {
 		    	title:config.name,
 		    	diarys:diarys,
-	            config:diary_config
+	            diary_config:diary_config,
+                config:config
 		    });
 	        
 	        
@@ -234,7 +238,8 @@ exports.view = function(req, res, next){
 		    	title:config.name,
 		    	diary:gdiary,
 		    	comments:comments,
-	            config:diary_config
+	            diary_config:diary_config,
+                config:config
 		      });
            });
        });
