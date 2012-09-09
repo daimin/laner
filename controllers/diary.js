@@ -5,7 +5,7 @@ var DB = require("../models")
     ,config = require('../config').config
     ,check = require('validator').check
     ,sanitize = require('validator').sanitize
-    ,common = require('./common')
+    ,common = require('../utils/common')
     ,fs = require('fs')
     ,path = require('path')
     ,gm = require('gm')
@@ -22,7 +22,8 @@ var diary_config = {
 };
 
 exports.add = function(req, res, next){
-    var loguser = common.verify(req, res);
+    //var loguser = common.verify_auth(req, res);
+    
 	var method = req.method.toLowerCase();
 	if(method == "get"){
 	    res.render('diary/add', {

@@ -54,7 +54,7 @@ exports.config = {
 	        "password":"",
 	        "name":"laner",
 	        "db":"db"
-	        }
+	        };
 	    }
 	    
 	    var generate_mongo_url = function(obj){
@@ -67,7 +67,7 @@ exports.config = {
 	        else{
 	            return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db + "?auto_reconnect=true";
 	        }
-	    }
+	    };
 	    
 	    return generate_mongo_url(mongo);;
 	})(),

@@ -6,7 +6,7 @@ var DB = require("../models")
     ,sanitize = require('validator').sanitize
     ,Validator = require('validator').Validator
     ,check = require('validator').check
-    ,common = require('./common')
+    ,common = require('../utils/common')
     ,fs = require('fs')
     ,path = require('path')
     ,gm = require('gm')
@@ -155,6 +155,7 @@ exports.register = function(req, res, next){
 };
 
 exports.del = function(req, res, next){
+    
     var diary_id = ObjID(req.params.did);
 
     // 先删图片，所以要先查图片的链接

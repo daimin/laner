@@ -1,12 +1,12 @@
 var DB = require("../models")
     ,Diary = DB.Table('Diary')
-    ,common = require('./common')
+    ,common = require('../utils/common')
     ,config = require('../config').config;
 
 var ObjID = DB.ObjID;
 
 exports.index = function(req, res, next){
-    var loguser = common.verify(req, res);
+  //  var loguser = common.verify(req, res);
     
     var method = req.method.toLowerCase();
 	if(method == "get"){
