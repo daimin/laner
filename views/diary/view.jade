@@ -21,11 +21,11 @@ block content-detail
               span.entry-date #{diary.create_date}
           div.content                  
            - if(diary.up_img_thumb){
-                    div.thumbs_block100
-                      a(href='#{diary.up_img_thumb}')
-                        img.entry-img(src='#{diary.up_img_thumb}')
-                  - }
-                  !{diary.content}
+               div.thumbs_block250
+                 a(href='#{diary.up_img}')
+                   img.entry-img(src='#{diary.up_img}')
+           - }
+             !{diary.content}
           div.diary-tail
             div
               div.jiathis_style

@@ -56,7 +56,7 @@ exports.add = function(req, res, next){
 		}
 		
 		if(err_msg != ""){
-		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,config:diary_config});
+		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
 		    return;
 		}
 		// 检验文本的长度
@@ -73,7 +73,7 @@ exports.add = function(req, res, next){
 		}
 		
 		if(err_msg != ""){
-		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,config:diary_config});
+		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
 		    return;
 		}
 		
@@ -83,7 +83,7 @@ exports.add = function(req, res, next){
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
 			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
-			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,config:diary_config});
+			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
 			   return;
 			}
 			
@@ -105,7 +105,7 @@ exports.add = function(req, res, next){
 	        
 	        if(is_allow_img == false){
 			   err_msg += "上传图片类型只能是" + config.allow_img.join(",")+"之一";
-			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,config:diary_config});
+			   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
 	           return;
 	        }
 	        // 指定文件上传后的目录 
@@ -122,7 +122,7 @@ exports.add = function(req, res, next){
              proxy.assign("thumb_img", "img", "del_img", render);
              proxy.once("thumb_img", function (thumb_img) {
                  gm(tmp_path)
-	             .resize(config.img_size.thumb, config.img_size.thumb, '%')
+	             .resize(config.img_size.thumb, config.img_size.thumb)
 	             .write(full_img_path_thumb, function(err){
 	                    if (err) return console.dir(arguments);
 	                    proxy.trigger('img');
@@ -130,7 +130,7 @@ exports.add = function(req, res, next){
              });
              proxy.once("img", function (img) {
                  gm(tmp_path)
-	             .resize(config.img_size.cont, config.img_size.cont, '%')
+	             .resize(config.img_size.cont, config.img_size.cont)
 	             .write(full_img_path, function(err){
 	                if (err) return console.dir(arguments);
 	                proxy.trigger('del_img');
@@ -210,6 +210,8 @@ exports.view = function(req, res, next){
 	       Diary.findOne({"_id":diary_id}, function(err, diary){
 	           diary.create_date = common.dateFormat(diary.create_date);
                diary.edit_date = common.dateFormat(diary.edit_date);
+               diary.up_img_thumb = config.diary_url + diary.up_img_thumb;
+               diary.up_img = config.diary_url + diary.up_img;
                gdiary = diary;
                if(err) return next(err);
                proxy.trigger('get_comment_list');

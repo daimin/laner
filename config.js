@@ -94,9 +94,9 @@ exports.config = {
 	diary_url : '/images/upload/',
 	allow_img:['.png','.gif','.jpg'],
 	img_size : {
-	   thumb :80,
-	   cont  :400,
-	   header:40,
+	   thumb :100,
+	   cont  :250,
+	   header:48,
 	},
 	// 日志类型(公开，私密)
 	diary_type:{

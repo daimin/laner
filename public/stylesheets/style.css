@@ -38,15 +38,15 @@
 }
 
 .thumbs_block250{
-    width: 250px;
-	height: 250px;
-	float:left;
+    max-width: 250px;
+	max-height: 250px;
 	margin-right:6px;
 	margin-button:6px;
+	float:left;
 }
 .thumbs_block250 a {
-	width: 250px;
-	height: 250px;
+	max-width: 250px;
+	max-height: 250px;
 	display: block;
 	position:relative;
 	overflow: hidden;
@@ -247,6 +247,7 @@ body.page .edit-link {
   border-bottom:1px solid #ddd;
   margin-bottom:12px;
   padding-bottom:12px;
+  min-height:250px;
 }
 
 .diary-tail{
