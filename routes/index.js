@@ -6,7 +6,7 @@ var diary = require('../controllers/diary')
     ,site = require('../controllers/site')
     ,comment = require('../controllers/comment')
     ,user = require('../controllers/user')
-    ,comment = require('../utils/common').filter;
+    ,filter = require('../utils/common').filter;
 
 exports.index = function(req, res){
 };
@@ -22,6 +22,7 @@ exports = module.exports = function(app){
 	// 参数1是GET的URL地址
 	// 参数2是控制器地址
 	//过滤这些个路径，进行权限控制
+	
 	var maps = [
 	{
 	   path:"/",
@@ -29,18 +30,71 @@ exports = module.exports = function(app){
 	   method:'get'
 	},
 	{
-	   path:"/",
-	   ctrl:site.index,
+	   path:"/diary/add",
+	   ctrl:diary.add,
 	   method:'get'
 	},
+	{
+	   path:"/diary/add",
+	   ctrl:diary.add,
+	   method:'post'
+	},
+	{
+	   path:"/diary/list",
+	   ctrl:diary.list,
+	   method:'get'
+	},
+	{
+	   path:"/diary/:did",
+	   ctrl:diary.list,
+	   method:'get'
+	},
+	{
+	   path:"/diary/:did/del",
+	   ctrl:diary.del,
+	   method:'get'
+	},
+	{
+	   path:"/diary/:did/view",
+	   ctrl:diary.view,
+	   method:'get'
+	},
+	{
+	   path:"/comment/add",
+	   ctrl: comment.add,
+	   method:'post'
+	},
+	{
+	   path:"/user/login",
+	   ctrl: user.login,
+	   method:'post'
+	},
+	{
+	   path:"/user/login",
+	   ctrl: user.login,
+	   method:'get'
+	},
+	{
+	   path:"/user/register",
+	   ctrl:user.register,
+	   method:'get'
+	},
+	{
+	   path:"/user/register",
+	   ctrl:user.register,
+	   method:'post'
+	},
+	{
+	   path:"/user/logout",
+	   ctrl:user.logout,
+	   method:'get'
+	}
 	];
 	
-	filter(app,maps,req,res,next){
-	};
-	app.get('/', function(req,res,next){
-	console.log('21312312');
-	site.index(req ,res, next);
-	});
+	filter(app, maps);
+	
+	/*
+	app.get('/', function(req,res,next){console.log('1231221dd');site.index(req,res,next)});
 	app.get('/diary/add', diary.add);
 	app.post('/diary/add', diary.add);
 	app.get('/diary/list', diary.list);
@@ -53,5 +107,7 @@ exports = module.exports = function(app){
     app.get('/user/register', user.register);
     app.post('/user/register', user.register);
     app.get('/user/logout', user.logout);
+    */
+    
 };
 

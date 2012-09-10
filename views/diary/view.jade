@@ -19,7 +19,13 @@ block content-detail
               a(href='javascript:void(0)') #{diary.author}
               &nbsp;&nbsp;
               span.entry-date #{diary.create_date}
-          div.content !{diary.content}
+          div.content                  
+           - if(diary.up_img_thumb){
+                    div.thumbs_block100
+                      a(href='#{diary.up_img_thumb}')
+                        img.entry-img(src='#{diary.up_img_thumb}')
+                  - }
+                  !{diary.content}
           div.diary-tail
             div
               div.jiathis_style
@@ -62,7 +68,7 @@ block content-detail
                 div.controls
                   textarea.input-xlarge(id="comment",name="comment",placeholder="发表你的评论",style="width:98%;height:80px;")
                 button.btn.btn-success(type="submit") 发表评论
-                span.small.help-inline 字数控制在#{comment_config.comment_size[0]}到#{comment_config.comment_size[1]}个之间
+                span.small.help-inline 字数控制在#{diary_config.comment_size[0]}到#{diary_config.comment_size[1]}个之间
 
       div.span4
         div.panel

@@ -2,9 +2,9 @@
  * config
  */
 exports.config = {
-	name: '晓知+',
+	name       : '晓知+',
 	description: 'Diary',
-	version: '0.0.1',
+	version    : '0.0.1',
 	// 配置网站头部
 	site_headers:
 	{
@@ -15,8 +15,8 @@ exports.config = {
 	   {name:"关注日记",url:"javascript:void(0)"},
 	   ],
 	drop_down:{
-	    name:"更多选项",
-	    item:[
+	    name :"更多选项",
+	    item :[
 	    {name:"注册",url:"/user/register"},
 	    {name:"登录",url:"/user/login"},
 	    ]
@@ -26,16 +26,18 @@ exports.config = {
 		'<meta name="description" content="laner diary">'
 	]
 	},
+	ACCESS_PUBLIC : 1,
+	ACCESS_VERIFY : 2,
 	// 路径的访问权限，1表示公共访问，2代表注册用户才能访问,3代表管理员才能访问
 	path_access:
 	{
-	"/":1,
-	"/diary/add":2,
-	"/diary/view":1,
-	"/diary/list":1,
-	"/user/login":1,
-	"/user/register":1,
-	"/comment/add":1,
+		"/"              : 1,
+		"/diary/add"     : 2,
+		"/diary/view"    : 1,
+		"/diary/list"    : 1,
+		"/user/login"    : 1,
+		"/user/register" : 1,
+		"/comment/add"   : 2
 	}
 	,
 	host: '', // host 结尾不要添加'/'
@@ -71,20 +73,20 @@ exports.config = {
 	    
 	    return generate_mongo_url(mongo);;
 	})(),
-	session_secret: 'WOWILOVEYOU',
+	session_secret  : 'WOWILOVEYOU',
 	auth_cookie_name: 'laner_diary',
-	port: 3000,
+	port            : 3000,
 	
 	// admin 可删除话题，编辑标签
-	admins: { admin: true },
+	admins    : { admin: true },
 	// 上传临时目录
 	upload_dir:"./upload",
 	
 	// 日记配置
-	diary_title_size : [2,40],
+	diary_title_size   : [2,40],
 	diary_content_size : [2,4000],
     diary_summary_size : [2,400],
-    comment_size : [2,2000],
+    comment_size       : [2,2000],
 	diary_img_size : 512 * 1024,
 	// 上传日记说明图片的目录
 	diary_img : '/public/images/upload/',
@@ -92,8 +94,8 @@ exports.config = {
 	diary_url : '/images/upload/',
 	allow_img:['.png','.gif','.jpg'],
 	img_size : {
-	   thumb:80,
-	   cont:400,
+	   thumb :80,
+	   cont  :400,
 	   header:40,
 	},
 	// 日志类型(公开，私密)
@@ -104,10 +106,10 @@ exports.config = {
 	// 首页日志的内容显示字数
 	diary_size:120,
 	user_config:{
-	    email_size:[8,80],
+	    email_size   :[8,80],
 	    nickname_size:[4,40],
 	    password_size:[2,20],
-	    avatar_size:128*1024
+	    avatar_size  :128*1024
 	}
 	
 };

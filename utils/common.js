@@ -1,5 +1,8 @@
 var crypto = require('crypto')
-    ,config = require('../config').config;
+    ,config = require('../config').config
+    ,site = require('../controllers/site');
+    
+    
 exports.encrypt = function(str,secret) {
    var cipher = crypto.createCipher('aes192', secret);
    var enc = cipher.update(str,'utf8','hex');
@@ -97,25 +100,57 @@ exports.verify_auth = function(req,res){
 /**
   过滤路径
 */
-exports.filter = function(req, res){
-    if(config.path_access[req.path] == 1){
-        return true;
-    }
+exports.filter = function(app,maps){
+    var verfiy = function(req,res,next){
+	    var pass = false;
+	    if(config.path_access[req.path] == config.ACCESS_VERIFY){
+	        if(req.cookies[(config.auth_cookie_name)]){
+	            var email = null;
+	            try{
+	                email = exports.decrypt(req.cookies[(config.auth_cookie_name)],config.session_secret);
+	            }catch(e){
+	                console.log(e.message);
+	            }
+	            
+	            if(email){
+	                pass = true;
+	            }
+	        }
+	    }else{
+	        pass = true;
+	    }
+	    return pass;
+    };
     
-    if(req.cookies[(config.auth_cookie_name)]){
-       var email = null;
-       try{
-        email = exports.decrypt(req.cookies[(config.auth_cookie_name)],config.session_secret);
-       }catch(e){
-          console.log(e.message);
-       }
-        if(email){
-           return email;
-        }else{
-           res.redirect("/user/login");
+    var get_ctrl_func = function(path, method){
+        method = method.toLowerCase();
+       // 示例url /diary/add 或者/comment/add以及/diary/2131232dfsddsds/view
+        for(var i = 0, len = maps.length;i < len; i++){
+            var objm = maps[i];
+            if(path == objm.path && method == objm.method){
+                return objm.ctrl;
+            }else if(path != objm.path && method == objm.method){
+                var ps = path.split('/');
+                var ops = objm.path.split('/');
+                
+                if(ps[1] == ops[1] && ps[ps.length - 1] == ops[ops.length - 1]){
+                    return objm.ctrl;
+                }
+            }
         }
-    }else{
-        res.redirect("/user/login");
+    };
+    
+    for(var i = 0, len = maps.length;i < len; i++){
+        var objm = maps[i];
+        app[objm.method](objm.path, function(req,res,next){
+            if(verfiy(req, res, next)){
+                get_ctrl_func(req.path, req.method)(req,res,next);
+            }else{
+                res.redirect('user/login');
+            }
+          
+        });
+        
     }
-    return true;
+   
 };

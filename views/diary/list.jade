@@ -27,7 +27,7 @@ block content-detail
                     span.entry-date #{diary.create_date} 
                     说到
                   div.entry-content
-                  - if(diary.up_img){
+                  - if(diary.up_img_thumb){
                     div.thumbs_block100
                       a(href='#{diary.up_img_thumb}')
                         img.entry-img(src='#{diary.up_img_thumb}')

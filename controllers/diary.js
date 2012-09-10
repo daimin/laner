@@ -221,16 +221,6 @@ exports.view = function(req, res, next){
 	           if(err) return next(err);
 	           for(var i = 0 ; i < comments.length;i++){
 	               comments[i].comment_date = common.dateFormat(comments[i].comment_date);
-	               /*
-	               if(i == 0){
-	                  comments[i].floor = "沙发";
-	               }else if(i == 1){
-	                  comments[i].floor = "板凳";
-	               }else if(i == 2){
-	                  comments[i].floor = "地板";
-	               }else{
-	                  comments[i].floor = (i + 1) + "楼";
-	               }*/
 	               comments[i].floor = "#" + (i + 1);
 	               
 	           }
