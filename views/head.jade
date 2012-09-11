@@ -17,18 +17,12 @@ block content
             - })
         form.navbar-form.pull-left
           input.search-query.span3(type="text",placeholder="Search")
-        ul.nav.pull-right
-          li.dropdown
-            a.dropdown-toggle(data-toggle="dropdown",href="#") 设置
-              b.caret
-            ul.dropdown-menu
+        div.nav-collapse
+          ul.nav.pull-right
+            - config.site_headers.right_menu.menu_item.forEach(function(menu){
               li
-                a(href="/user/login") 登录
-              li.divider
-              li
-                a(href="/user/register") 注册
-              li
-                a(href="/user/logout") 注销
+                a(href='!{menu.url}') !{menu.name}
+            - })
   block content-detail
           
 

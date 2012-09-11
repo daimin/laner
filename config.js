@@ -14,12 +14,17 @@ exports.config = {
 	   {name:"所有日记",url:"/diary/list"},
 	   {name:"关注日记",url:"javascript:void(0)"},
 	   ],
-	drop_down:{
-	    name :"更多选项",
-	    item :[
+	right_menu:{
+	    nologin_item :[
 	    {name:"注册",url:"/user/register"},
 	    {name:"登录",url:"/user/login"},
-	    ]
+	    ],
+	    login_item :[
+	    {name:"设置",url:"/user/setting"},
+	    {name:"注销",url:"/user/logout"},
+	    ],
+	    menu_item:[]
+	    
 	},
 	meta: [
 		'<meta name="author" content="vagasnail@gmail.com">',

@@ -1,6 +1,10 @@
 var crypto = require('crypto')
     ,config = require('../config').config
-    ,site = require('../controllers/site');
+    ,site = require('../controllers/site')
+    ,DB = require("../models")
+    ,User = DB.Table('User')
+    ,ObjID = DB.ObjID
+    ,EventProxy = require("eventproxy").EventProxy;
     
     
 exports.encrypt = function(str,secret) {
@@ -95,6 +99,48 @@ exports.verify_auth = function(req,res){
         res.redirect("/user/login");
     }
     return true;
+};
+
+
+exports.userinfo = function(req, callback){
+    var proxy = new EventProxy();
+    var render = function (get_user, user){
+        // 这里可以加入更多的代码 //
+        
+        do_with_right_menu(user);
+        ////
+        callback(user);
+    };
+    proxy.assign("get_user", "callback", render);
+    proxy.once("get_user",function(get_user){
+        try{
+            if(req.cookies[(config.auth_cookie_name)]){
+                var email = exports.decrypt(req.cookies[(config.auth_cookie_name)], config.session_secret);
+                if(email){
+	                User.findOne({"email":email}, function(err, user){
+	                    if(err) return next(err);
+                        proxy.trigger('callback', user);
+	                });   
+	            }
+	        }else{
+	           proxy.trigger('callback');
+	        }
+	    }catch(e){
+	        console.log(e.message);
+	    }
+	   
+    });
+    
+    proxy.trigger('get_user');
+};
+
+var do_with_right_menu = function(user){
+   if(user && user.email.length > 0){
+      config.site_headers.right_menu.menu_item = config.site_headers.right_menu.login_item;	
+	    
+	}else{
+	  config.site_headers.right_menu.menu_item = config.site_headers.right_menu.nologin_item;	
+	}
 };
 
 /**

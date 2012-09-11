@@ -77,6 +77,8 @@ exports.add = function(req, res, next){
 		    return;
 		}
 		
+		var proxy = new EventProxy();
+		
 		var target_path = "";
         var target_path_thumb = "";
 		if(req.files.up_img.size > 0){
@@ -116,10 +118,10 @@ exports.add = function(req, res, next){
 
 	        // 上传后上传两张图片
              
-             var proxy = new EventProxy();
+             
              var render = function (thumb_img, img, del_img){
              };
-             proxy.assign("thumb_img", "img", "del_img", render);
+             proxy.assign("thumb_img", "img", "del_img","save", render);
              proxy.once("thumb_img", function (thumb_img) {
                  gm(tmp_path)
 	             .resize(config.img_size.thumb, config.img_size.thumb)
@@ -139,28 +141,38 @@ exports.add = function(req, res, next){
              proxy.once("del_img", function (del_img) {
                 fs.unlink(tmp_path, function(err) {
 		            if (err) throw err;
+		            proxy.trigger('save');
 		        });
              });
              proxy.trigger('thumb_img');
+        }else{
+           
+             var render = function (thumb_img, img, del_img){
+             };
+             proxy.assign("save", render);
+             proxy.trigger('save');
         }
+        
+        proxy.once("save",function(save){
+	        //保存日志
+			var diary = {};
+			diary.title = title;
+			diary.content = content;
+	        diary.summary = summary;
+			diary.create_date = new Date();
+			diary.edit_date = new Date();
+			diary.weather = weather;
+			diary.up_img = target_path;
+			diary.up_img_thumb = target_path_thumb;
+			diary.author = 'daimin';
+			diary.type = diary_type;
+			
+			Diary.save(diary, function(err){
+			    if(err) return next(err);
+			    res.redirect('diary/list');
+			});
+        });
 
-        //保存日志
-		var diary = {};
-		diary.title = title;
-		diary.content = content;
-        diary.summary = summary;
-		diary.create_date = new Date();
-		diary.edit_date = new Date();
-		diary.weather = weather;
-		diary.up_img = target_path;
-		diary.up_img_thumb = target_path_thumb;
-		diary.author = 'daimin';
-		diary.type = diary_type;
-		
-		Diary.save(diary, function(err){
-		    if(err) return next(err);
-		    res.redirect('diary/list');
-		});
 	}
 	
 };
