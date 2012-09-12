@@ -300,3 +300,32 @@ body.page .edit-link {
   padding-right:10px;
   color:#aaaaff;
 }
+.user-nickname{
+	margin-left:24px;
+	font-size:large;
+	display: inline;
+	color: #444;
+}
+.userinfo{
+	line-height:18px;
+	height: 18px;
+	padding-top:6px;
+	padding-left: 12px;
+}
+.ann_h1{
+	color:#005580;
+	font-size: large;
+	font-weight:bold;
+	padding-bottom: 6px;
+	
+}
+.ann_h2{
+	color:#005580;
+	padding-bottom: 6px;
+}
+
+span .number{
+
+	color:#444;
+	padding-right: 3px;
+}

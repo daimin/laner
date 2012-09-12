@@ -5,8 +5,8 @@ block content-detail
     div.row.show-grid
       div.span8
         div.row.panel
-          h2 公告区
-          h3 公告还有广告就加在这里
+          div.ann_h1 !{config.announcement.h1}
+          div.ann_h2 !{config.announcement.h2}
         div.row.panel
           div.row
           - if (diarys.length)
@@ -29,11 +29,13 @@ block content-detail
                 - } 
                 !{diary.summary}
               div.entry-utility.pull-right
-                span.comments-link
-                  a(title='《#{diary.title}》上的评论",href="http://localhost/wordpress/?p=4#respond") 0回应
+                span.edit-link 
+                  span.number 12
+                  查看
                 span.meta-sep |
-                span.edit-link
-                  a.post-edit-link(title="编辑文章",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 编辑
+                span.comments-link
+                    span.number 0
+                    回应
                 span.meta-sep |
                 span.edit-link
                   a.post-edit-link(title="阅读全文",href="http://localhost/wordpress/wp-admin/post.php?post=4&amp;action=edit") 阅读全文
@@ -54,18 +56,28 @@ block content-detail
                 li
                   a(href="#") Next
       div.span4
-        form.panel.form-vertical(action='/user/login',method='post',onsubmit='return dologin("/user/login")')
-          div.header 登录
-          div.alert.alert-error#alert-error(style='display:none')
-          i.icon-user
-          &nbsp;
-          input.input-large(type="text",placeholder="Email",name="email",id="email")
-          br
-          i.icon-lock
-          &nbsp;
-          input.input-large(type="password",placeholder="Password",name="password",id="password") 
-          button.btn(type="sumbit") 登录
-          a(href="/user/register") &nbsp;注册
+        - if (!userinfo)
+          form.panel.form-vertical(action='/user/login',method='post',onsubmit='return dologin("/user/login")')
+            div.header 登录
+            div.alert.alert-error#alert-error(style='display:none')
+            i.icon-user
+            &nbsp;
+            input.input-large(type="text",placeholder="Email",name="email",id="email")
+            br
+            i.icon-lock
+            &nbsp;
+            input.input-large(type="password",placeholder="Password",name="password",id="password") 
+            button.btn(type="sumbit") 登录
+            a(href="/user/register") &nbsp;注册
+        - else
+          div.panel
+            img(src='!{config.user_config.avatar_url}!{userinfo.avatar}')
+            div.user-nickname
+              !{userinfo.nickname}
+            div.userinfo
+              !{0} 日记收藏
+            div.userinfo
+              !{0} 关注 &nbsp;&nbsp;     !{0} 粉丝  &nbsp;&nbsp;    !{0} 积分
         div
           div.panel 
             div.header 热门日记

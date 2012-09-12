@@ -24,7 +24,8 @@ exports.index = function(req, res, next){
 		          res.render('index', {
 		    	    title:config.name,
 		    	    config:config,
-		    	    diarys:diarys
+		    	    diarys:diarys,
+		    	    userinfo:user
 		          });
             DB.close();
 

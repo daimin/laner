@@ -114,7 +114,14 @@ exports.config = {
 	    email_size   :[8,80],
 	    nickname_size:[4,40],
 	    password_size:[2,20],
-	    avatar_size  :128*1024
+	    avatar_size  :128*1024,
+	    avatar_url : '/images/avatar/',
+	},
+	// 公告配置，h1，为大标题，h2,次之，总是都是标题
+	announcement:{
+	  h1:"晓知+日记终于快上线",
+	  h2:"可惜没有钱买VPS啊，哪位大大捐献点米米。",
+	  h3:"",
 	}
 	
 };
