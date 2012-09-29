@@ -157,7 +157,7 @@ textarea {
 
 body {
   margin: 0;
-  font-family: "Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:"Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 18px;
   color: #333333;
@@ -3117,6 +3117,7 @@ input[type="submit"].btn.btn-mini {
   margin-bottom: 18px;
   margin-left: 0;
   list-style: none;
+  font-family:"Josefin Sans","Helvetica Neue",Helvetica,Arial,sans-serif;
 }
 
 .nav > li > a {
