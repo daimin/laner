@@ -147,7 +147,8 @@ var do_with_right_menu = function(user){
   过滤路径
 */
 exports.filter = function(app,maps){
-    var verfiy = function(req,res,next){
+    // 验证用户登录
+    var verfiy_auth = function(req,res,next){
 	    var pass = false;
 	    if(config.path_access[req.path] == config.ACCESS_VERIFY){
 	        if(req.cookies[(config.auth_cookie_name)]){
@@ -189,7 +190,7 @@ exports.filter = function(app,maps){
     for(var i = 0, len = maps.length;i < len; i++){
         var objm = maps[i];
         app[objm.method](objm.path, function(req,res,next){
-            if(verfiy(req, res, next)){
+            if(verfiy_auth(req, res, next)){
                 get_ctrl_func(req.path, req.method)(req,res,next);
             }else{
                 res.redirect('user/login');

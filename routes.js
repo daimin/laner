@@ -93,21 +93,6 @@ exports = module.exports = function(app){
 	
 	filter(app, maps);
 	
-	/*
-	app.get('/', function(req,res,next){console.log('1231221dd');site.index(req,res,next)});
-	app.get('/diary/add', diary.add);
-	app.post('/diary/add', diary.add);
-	app.get('/diary/list', diary.list);
-	app.get('/diary/:did', diary.index);
-	app.get('/diary/:did/del', diary.del);
-	app.get('/diary/:did/view', diary.view);
-    app.post('/comment/add', comment.add);
-    app.post('/user/login', user.login);
-    app.get('/user/login', user.login);
-    app.get('/user/register', user.register);
-    app.post('/user/register', user.register);
-    app.get('/user/logout', user.logout);
-    */
     
 };
 
