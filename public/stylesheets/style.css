@@ -212,7 +212,7 @@ body.page .edit-link {
 }
 
 .header{
-   border-bottom:1px solid #ddd;
+   border-bottom:0px solid #ddd;
    height:24px;
    margin-bottom:12px;
    font-weight:bold;
