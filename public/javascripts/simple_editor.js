@@ -49,7 +49,7 @@ KindEditor.ready(function(K) {
 				K.create('#content', {
 					themeType : 'simple',
 					items : [
-						'bold','italic','underline','code','fontname','fontsize','forecolor','hilitecolor','plug-align','plug-order','plug-indent', 'link'
+						'bold','italic','underline','code','fontname','fontsize','forecolor','hilitecolor','plug-align','plug-order','plug-indent', 'link','image'
 					]
 				});
 			});

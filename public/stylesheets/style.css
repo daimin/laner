@@ -344,3 +344,6 @@ span .number{
 	marginwidth:-100px;
 	align:center;
 }
+.footer{
+    display: block;
+}
