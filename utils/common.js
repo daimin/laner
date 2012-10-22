@@ -1,10 +1,12 @@
-var crypto = require('crypto')
+var sys = require("sys")
+    ,crypto = require('crypto')
     ,config = require('../config').config
     ,site = require('../controllers/site')
     ,DB = require("../models")
     ,User = DB.Table('User')
     ,ObjID = DB.ObjID
-    ,EventProxy = require("eventproxy").EventProxy;
+    ,EventProxy = require("eventproxy").EventProxy
+    ,htmlparser = require("htmlparser");
     
     
 exports.encrypt = function(str,secret) {
@@ -200,4 +202,27 @@ exports.filter = function(app,maps){
         
     }
    
+};
+
+exports.get_summary = function(html){
+   var handler = new htmlparser.DefaultHandler(function(err, dom) {
+	if (err) {
+		sys.debug("Error: " + err);
+	}
+	else {
+	    var getText = function(dom){
+	        console.log(typeof dom);
+	        for(var pk in dom){
+	            var pv = dom[pk];
+	            if(typeof pv == 'object'){
+	            }
+	        }
+	    };
+	    getText(dom);
+		//sys.debug(sys.inspect(dom, false, null));
+		
+	}
+}, { verbose: false });
+var parser = new htmlparser.Parser(handler);
+parser.parseComplete(html);
 };

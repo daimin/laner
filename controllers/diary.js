@@ -40,7 +40,7 @@ exports.add = function(req, res, next){
 	if(method == "post"){
 		var title = sanitize(req.body.title).trim();
 		var content = sanitize(common.html_entries(req.body.content)).xss();
-        var summary = sanitize(req.body.summary).trim();
+        var summary = common.get_summary(content);
         var weather = sanitize(req.body.weather).trim();
         var diary_type = sanitize(req.body.type).trim();
 		var err_msg = "";
