@@ -76,6 +76,12 @@ exports.html_entries = function(str){
   return s;
 };
 
+exports.html_decode = function(html){
+    var s = html.replace('&nbsp;', ' ');
+    s = s.replace('<br/>', '\n');
+    return s;
+};
+
 
 /**
    验证用户是否登录
@@ -204,25 +210,36 @@ exports.filter = function(app,maps){
    
 };
 
-exports.get_summary = function(html){
-   var handler = new htmlparser.DefaultHandler(function(err, dom) {
-	if (err) {
-		sys.debug("Error: " + err);
-	}
-	else {
-	    var getText = function(dom){
-	        console.log(typeof dom);
-	        for(var pk in dom){
-	            var pv = dom[pk];
-	            if(typeof pv == 'object'){
+function get_text_from_html(html){
+    var text = "";
+    var handler = new htmlparser.DefaultHandler(function(err, dom) {
+        if (err) {
+		    text = "";
+        }
+	    else {
+	        var getText = function(dom){
+	            for(var pk in dom){
+	                var pv = dom[pk];
+	                if(typeof pv == 'object'){
+	                    if(pv['type'] == 'tag'){
+	                        getText(pv['children']);
+	                    }else if(pv['type'] == 'text'){
+	                        text += pv['data'];
+	                    }
+	                }
 	            }
-	        }
-	    };
-	    getText(dom);
-		//sys.debug(sys.inspect(dom, false, null));
-		
-	}
-}, { verbose: false });
-var parser = new htmlparser.Parser(handler);
-parser.parseComplete(html);
+	         };
+	         getText(dom);
+	    }
+    }, { verbose: false });
+	var parser = new htmlparser.Parser(handler);
+	parser.parseComplete(html);
+	return exports.html_decode(text);
+}
+
+
+exports.get_summary = function(html){
+    var text = get_text_from_html(html);
+    var len = text.length < config.diary_summary_size[1]?text.size:config.diary_summary_size[1];
+    return text.substring(0, len);
 };

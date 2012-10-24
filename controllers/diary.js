@@ -41,7 +41,6 @@ exports.add = function(req, res, next){
 		var title = sanitize(req.body.title).trim();
 		var content = sanitize(common.html_entries(req.body.content)).xss();
         var summary = common.get_summary(content);
-        var weather = sanitize(req.body.weather).trim();
         var diary_type = sanitize(req.body.type).trim();
 		var err_msg = "";
 		// 检测控制
@@ -67,11 +66,7 @@ exports.add = function(req, res, next){
 		if(content.length < config.diary_content_size[0] || content.length > config.diary_content_size[1]){
 			err_msg += "日志内容的长度必须是" + config.diary_content_size[0] + "到" + config.diary_content_size[1] + "个之间。 ";
 		}
-        
-        if(summary.length < config.diary_summary_size[0] || summary.length > config.diary_summary_size[1]){
-			err_msg += "日志摘要的长度必须是" + config.diary_summary_size[0] + "到" + config.diary_summary_size[1] + "个之间。 ";
-		}
-		
+        		
 		if(err_msg != ""){
 		    res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
 		    return;
@@ -81,7 +76,7 @@ exports.add = function(req, res, next){
 		
 		var target_path = "";
         var target_path_thumb = "";
-		if(req.files.up_img.size > 0){
+		if(req.files.up_img && req.files.up_img.size > 0){
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
 			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
@@ -116,8 +111,7 @@ exports.add = function(req, res, next){
 	        target_path_thumb =  new Date().getTime() + "_thumb" + fileext;
 	        var full_img_path_thumb = config.site_dir + config.diary_img + target_path_thumb;
 
-	        // 上传后上传两张图片
-             
+        // 上传后上传生成两张图片
              
              var render = function (thumb_img, img, del_img){
              };
@@ -161,7 +155,6 @@ exports.add = function(req, res, next){
 	        diary.summary = summary;
 			diary.create_date = new Date();
 			diary.edit_date = new Date();
-			diary.weather = weather;
 			diary.up_img = target_path;
 			diary.up_img_thumb = target_path_thumb;
 			diary.author = 'daimin';

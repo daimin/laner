@@ -2,12 +2,12 @@
  * GET home page.
  */
 
-var diary = require('./controllers/diary')
-    ,site = require('./controllers/site')
-    ,comment = require('./controllers/comment')
-    ,user = require('./controllers/user')
-     , partials = require('express-partials')
-    ,filter = require('./utils/common').filter;
+var  diary       = require('./controllers/diary')
+    ,site       = require('./controllers/site')
+    ,comment    = require('./controllers/comment')
+    ,user       = require('./controllers/user')
+    , partials  = require('express-partials')
+    ,filter     = require('./utils/common').filter;
 
 
 

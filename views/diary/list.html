@@ -1,0 +1,99 @@
+<%- partial("head") %>
+<div class="container">
+  <div class="row show-grid">
+    <div class="row">
+      <div class="span12">
+        <ul class="breadcrumb">
+          <li>
+            <a href="/">首页</a>
+          </li>
+          <span class="divider">/</span>
+          <li class="active">日记列表</li>
+        </ul>
+      </div>
+    </div>
+    
+    <div class="row">
+      <div class="span8">
+        <div class="panel">
+        <!-- 文章内容开始 -->
+         <% 
+          for(var i = 0; i<diarys.length; i++) {
+             var diary = diarys[i];
+         %>
+          <div class="post">
+            <h3 class="entry-title">
+              <a rel="bookmark" title="<%= diary['title'] %>" href="#"><%= diary['title'] %></a>
+            </h3>
+            <div class="entry-meta">
+              <span class="author vcard">
+                <a class="url fn n" title="查看所有admin发布的文章" href="#"><%= diary['author'] %></a>于
+                <a href="bookmark" title="<%= diary['create_date'] %>" href="#">
+                   <span class="entry-date"><%= diary['create_date'] %></span>
+                </a>
+                说到
+              </span>
+            </div>
+            <div class="entry-content">
+              <% if(diary['up_img'] ){ %>
+                 <a href="<%- diary['up_img'] %>"><img class="entry-img" src="<%- diary['up_img'] %>"></a>
+              <%}%>
+              <%- diary['summary'] %>
+            </div>
+            <div class="entry-utility pull-right">
+              <span class="edit-link">
+                <span class="number">12</span> 查看
+              </span>
+              <span class="meta-sep"> | </span>
+              <span class="comments-link"> <span class="number"> 0 </span> 回应 </span>
+              <span class="meta-sep"> | </span>
+              <span class="edit-link">
+                <a class="post-edit-link" title="阅读全文" href="#">阅读全文</a>
+              </span>
+            </div>
+          </div>
+          <div class="ul">&nbsp;</div>
+          <% } %>
+          <!-- 文章内容结束 -->
+          
+           <div class="pagination">
+           <ul>
+          <li><a href="#">Prev</a></li>
+          <li><a href="#">1</a></li>
+          <li><a href="#">2</a></li>
+          <li><a href="#">3</a></li>
+          <li><a href="#">4</a></li>
+          <li><a href="#">Next</a></li>
+          </ul>
+        </div>
+        
+        </div>
+      </div>
+      
+        <div class="span4">
+          <div class="panel">
+            <div class="header">作者</div>
+          </div>
+          
+          <div class="panel">
+            <div class="header">作者其它日志</div>
+          </div>
+          
+          <div class="panel">
+            <div class="header">作者感兴趣的日志</div>
+          </div>
+          
+      </div>
+   
+  
+  </div>
+  <hr/>
+<%- partial("footer") %>
+</div>
+
+
+          
+
+                
+
+    
