@@ -11,7 +11,7 @@
          %>
           <div class="post">
             <h3 class="entry-title">
-              <a rel="bookmark" title="<%= diary['title'] %>" href="#"><%= diary['title'] %></a>
+              <a rel="bookmark" title="<%= diary['title'] %>" href="<%= diary._id %>/view"><%= diary['title'] %></a>
             </h3>
             <div class="entry-meta">
               <span class="author vcard">
@@ -23,8 +23,10 @@
               </span>
             </div>
             <div class="entry-content">
-              <% if(diary['up_img'] ){ %>
-                 <a href="<%- diary['up_img'] %>"><img class="entry-img" src="<%- diary['up_img'] %>"></a>
+              <% if(diary['up_img_thumb'] ){ %>
+                <div class="thumbs_block100">
+                  <a href="<%- diary['up_img_thumb'] %>"><img class="entry-img" src="<%- diary['up_img_thumb'] %>"></a>
+                </div>
               <%}%>
               <%- diary['summary'] %>
             </div>

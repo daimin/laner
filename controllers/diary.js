@@ -72,14 +72,15 @@ exports.add = function(req, res, next){
 		    return;
 		}
 		
-
+        
 		var proxy = new EventProxy();
-		proxy.assign("save", render);
 		
+        
 		var target_path = "";
         var target_path_thumb = "";
-        
+        var no_up_img = true;
 		if(req.files.up_img && req.files.up_img.size > 0){
+		    no_up_img = false;
 		    common.log("Upload img.");
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
@@ -111,51 +112,16 @@ exports.add = function(req, res, next){
 	        }
 	        // 指定文件上传后的目录 
 	        target_path =  new Date().getTime() + fileext;
+	        target_path_thumb = target_path;
 	        var full_img_path = config.site_dir + config.diary_img + target_path;
-	        // target_path_thumb =  new Date().getTime() + "_thumb" + fileext;
-	        // var full_img_path_thumb = config.site_dir + config.diary_img + target_path_thumb;
-	        var full_img_path_thumb = full_img_path;
-	        fs.rename(req.files.up_img.path, full_img_path, function (err) {
+	        
+	        fs.rename(tmp_path, full_img_path, function (err) {
                 if (err) {
                     return next(err);
                 }
                 proxy.trigger('save');
             });
-/* appfog不支持
-        // 上传后上传生成两张图片
-             
-             var render = function (thumb_img, img, del_img){
-             };
-             proxy.assign("thumb_img", "img", "del_img","save", render);
-             proxy.once("thumb_img", function (thumb_img) {
-                 gm(tmp_path)
-	             .resize(config.img_size.thumb, config.img_size.thumb)
-	             .write(full_img_path_thumb, function(err){
-	                    if (err) return console.dir(arguments);
-	                    proxy.trigger('img');
-	             });
-             });
-             proxy.once("img", function (img) {
-                 gm(tmp_path)
-	             .resize(config.img_size.cont, config.img_size.cont)
-	             .write(full_img_path, function(err){
-	                if (err) return console.dir(arguments);
-	                proxy.trigger('del_img');
-	             });
-             });
-             proxy.once("del_img", function (del_img) {
-                fs.unlink(tmp_path, function(err) {
-		            if (err) throw err;
-		            proxy.trigger('save');
-		        });
-             });
-             proxy.trigger('thumb_img');
-*/
-        }else{
-             common.log("No upload img.");
-             proxy.trigger('save');
         }
-        
         proxy.once("save",function(save){
             common.log("Save diary.");
 	        //保存日志
@@ -175,19 +141,21 @@ exports.add = function(req, res, next){
 			    res.redirect('diary/list');
 			});
         });
-
+        
+        if(no_up_img) {
+            proxy.trigger('save');
+        }
 	}
 	
 };
 
 
 exports.list = function(req, res, next){
-
+   common.log('Get diary list.');
    var method = req.method.toLowerCase();
 	if(method == "get"){
 	   Diary.find({},{sort:[['create_date', -1]]}).toArray(function(err, diarys){
 	        if(err) return next(err);
-	            // console.log(diarys);
 	            for(var i = 0 ; i < diarys.length;i++){
 	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
 	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);

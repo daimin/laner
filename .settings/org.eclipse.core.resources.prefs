@@ -1,5 +1,7 @@
-#Thu Oct 11 22:28:06 CST 2012
+#Mon Oct 29 23:10:37 CST 2012
 eclipse.preferences.version=1
+encoding//views/diary/add.html=UTF-8
+encoding//views/diary/list.html=UTF-8
 encoding//views/index.html=UTF-8
 encoding//views/index.jade=UTF-8
 encoding/<project>=UTF-8

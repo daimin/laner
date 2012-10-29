@@ -2646,14 +2646,14 @@ input[type="button"].btn-block {
 .btn-primary {
   color: #ffffff;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #26e611;
-  background-image: -moz-linear-gradient(top, #29ef13, #23890f);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#29ef13), to(#23890f));
-  background-image: -webkit-linear-gradient(top, #29ef13, #23890f);
-  background-image: -o-linear-gradient(top, #29ef13, #23890f);
-  background-image: linear-gradient(to bottom, #29ef13, #23890f);
+  background-color: #26B611;
+  background-image: -moz-linear-gradient(top, #26B611, #23890f);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#26B611), to(#23890f));
+  background-image: -webkit-linear-gradient(top, #26B611, #23890f);
+  background-image: -o-linear-gradient(top, #26B611, #23890f);
+  background-image: linear-gradient(to bottom, #26B611, #23890f);
   background-repeat: repeat-x;
-  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff29ef13', endColorstr='#ff23890f', GradientType=0);
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff26B611', endColorstr='#ff23890f', GradientType=0);
   border-color: #23890f #23890f #23890f;
   border-color: rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.1) rgba(0, 0, 0, 0.25);
   *background-color: #23890f;

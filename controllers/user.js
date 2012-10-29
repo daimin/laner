@@ -9,7 +9,6 @@ var DB = require("../models")
     ,common = require('../utils/common')
     ,fs = require('fs')
     ,path = require('path')
-    ,gm = require('gm')
     ,EventProxy = require("eventproxy").EventProxy;
 
 exports.login = function(req, res, next){
