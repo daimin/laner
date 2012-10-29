@@ -42,6 +42,13 @@ exports.randomString = function (size) {
   return new_pass;
 };
 
+exports.log = function(info){
+    if(config.DEBUG == true){
+       info += '\t' + exports.dateFormat(new Date());
+       console.log(info+'\n');
+    }
+};
+
 exports.dateFormat = function(cd){
    if(cd){
       var m = (cd.getMonth()+1);

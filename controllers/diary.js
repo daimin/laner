@@ -8,7 +8,6 @@ var DB = require("../models")
     ,common = require('../utils/common')
     ,fs = require('fs')
     ,path = require('path')
-    ,gm = require('gm')
     ,EventProxy = require("eventproxy").EventProxy;
 
 var diary_config = {
@@ -38,6 +37,7 @@ exports.add = function(req, res, next){
 	}
 	
 	if(method == "post"){
+	    common.log("Add diary post begin.");
 		var title = sanitize(req.body.title).trim();
 		var content = sanitize(common.html_entries(req.body.content)).xss();
         var summary = common.get_summary(content);
@@ -72,11 +72,15 @@ exports.add = function(req, res, next){
 		    return;
 		}
 		
+
 		var proxy = new EventProxy();
+		proxy.assign("save", render);
 		
 		var target_path = "";
         var target_path_thumb = "";
+        
 		if(req.files.up_img && req.files.up_img.size > 0){
+		    common.log("Upload img.");
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
 			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
@@ -108,9 +112,16 @@ exports.add = function(req, res, next){
 	        // 指定文件上传后的目录 
 	        target_path =  new Date().getTime() + fileext;
 	        var full_img_path = config.site_dir + config.diary_img + target_path;
-	        target_path_thumb =  new Date().getTime() + "_thumb" + fileext;
-	        var full_img_path_thumb = config.site_dir + config.diary_img + target_path_thumb;
-
+	        // target_path_thumb =  new Date().getTime() + "_thumb" + fileext;
+	        // var full_img_path_thumb = config.site_dir + config.diary_img + target_path_thumb;
+	        var full_img_path_thumb = full_img_path;
+	        fs.rename(req.files.up_img.path, full_img_path, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                proxy.trigger('save');
+            });
+/* appfog不支持
         // 上传后上传生成两张图片
              
              var render = function (thumb_img, img, del_img){
@@ -139,15 +150,14 @@ exports.add = function(req, res, next){
 		        });
              });
              proxy.trigger('thumb_img');
+*/
         }else{
-           
-             var render = function (thumb_img, img, del_img){
-             };
-             proxy.assign("save", render);
+             common.log("No upload img.");
              proxy.trigger('save');
         }
         
         proxy.once("save",function(save){
+            common.log("Save diary.");
 	        //保存日志
 			var diary = {};
 			diary.title = title;
