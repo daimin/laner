@@ -2,57 +2,9 @@
     padding-top: 60px;
     padding-bottom: 40px;
 }
-.thumbs_block100{
-    width: 100px;
-	height: 100px;
-	float:left;
-	margin-right:6px;
-	margin-button:6px;
-}
-.thumbs_block100 a {
-	width: 100px;
-	height: 100px;
-	display: block;
-	position:relative;
-	overflow: hidden;
-}
-.thumbs_block100 img {
-	position:relative;
-}
-
-.thumbs_block48{
-    width: 48px;
-	height: 48px;
-	overflow: hidden;
-	float:left;
-}
-.thumbs_block48 a {
-	width: 48px;
-	height: 48px;
-	display: block;
-	position:relative;
-	overflow: hidden;
-}
-.thumbs_block48 img {
-	position:relative;
-}
-
-.thumbs_block250{
-    max-width: 250px;
-	max-height: 250px;
-	margin-right:6px;
-	margin-button:6px;
-	float:left;
-}
-.thumbs_block250 a {
-	max-width: 250px;
-	max-height: 250px;
-	display: block;
-	position:relative;
-	overflow: hidden;
-}
-.thumbs_block250 img {
-	position:relative;
+.nailthumb-container{
+  float:left;
+  margin-right:12px;
 }
 
 .post-edit-link{

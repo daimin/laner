@@ -40,7 +40,7 @@ exports = module.exports = function(app){
 	   method:'post'
 	},
 	{
-	   path:"/diary/list",
+	   path:"/diary/:page/list",
 	   ctrl:diary.list,
 	   method:'get'
 	},

@@ -39,7 +39,8 @@ exports.add = function(req, res, next){
 	if(method == "post"){
 	    common.log("Add diary post begin.");
 		var title = sanitize(req.body.title).trim();
-		var content = sanitize(common.html_entries(req.body.content)).xss();
+		var content = sanitize(req.body.content).xss();
+	
         var summary = common.get_summary(content);
         var diary_type = sanitize(req.body.type).trim();
 		var err_msg = "";
@@ -154,12 +155,14 @@ exports.list = function(req, res, next){
    common.log('Get diary list.');
    var method = req.method.toLowerCase();
 	if(method == "get"){
-	   Diary.find({},{sort:[['create_date', -1]]}).toArray(function(err, diarys){
+	   var pageno = ObjID(req.params.page);
+	   Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
 	        if(err) return next(err);
 	            for(var i = 0 ; i < diarys.length;i++){
 	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
 	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);
-	               if(diarys[i].up_img_thumb){
+	               if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
+	                   
 	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
 	               }
 	               diarys[i].content = diarys[i].summary;
@@ -191,10 +194,15 @@ exports.view = function(req, res, next){
        proxy.assign("get_diary", "get_comment_list","render", render);
 	   proxy.once("get_diary", function (img) {
 	       Diary.findOne({"_id":diary_id}, function(err, diary){
+	           
 	           diary.create_date = common.dateFormat(diary.create_date);
                diary.edit_date = common.dateFormat(diary.edit_date);
-               diary.up_img_thumb = config.diary_url + diary.up_img_thumb;
-               diary.up_img = config.diary_url + diary.up_img;
+               if(diary.up_img_thumb){
+                   diary.up_img_thumb = config.diary_url + diary.up_img_thumb;
+               }
+               if(diary.up_img){
+                   diary.up_img = config.diary_url + diary.up_img;
+               }
                gdiary = diary;
                if(err) return next(err);
                proxy.trigger('get_comment_list');
@@ -205,6 +213,7 @@ exports.view = function(req, res, next){
 	       Comment.find({'diary_id':diary_id},{sort:[['comment_date', 1]]}).toArray(function(err, comments){
 	           if(err) return next(err);
 	           for(var i = 0 ; i < comments.length;i++){
+	              
 	               comments[i].comment_date = common.dateFormat(comments[i].comment_date);
 	               comments[i].floor = "#" + (i + 1);
 	               

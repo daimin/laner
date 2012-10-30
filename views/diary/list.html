@@ -24,7 +24,7 @@
             </div>
             <div class="entry-content">
               <% if(diary['up_img_thumb'] ){ %>
-                <div class="thumbs_block100">
+                <div class="nailthumb-container" style="float:left;">
                   <a href="<%- diary['up_img_thumb'] %>"><img class="entry-img" src="<%- diary['up_img_thumb'] %>"></a>
                 </div>
               <%}%>
@@ -38,7 +38,7 @@
               <span class="comments-link"> <span class="number"> 0 </span> 回应 </span>
               <span class="meta-sep"> | </span>
               <span class="edit-link">
-                <a class="post-edit-link" title="阅读全文" href="#">阅读全文</a>
+                <a class="post-edit-link" title="阅读全文" href="<%= diary._id %>/view">阅读全文</a>
               </span>
             </div>
           </div>
@@ -80,6 +80,13 @@
   <hr/>
 <%- partial("footer") %>
 </div>
+<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
+<script type="text/javascript">
+      jQuery(document).ready(function() {
+          jQuery('.nailthumb-container').nailthumb({width:100,height:100});
+      });
+</script>
 
 
           

@@ -1,0 +1,130 @@
+<%- partial("head") %>
+<div class="container">
+  <div class="row show-grid">    
+    <div class="row">
+      <div class="span8">
+        <div class="panel">
+          <div class="diary-title"><%= diary.title%>
+            <span class="diary-subtitle">
+              来自：&nbsp;<a href="javascript:void(0)"><%= diary.author %>&nbsp;&nbsp;</a>
+              <span class="entry-date"><%= diary.create_date%></span>
+            </span>
+          </div>
+
+          <div class="content">
+          <%
+            if(diary.up_img_thumb && diary.up_img_thumb != ""){
+            %>
+              <div class="nailthumb-container">
+                <a href="<%= diary.up_img%>"><img class="entry-img" src="<%= diary.up_img%>"></a>
+              </div>
+            <%
+            }
+          %>
+          <%- diary.content %>
+          </div>
+          <div class="diary-tail">
+            <div>
+              <div class="jiathis_style">
+                <span class="jiathis_txt">分享到：</span>
+                <a class="jiathis_button_icons_1"></a>
+                <a class="jiathis_button_icons_2"></a>
+                <a class="jiathis_button_icons_3"></a>
+                <a class="jiathis_button_icons_4"></a>
+                <a class="jiathis jiathis_txt jtico jtico_jiathis" href="http://www.jiathis.com/share" target="_blank"></a>
+                <a class="jiathis_counter_style"></a>
+              </div>
+              <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=1334623036661201" charset="utf-8"></script>
+            </div>
+            <div class="pull-right">
+              <a href="javascript:void(0)">
+                <span class="badge badge-warning">&nbsp;喜 欢&nbsp;</span>
+              </a>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <div class="comment">评论 <%= comments.length%>
+            <%
+               if(comments.length){
+            %>
+              <div class="comment-list">
+                <%
+                 comments.forEach(function(comment){
+                    %>
+                      <div class="comment-item row">
+                        <div class="comment-left span1 thumbs_block48">
+                          <a href="javascript:void(0)"><img src="/images/avatar/default.jpg"></a>
+                        </div>
+                        <div class="comment-right span6">
+                          <div class="comment-header">
+                            &nbsp;在 <%= comment.comment_date%>&nbsp;&nbsp;
+                            <a href="javascript:void(0)"><%= comment.commenter%></a>
+                            <span class="comment-floor"><%= comment.floor%></span>
+                          </div>
+                          <div class="comment-cont">
+                            <%= comment.content%>
+                          </div>
+                        </div>
+                      </div>
+                    <%
+                 });
+                %>
+              </div>
+            <%
+               }
+            %>
+          </div>
+          <div class="alert alert-error" id="alert-error" style="display:none;"></div>
+          <form method="POST" action="" onsubmit="return doCommentSubmit('/comment/add');">
+            <fieldset>
+              <input type="hidden" name="action" value="comment">
+              <input type="hidden" name="commenter" id="commenter" value="vagasnail">
+              <input id="diary_id" type="hidden" name="diary_id" value="<%=diary._id%>">
+              <div class="control-group">
+                <div class="controls">
+                  <textarea class="input-xlarge" id="comment" name="comment" placeholder="发表你的评论" style="width:98%;height:80px;"></textarea>
+                </div>
+                <button class="btn btn-success" type="submit">发表评论</button>
+                <span class="smaill help-inline">字数控制在<%= diary_config.comment_size[0]%>到<%= diary_config.comment_size[1]%>个直接</span>
+              </div>
+            </fieldset>
+          </form>
+        </div>
+      </div>
+      
+        <div class="span4">
+          <div class="panel">
+            <div class="header">作者</div>
+          </div>
+          
+          <div class="panel">
+            <div class="header">作者其它日志</div>
+          </div>
+          
+          <div class="panel">
+            <div class="header">作者感兴趣的日志</div>
+          </div>
+          
+      </div>
+   
+  
+  </div>
+  <hr/>
+<%- partial("footer") %>
+</div>
+<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
+<script type="text/javascript">
+      jQuery(document).ready(function() {
+          jQuery('.nailthumb-container').nailthumb({width:250,height:250});
+      });
+</script>
+
+
+          
+
+                
+
+    
