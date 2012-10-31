@@ -5,10 +5,11 @@ var DB = require("../models")
     ,config = require('../config').config
     ,check = require('validator').check
     ,sanitize = require('validator').sanitize
-    ,common = require('../utils/common')
+    ,util = require('../utils/util')
     ,fs = require('fs')
     ,path = require('path')
-    ,EventProxy = require("eventproxy").EventProxy;
+    ,EventProxy = require("eventproxy").EventProxy
+    ,page = require('./page');
 
 var diary_config = {
 	diary_title_size : config.diary_title_size,
@@ -37,11 +38,11 @@ exports.add = function(req, res, next){
 	}
 	
 	if(method == "post"){
-	    common.log("Add diary post begin.");
+	    util.log("Add diary post begin.");
 		var title = sanitize(req.body.title).trim();
 		var content = sanitize(req.body.content).xss();
 	
-        var summary = common.get_summary(content);
+        var summary = util.get_summary(content);
         var diary_type = sanitize(req.body.type).trim();
 		var err_msg = "";
 		// 检测控制
@@ -82,7 +83,7 @@ exports.add = function(req, res, next){
         var no_up_img = true;
 		if(req.files.up_img && req.files.up_img.size > 0){
 		    no_up_img = false;
-		    common.log("Upload img.");
+		    util.log("Upload img.");
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
 			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
@@ -124,7 +125,7 @@ exports.add = function(req, res, next){
             });
         }
         proxy.once("save",function(save){
-            common.log("Save diary.");
+            util.log("Save diary.");
 	        //保存日志
 			var diary = {};
 			diary.title = title;
@@ -152,32 +153,59 @@ exports.add = function(req, res, next){
 
 
 exports.list = function(req, res, next){
-   common.log('Get diary list.');
+   util.log('Get diary list.');
    var method = req.method.toLowerCase();
+   
 	if(method == "get"){
-	   var pageno = ObjID(req.params.page);
-	   Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
+	   var pageno = 1;
+	   if(req.params.page){
+	      pageno = parseInt(req.params.page);
+	   }
+	   var proxy = new EventProxy();
+	   var total_page = 0;
+	   
+	   proxy.once("get_list",function(){
+	       Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
 	        if(err) return next(err);
 	            for(var i = 0 ; i < diarys.length;i++){
-	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
-	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);
+	               diarys[i].create_date = util.dateFormat(diarys[i].create_date);
+	               diarys[i].edit_date = util.dateFormat(diarys[i].edit_date);
 	               if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
 	                   
 	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
 	               }
 	               diarys[i].content = diarys[i].summary;
+	               util.log(diarys[i]);
 	            }
+	            var pageData = page.createPage(pageno, total_page);
+
 		        res.render('diary/list', {
-		    	title:config.name,
-		    	diarys:diarys,
+		    	title       :config.name,
+		    	diarys      :diarys,
 	            diary_config:diary_config,
-                config:config
+                config      :config,
+                pageData    :pageData,
+                req_path    :req.path
 		    });
 	        
 	        
             DB.close();
 
-        });
+           });
+	   });
+	   
+	   proxy.once("get_total",function(){
+	      Diary.find({}).toArray(function(err, diarys){
+	          var total_items = diarys.length;
+	          total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
+	          proxy.trigger('get_list');
+	      });
+	   });
+	   
+	   proxy.trigger('get_total');
+	   
+
+	   
 
 	}
 };
@@ -187,16 +215,14 @@ exports.view = function(req, res, next){
 	if(method == "get"){
 	   var gdiary = null;
 	   var proxy = new EventProxy();
-       var render = function (diary,comments){
-       		
-       };
+
        var diary_id = ObjID(req.params.did);
-       proxy.assign("get_diary", "get_comment_list","render", render);
+      
 	   proxy.once("get_diary", function (img) {
 	       Diary.findOne({"_id":diary_id}, function(err, diary){
 	           
-	           diary.create_date = common.dateFormat(diary.create_date);
-               diary.edit_date = common.dateFormat(diary.edit_date);
+	           diary.create_date = util.dateFormat(diary.create_date);
+               diary.edit_date = util.dateFormat(diary.edit_date);
                if(diary.up_img_thumb){
                    diary.up_img_thumb = config.diary_url + diary.up_img_thumb;
                }
@@ -205,26 +231,40 @@ exports.view = function(req, res, next){
                }
                gdiary = diary;
                if(err) return next(err);
-               proxy.trigger('get_comment_list');
+               proxy.trigger('update_view_num');
           }); 
        });
+       
+       proxy.once("update_view_num", function (img) {
+           var n_view_num = 0;
+           if(gdiary['view_num']){
+               n_view_num = gdiary['view_num'] + 1;
+           }else{
+               n_view_num = 1;
+           }
+           Diary.update({_id:diary_id}, {$set: {view_num : n_view_num}},{},function(err){
+              if(err)  return next(err);
+              proxy.trigger('get_comment_list');
+           });
+       });
+       
        
        proxy.once("get_comment_list", function (img) {
 	       Comment.find({'diary_id':diary_id},{sort:[['comment_date', 1]]}).toArray(function(err, comments){
 	           if(err) return next(err);
 	           for(var i = 0 ; i < comments.length;i++){
 	              
-	               comments[i].comment_date = common.dateFormat(comments[i].comment_date);
+	               comments[i].comment_date = util.dateFormat(comments[i].comment_date);
 	               comments[i].floor = "#" + (i + 1);
 	               
 	           }
 	           
 	           res.render('diary/view', {
-		    	title:config.name,
-		    	diary:gdiary,
-		    	comments:comments,
-	            diary_config:diary_config,
-                config:config
+		    	 title:config.name,
+		    	 diary:gdiary,
+		    	 comments:comments,
+	             diary_config:diary_config,
+                 config:config
 		      });
            });
        });
@@ -235,6 +275,7 @@ exports.view = function(req, res, next){
 };
 
 exports.del = function(req, res, next){
+    util.log(req.params.did);
     var diary_id = ObjID(req.params.did);
 
     // 先删图片，所以要先查图片的链接

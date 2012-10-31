@@ -1,4 +1,5 @@
 <%- partial("head") %>
+<link rel="stylesheet" href="/stylesheets/skins/simple.css"></link>
 <div class="container">
   <div class="row show-grid">    
     <div class="row">
@@ -6,13 +7,22 @@
         <div class="panel">
         <!-- 文章内容开始 -->
          <% 
-          for(var i = 0; i<diarys.length; i++) {
+          for(var i = 0; i < diarys.length; i++) {
              var diary = diarys[i];
+             var view_num = comment_num = 0;
+             
+             if(diary['view_num']){
+                 view_num = diary['view_num'];
+             }
+             
+             if(diary['comment_num']){
+                 comment_num = diary['comment_num'];
+             }
          %>
           <div class="post">
-            <h3 class="entry-title">
-              <a rel="bookmark" title="<%= diary['title'] %>" href="<%= diary._id %>/view"><%= diary['title'] %></a>
-            </h3>
+            <div class="entry-title">
+              <a rel="bookmark" title="<%= diary['title'] %>" href="/diary/<%= diary._id %>/view"><%= diary['title'] %></a>
+            </div>
             <div class="entry-meta">
               <span class="author vcard">
                 <a class="url fn n" title="查看所有admin发布的文章" href="#"><%= diary['author'] %></a>于
@@ -32,30 +42,29 @@
             </div>
             <div class="entry-utility pull-right">
               <span class="edit-link">
-                <span class="number">12</span> 查看
+                <span class="number"><%= view_num%></span> 查看
               </span>
               <span class="meta-sep"> | </span>
-              <span class="comments-link"> <span class="number"> 0 </span> 回应 </span>
+              <span class="comments-link"> <span class="number"> <%= comment_num%> </span> 回应 </span>
               <span class="meta-sep"> | </span>
               <span class="edit-link">
-                <a class="post-edit-link" title="阅读全文" href="<%= diary._id %>/view">阅读全文</a>
+                <a class="post-edit-link" title="编辑文章" href="javascript:void(0)">编辑</a>
+              </span>
+              <span class="meta-sep"> | </span>
+              <span class="edit-link">
+                <a class="post-edit-link" title="删除文章" href="javascript:void(0)" onclick="del_diary('/diary/<%= diary._id %>/del')">删除</a>
+              </span>
+              <span class="meta-sep"> | </span>
+              <span class="edit-link">
+                <a class="post-edit-link" title="阅读全文" href="/diary/<%= diary._id %>/view">阅读全文</a>
               </span>
             </div>
           </div>
           <div class="ul">&nbsp;</div>
           <% } %>
           <!-- 文章内容结束 -->
-          
-           <div class="pagination">
-           <ul>
-          <li><a href="#">Prev</a></li>
-          <li><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li><a href="#">Next</a></li>
-          </ul>
-        </div>
+          <%- partial("page",{pageData:pageData,path:req_path}) %>
+
         
         </div>
       </div>
@@ -82,6 +91,7 @@
 </div>
 <script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.artDialog.js"></script>
 <script type="text/javascript">
       jQuery(document).ready(function() {
           jQuery('.nailthumb-container').nailthumb({width:100,height:100});

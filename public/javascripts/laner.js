@@ -32,7 +32,7 @@ function del_diary(did){
 	art.dialog({
 	    content: '确定删除该篇日志？',
 	    ok: function () {
-	        window.location = did; 
+	        window.location = did;
 	        return false;
 	    },
 	    cancelVal: '取消',

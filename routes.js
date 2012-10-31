@@ -6,8 +6,8 @@ var  diary       = require('./controllers/diary')
     ,site       = require('./controllers/site')
     ,comment    = require('./controllers/comment')
     ,user       = require('./controllers/user')
-    , partials  = require('express-partials')
-    ,filter     = require('./utils/common').filter;
+    ,partials  = require('express-partials')
+    ,filter     = require('./utils/util').filter;
 
 
 
@@ -30,6 +30,11 @@ exports = module.exports = function(app){
 	   method:'get'
 	},
 	{
+	   path:"/:page",
+	   ctrl:site.index,
+	   method:'get'
+	},
+	{
 	   path:"/diary/add",
 	   ctrl:diary.add,
 	   method:'get'
@@ -40,12 +45,12 @@ exports = module.exports = function(app){
 	   method:'post'
 	},
 	{
-	   path:"/diary/:page/list",
+	   path:"/diary/list/:page",
 	   ctrl:diary.list,
 	   method:'get'
 	},
 	{
-	   path:"/diary/:did",
+	   path:"/diary/list",
 	   ctrl:diary.list,
 	   method:'get'
 	},

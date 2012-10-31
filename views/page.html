@@ -1,0 +1,23 @@
+<div class="pagination">
+   <ul>
+   <%
+   var base_path = path;
+   base_path = base_path.substring(0, base_path.lastIndexOf('/'));
+   var pageno = path.substring(path.lastIndexOf('/') + 1);
+   if(isNaN(pageno)){
+      pageno = 1;
+      base_path = path;
+   }
+   
+   pageData.forEach(function(pd){
+       var class_act = "";
+       if(pageno == pd[1]){
+            class_act = 'class="active"';
+       }
+   %>
+       <li <%- class_act %>><a href="<%= base_path+'/'+ pd[1] %>"><%= pd[0]%></a></li>
+   <%
+   });
+   %>
+   </ul>
+</div>

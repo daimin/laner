@@ -3,21 +3,22 @@
   <div class="row show-grid">
     <div class="span8">
       <div class="row panel">
-        <div class="ann_h1"><a href="http://douban.fm/">douban.fm</a></div>
+        <div class="ann_h1"><a href="http://douban.fm/"><%- config.announcement.h1%></a></div>
         <div class="ann_h2">
-        <div class="radio">
-           <iframe src="http://douban.fm/partner/baidu/doubanradio">
-        </iframe>
-        </div>
+          <%- config.announcement.h2%>
         </div>
       </div>
       
       <div class="row panel">
          <!-- 文章内容开始 -->
+         <% 
+          for(var i = 0; i < diarys.length; i++) {
+             var diary = diarys[i];
+         %>
           <div class="post">
-            <h3 class="entry-title">
-              <a rel="bookmark" title="指向我的文章" href="#">指向我的文章</a>
-            </h3>
+            <div class="entry-title">
+              <a rel="bookmark" title="<%= diary['title'] %>" href="/diary/<%= diary._id %>/view"><%= diary['title'] %></a>
+            </div>
             <div class="entry-meta">
               <span class="author vcard">
                 <a class="url fn n" title="查看所有admin发布的文章" href="#">admin</a>于
@@ -28,13 +29,14 @@
               </span>
             </div>
             <div class="entry-content">
-              <!-- <a href="#"><img class="entry-img" src="#"></a> -->
-              我去我去我去我去我去我去我去我去我去我去我去我去我去我去
-              我去我去我去我去我去我去我去我去我去我去我去我去我去我去
-              我去我去我去我去我去我去我去我去我去我去我去我去我去我去
-              我去我去我去我去我去我去我去我去我去我去我去我去我去我去
+              <% if(diary['up_img_thumb'] ){ %>
+                <div class="nailthumb-container" style="float:left;">
+                  <a href="<%- diary['up_img_thumb'] %>"><img class="entry-img" src="<%- diary['up_img_thumb'] %>"></a>
+                </div>
+              <%}%>
+              <%- diary['summary'] %>
             </div>
-            <div class="entry-utility pull-right">
+           <div class="entry-utility pull-right">
               <span class="edit-link">
                 <span class="number">12</span> 查看
               </span>
@@ -42,22 +44,14 @@
               <span class="comments-link"> <span class="number"> 0 </span> 回应 </span>
               <span class="meta-sep"> | </span>
               <span class="edit-link">
-                <a class="post-edit-link" title="阅读全文" href="#">阅读全文</a>
+                <a class="post-edit-link" title="阅读全文" href="/diary/<%= diary._id %>/view">阅读全文</a>
               </span>
             </div>
           </div>
+          <% } %>
           <!-- 文章内容结束 -->
           <div class="ul"></div>
-           <div class="pagination">
-           <ul>
-          <li><a href="#">Prev</a></li>
-          <li><a href="#">1</a></li>
-          <li><a href="#">2</a></li>
-          <li><a href="#">3</a></li>
-          <li><a href="#">4</a></li>
-          <li><a href="#">Next</a></li>
-          </ul>
-        </div>
+           <%- partial("page",{pageData:pageData,path:req_path}) %>
           </div>
     </div>
     <div class="span4">
@@ -91,6 +85,14 @@
   <hr/>
 <%- partial("footer") %>
 </div>
+
+<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
+<script type="text/javascript">
+      jQuery(document).ready(function() {
+          jQuery('.nailthumb-container').nailthumb({width:100,height:100});
+      });
+</script>
 
 
           

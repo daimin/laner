@@ -117,15 +117,16 @@ exports.config = {
 	    avatar_size  :128*1024,
 	    avatar_url : '/images/avatar/',
 	},
+	INDEX_ITEM_SIZE : 100,
 	// 公告配置，h1，为大标题，h2,次之，总是都是标题
 	announcement:{
-	  h1:"晓知+日记终于快上线",
-	  h2:"可惜没有钱买VPS啊，哪位大大捐献点米米。",
+	  h1:"douban.fm",
+	  h2:'<div class="radio"><iframe src="http://douban.fm/partner/baidu/"></iframe></div>',
 	  h3:"",
 	},
 	// 程序是否是调试模式
 	DEBUG:true,
-	PAGE_SIZE:20,
+	PAGE_SIZE:10,
 	
 };
 

@@ -6,7 +6,7 @@ var DB = require("../models")
     ,sanitize = require('validator').sanitize
     ,Validator = require('validator').Validator
     ,check = require('validator').check
-    ,common = require('../utils/common')
+    ,util = require('../utils/util')
     ,fs = require('fs')
     ,path = require('path')
     ,EventProxy = require("eventproxy").EventProxy;
@@ -41,7 +41,7 @@ exports.login = function(req, res, next){
             res.send(e.message);
         }
 		
-		User.findOne({"email":email,"password":common.md5(password)}, function(err, user){
+		User.findOne({"email":email,"password":util.md5(password)}, function(err, user){
 		    if(err) return next(err);
 		    if(user == null){
 		       res.send('用户名或密码错误!');
@@ -61,7 +61,7 @@ exports.logout = function(req, res, next){
 };
 
 function gen_session(user,res) {
-  var auth_token = common.encrypt(user.email, config.session_secret);
+  var auth_token = util.encrypt(user.email, config.session_secret);
   res.cookie(config.auth_cookie_name, auth_token, { expires: new Date(Date.now() + 1000*60*60*2), httpOnly: true }); //cookie 有效期2个小时      
 }
 
@@ -129,14 +129,14 @@ exports.register = function(req, res, next){
         }catch(e){
             res.send(e.message);
         }
-	   User.findOne({"email":email,"password":common.md5(password)}, function(err, user){
+	   User.findOne({"email":email,"password":util.md5(password)}, function(err, user){
 	   if(user != null){
 		        res.send('邮箱已存在，请登录');
 		}else{
 		        //保存日志
 			var user = {};
 			user.email = email;
-			user.password = common.md5(password);
+			user.password = util.md5(password);
 		    user.nickname = nickname;
 			user.reg_date = new Date();
 			user.avatar = "default.jpg";

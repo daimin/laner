@@ -1,10 +1,11 @@
 var DB = require("../models")
     ,Comment = DB.Table('Comment')
+    ,Diary = DB.Table('Diary')
     ,ObjID = DB.ObjID
     ,config = require('../config').config
     ,check = require('validator').check
     ,sanitize = require('validator').sanitize
-    ,common = require('../utils/common')
+    ,util = require('../utils/util')
     ,fs = require('fs')
     ,path = require('path')
     ,EventProxy = require("eventproxy").EventProxy;
@@ -23,8 +24,8 @@ var comment_config = {
 
 function view_diary(did){
 	Diary.findOne({"_id":diary_id}, function(err, diary){
-	    diary.create_date = common.dateFormat(diary.create_date);
-        diary.edit_date = common.dateFormat(diary.edit_date);
+	    diary.create_date = util.dateFormat(diary.create_date);
+        diary.edit_date = util.dateFormat(diary.edit_date);
         if(err) return next(err);
         return diary;
     });
@@ -33,7 +34,7 @@ function view_diary(did){
 exports.add = function(req, res, next){
 	var method = req.method.toLowerCase();
 	if(method == "post"){
-		var comment_cont = sanitize(common.html_entries(req.body.comment)).xss();
+		var comment_cont = sanitize(util.html_entries(req.body.comment)).xss();
         var diary_id = sanitize(req.body.diary_id).trim();
         var commenter = sanitize(req.body.commenter).trim();
         
@@ -67,10 +68,34 @@ exports.add = function(req, res, next){
         comment.diary_id = ObjID(diary_id);
 		comment.comment_date = new Date();
 		
-		Comment.save(comment, function(err){
-		    if(err) return next(err);
-		    res.send("1");
+		var proxy = new EventProxy ();
+		proxy.once("save_comment", function(){
+		    Comment.save(comment, function(err){
+		        if(err) return next(err);
+		        res.send("1");
+		    });		
 		});
+		
+		proxy.once("update_diary_comment",function(){
+		     Diary.findOne({"_id":ObjID(diary_id)}, function(err, diary){
+		         if(err) return next(err);
+		         var n_comment_num = 0;
+		         if(diary['comment_num']){
+		            n_comment_num = diary['comment_num'] + 1;
+		         }else{
+		            n_comment_num = 1;
+		         }
+		         
+		         Diary.update({_id:ObjID(diary_id)}, {$set: {comment_num : n_comment_num}},{},function(err){
+                     if(err)  return next(err);
+                     proxy.trigger('save_comment');
+                 });
+		     });
+		});
+		
+		 proxy.trigger('update_diary_comment');
+
+
 	}
 	
 };
@@ -83,8 +108,8 @@ exports.list = function(req, res, next){
 	        if(err) return next(err);
 	            // console.log(diarys);
 	            for(var i = 0 ; i < diarys.length;i++){
-	               diarys[i].create_date = common.dateFormat(diarys[i].create_date);
-	               diarys[i].edit_date = common.dateFormat(diarys[i].edit_date);
+	               diarys[i].create_date = util.dateFormat(diarys[i].create_date);
+	               diarys[i].edit_date = util.dateFormat(diarys[i].edit_date);
 	               if(diarys[i].up_img_thumb){
 	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
 	               }
@@ -104,26 +129,3 @@ exports.list = function(req, res, next){
 	}
 };
 
-
-exports.del = function(req, res, next){
-    var diary_id = ObjID(req.params.did);
-
-    // 先删图片，所以要先查图片的链接
-    Diary.findOne({"_id":diary_id}, function(err, diary){
-        if(err) return next(err);
-        // 删除图片啊个
-        var tar_img_path = config.site_dir + config.diary_img + diary.up_img;
-        fs.unlink(tar_img_path, function() {
-	        if (err) throw err;
-	        console.log('remove img ' + tar_img_path);
-	    });
-	    if(diary){
-		    Diary.remove({"_id":diary_id}, function(err){
-		       if(err) return next(err);
-			    res.redirect('diary/list');
-		    }); 
-        } 
-    });  
-
-
-};
