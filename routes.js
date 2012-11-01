@@ -93,6 +93,11 @@ exports = module.exports = function(app){
 	   path:"/user/logout",
 	   ctrl:user.logout,
 	   method:'get'
+	},
+	{
+	   path:"/user/setting",
+	   ctrl:user.setting,
+	   method:'get'
 	}
 	];
 	

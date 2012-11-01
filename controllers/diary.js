@@ -1,5 +1,6 @@
 var DB = require("../models")
     ,Diary = DB.Table('Diary')
+    ,User = DB.Table('User')
     ,Comment = DB.Table('Comment')
     ,ObjID = DB.ObjID
     ,config = require('../config').config
@@ -26,15 +27,18 @@ exports.add = function(req, res, next){
     
 	var method = req.method.toLowerCase();
 	if(method == "get"){
-	    res.render('diary/add', {
-	    	title:config.name,
-	    	error_msg:"",
-	    	content:"",
-            summary:"",
-	    	diary_title:"",
-            diary_config:diary_config,
-            config:config
+	    util.userinfo(req, function(user){
+	        res.render('diary/add', {
+	    	    title:config.name,
+	    	    error_msg:"",
+	    	    content:"",
+                summary:"",
+	    	    diary_title:"",
+                diary_config:diary_config,
+                config:config,
+                userinfo:user
 	    	});
+	    });
 	}
 	
 	if(method == "post"){
@@ -81,6 +85,8 @@ exports.add = function(req, res, next){
 		var target_path = "";
         var target_path_thumb = "";
         var no_up_img = true;
+        
+        
 		if(req.files.up_img && req.files.up_img.size > 0){
 		    no_up_img = false;
 		    util.log("Upload img.");
@@ -126,22 +132,25 @@ exports.add = function(req, res, next){
         }
         proxy.once("save",function(save){
             util.log("Save diary.");
+            util.userinfo(req, function(user){
 	        //保存日志
-			var diary = {};
-			diary.title = title;
-			diary.content = content;
-	        diary.summary = summary;
-			diary.create_date = new Date();
-			diary.edit_date = new Date();
-			diary.up_img = target_path;
-			diary.up_img_thumb = target_path_thumb;
-			diary.author = 'daimin';
-			diary.type = diary_type;
+			    var diary = {};
+		     	diary.title = title;
+		    	diary.content = content;
+	            diary.summary = summary;
+			    diary.create_date = new Date();
+			    diary.edit_date = new Date();
+			    diary.up_img = target_path;
+			    diary.up_img_thumb = target_path_thumb;
+			    diary.author = user.email;
+			    diary.view_num = 0;
+			    diary.type = diary_type;
 			
-			Diary.save(diary, function(err){
-			    if(err) return next(err);
-			    res.redirect('diary/list');
-			});
+			    Diary.save(diary, function(err){
+			        if(err) return next(err);
+			        res.redirect('diary/list');
+			    });
+             });
         });
         
         if(no_up_img) {
@@ -163,7 +172,7 @@ exports.list = function(req, res, next){
 	   }
 	   var proxy = new EventProxy();
 	   var total_page = 0;
-	   
+	   util.userinfo(req, function(user){
 	   proxy.once("get_list",function(){
 	       Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
 	        if(err) return next(err);
@@ -175,7 +184,6 @@ exports.list = function(req, res, next){
 	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
 	               }
 	               diarys[i].content = diarys[i].summary;
-	               util.log(diarys[i]);
 	            }
 	            var pageData = page.createPage(pageno, total_page);
 
@@ -185,7 +193,8 @@ exports.list = function(req, res, next){
 	            diary_config:diary_config,
                 config      :config,
                 pageData    :pageData,
-                req_path    :req.path
+                req_path    :req.path,
+                userinfo    :user
 		    });
 	        
 	        
@@ -205,19 +214,32 @@ exports.list = function(req, res, next){
 	   proxy.trigger('get_total');
 	   
 
-	   
+	  });
 
 	}
 };
+
+
+
 
 exports.view = function(req, res, next){
     var method = req.method.toLowerCase();
 	if(method == "get"){
 	   var gdiary = null;
 	   var proxy = new EventProxy();
-
+       var nickname = "";
        var diary_id = ObjID(req.params.did);
-      
+       
+       var get_nickname = function(diary){
+	       proxy.assign("get_nickname",function(obj){
+	          User.findOne({"email":diary.author}, function(err, user){
+	              diary.author = user.nickname;
+	              proxy.trigger('update_view_num');
+	          });
+	       });
+	       proxy.trigger('get_nickname');
+       };
+       
 	   proxy.once("get_diary", function (img) {
 	       Diary.findOne({"_id":diary_id}, function(err, diary){
 	           
@@ -230,8 +252,9 @@ exports.view = function(req, res, next){
                    diary.up_img = config.diary_url + diary.up_img;
                }
                gdiary = diary;
+               get_nickname(gdiary);
+               
                if(err) return next(err);
-               proxy.trigger('update_view_num');
           }); 
        });
        
@@ -258,13 +281,15 @@ exports.view = function(req, res, next){
 	               comments[i].floor = "#" + (i + 1);
 	               
 	           }
-	           
-	           res.render('diary/view', {
-		    	 title:config.name,
-		    	 diary:gdiary,
-		    	 comments:comments,
-	             diary_config:diary_config,
-                 config:config
+	           util.userinfo(req, function(user){
+		           res.render('diary/view', {
+			    	 title:config.name,
+			    	 diary:gdiary,
+			    	 comments:comments,
+		             diary_config:diary_config,
+	                 config:config,
+	                 userinfo:user
+			      });
 		      });
            });
        });

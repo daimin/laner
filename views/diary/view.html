@@ -1,4 +1,7 @@
-<%- partial("head") %>
+<%- partial("head",{userinfo:userinfo}) %>
+<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
+
 <div class="container">
   <div class="row show-grid">    
     <div class="row">
@@ -16,8 +19,12 @@
             if(diary.up_img_thumb && diary.up_img_thumb != ""){
             %>
               <div class="nailthumb-container">
-                <a href="<%= diary.up_img%>"><img class="entry-img" src="<%= diary.up_img%>"></a>
+                <a href="<%= diary.up_img%>"><img id="entry_img" class="entry-img" src="<%= diary.up_img%>"></a>
               </div>
+      <script type="text/javascript">
+           //jQuery('.nailthumb-container').nailthumb({width:580,height:580});
+           set_thumbs(".nailthumb-container",580,580);
+      </script>
             <%
             }
           %>
@@ -43,7 +50,6 @@
             </div>
           </div>
         </div>
-        
         <div class="panel">
           <div class="comment">评论 <%= comments.length%>
             <%
@@ -114,13 +120,15 @@
   <hr/>
 <%- partial("footer") %>
 </div>
-<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
-<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
+
 <script type="text/javascript">
-      jQuery(document).ready(function() {
-          jQuery('.nailthumb-container').nailthumb({width:250,height:250});
-      });
+    $(function(){
+           set_thumbs(".nailthumb-container", 500,500);
+    });
+           
 </script>
+
+
 
 
           

@@ -9,12 +9,12 @@ var ObjID = DB.ObjID;
 
 exports.index = function(req, res, next){
     util.userinfo(req, function(user){
-        var method = req.method.toLowerCase();
+        var method = req.method.toLowerCase(); 
 	    if(method == "get"){
            var pageno = 1;
 	       if(req.params.page){
 	          pageno = parseInt(req.params.page);
-	       }
+	       } 
 	       var proxy = new EventProxy();
 	       var total_page = 0;
 	   
@@ -34,16 +34,14 @@ exports.index = function(req, res, next){
 	                    total_page = config.INDEX_ITEM_SIZE;
 	                }
 	                var pageData = page.createPage(pageno, total_page);
-	      
-	            
-	            
 
 		            res.render('index', {
 		    	        title       :config.name,
 		    	        diarys      :diarys,
                         config      :config,
                         pageData    :pageData,
-                        req_path    :req.path
+                        req_path    :req.path,
+                        userinfo    :user
 		            });
 	        
 	        

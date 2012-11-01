@@ -3,8 +3,12 @@
     padding-bottom: 40px;
 }
 .nailthumb-container{
-  float:left;
   margin-right:12px;
+  text-align:center;
+}
+
+.nailthumb-container a{
+  text-align:center;
 }
 
 .post-edit-link{
@@ -138,7 +142,6 @@ body.page .edit-link {
    padding-right:2px;
 }
 .entry-img{
-  float: left;
   margin: 0 10px 10px 0;
 }
 .entry-date{
@@ -264,12 +267,25 @@ body.page .edit-link {
 	height: 18px;
 	padding-top:6px;
 	padding-left: 12px;
+	font-size:12px;
+	text-align:right;
+}
+.proverbs{
+   color:#262;
+   font-size:14px;
+   font-weight:bold;
+   line-height:20px;
+   padding-left: 12px;
+   margin-top:12px;
+   margin-bottom:12px;
+   
 }
 .ann_h1{
 	color:#005580;
 	font-size: large;
 	font-weight:bold;
 	padding-bottom: 6px;
+	
 	
 }
 .ann_h2{
@@ -299,4 +315,6 @@ span .number{
 }
 .footer{
     display: block;
+    color:#aaa;
+    font-size:12px;
 }

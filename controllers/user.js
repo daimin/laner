@@ -44,10 +44,15 @@ exports.login = function(req, res, next){
 		User.findOne({"email":email,"password":util.md5(password)}, function(err, user){
 		    if(err) return next(err);
 		    if(user == null){
-		       res.send('用户名或密码错误!');
+		       res.send('0:用户名或密码错误!');
 		    }else{
 		       gen_session(user, res);
-		       res.send('1');
+		       util.log(req.body.p);
+		       if(req.body.p){
+		          res.send('1:'+ req.body.p);
+		       }else{
+		          res.send('1:');
+		       }
 		    }
 		});
 		
@@ -68,13 +73,16 @@ function gen_session(user,res) {
 exports.register = function(req, res, next){
     var method = req.method.toLowerCase();
     if(method == "get"){
+    util.userinfo(req, function(user){
 	    res.render('user/register', {
 	    	title:config.name,
 	    	error_msg:"",
 	    	email:"",
             nickname:"",
             config:config,
-            user_config:config.user_config
+            user_config:config.user_config,
+            userinfo :user
+        });
         });
 	}else if(method == "post"){
 	    var email = sanitize(req.body.email).trim();

@@ -1,5 +1,5 @@
-<%- partial("head") %>
-<link rel="stylesheet" href="/stylesheets/skins/simple.css"></link>
+<%- partial("head",{userinfo:userinfo}) %>
+<link rel="stylesheet" href="/stylesheets/skins/green.css"></link>
 <div class="container">
   <div class="row show-grid">    
     <div class="row">
@@ -93,9 +93,7 @@
 <script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.artDialog.js"></script>
 <script type="text/javascript">
-      jQuery(document).ready(function() {
-          jQuery('.nailthumb-container').nailthumb({width:100,height:100});
-      });
+     jQuery('.nailthumb-container').nailthumb({width:100,height:100});
 </script>
 
 

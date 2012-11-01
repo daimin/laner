@@ -1,4 +1,7 @@
-<%- partial("head") %>
+<%- partial("head",{userinfo:userinfo}) %> 
+<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
+
 <div class="container">
   <div class="row show-grid">
     <div class="span8">
@@ -50,53 +53,19 @@
           </div>
           <% } %>
           <!-- 文章内容结束 -->
+<script type="text/javascript">
+    jQuery('.nailthumb-container').nailthumb({width:100,height:100});
+</script>
           <div class="ul"></div>
            <%- partial("page",{pageData:pageData,path:req_path}) %>
           </div>
     </div>
     <div class="span4">
-      <form class="panel form-vertical" action="#" method="post",onsubmit="return dologin('/user/login')">
-        <div class="header">登录</div>
-          <div class="alert alert-error" id="alert-error" style="display:none"></div>
-          <i class="icon-user" ></i>
-          <input class="input-large" type="text" placeholder="Email" name="email" id="email">
-          <br/>
-          <i class="icon-lock" ></i>
-          <input class="input-large" type="password" placeholder="Password" name="password" id="password">
-          <button class="btn" type="submit">登录</button>
-          <a href="#">&nbsp;注册</a>
-        </form>
-          <div class="panel">
-            <div class="header">热门日记</div>
-            <ul class="unstyled">
-              <li><a href="#">Node.js简单介绍并实现一个简单的Web MVC框架</a></li>
-              <li><a href="#">websocket与node.js的完美结合 </a></li>
-            </ul>       
-        </div>
-        <div class="panel">
-          <div class="header">活跃用户 </div>
-        </div>
-        <div class="panel">
-          <div class="header">相关站点</div>
-        </div>
-      </div>
-  
-  </div>
+       <%- partial("indexside",{userinfo:userinfo, config:config}) %>
+    </div>
   <hr/>
+
+</div>
 <%- partial("footer") %>
 </div>
 
-<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
-<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
-<script type="text/javascript">
-      jQuery(document).ready(function() {
-          jQuery('.nailthumb-container').nailthumb({width:100,height:100});
-      });
-</script>
-
-
-          
-
-                
-
-    

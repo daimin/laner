@@ -1,0 +1,37 @@
+  <%if(!userinfo){%>
+  <form class="panel form-vertical" action="" method="post" onsubmit="return dologin('/user/login')">
+    <div class="header">登录</div>
+      <div class="alert alert-error" id="alert-error" style="display:none"></div>
+      <i class="icon-user" ></i>
+      <input class="input-large" type="text" placeholder="Email" name="email" id="email">
+      <br/>
+      <i class="icon-lock" ></i>
+      <input class="input-large" type="password" placeholder="Password" name="password" id="password">
+      <button class="btn" type="submit">登录</button>
+      <a href="/user/register">&nbsp;注册</a>
+    </form>
+    <%}else{%>
+    <div class="panel">
+      <img src="<%= config.user_config.avatar_url+userinfo.avatar%>">
+      <div class="user-nickname"><%= userinfo.nickname%></div>
+      <div class="proverbs">
+        人生过处惟存悔，知识增时只益疑。
+      </div>
+      <div class="userinfo">
+       0日记收藏 &nbsp;&nbsp; 0关注 &nbsp;&nbsp; 0积分
+      </div>
+    </div>
+    <%}%>
+    <div class="panel">
+        <div class="header">热门日记</div>
+        <ul class="unstyled">
+          <li><a href="#">Node.js简单介绍并实现一个简单的Web MVC框架</a></li>
+          <li><a href="#">websocket与node.js的完美结合 </a></li>
+        </ul>       
+    </div>
+    <div class="panel">
+      <div class="header">活跃用户 </div>
+    </div>
+    <div class="panel">
+      <div class="header">相关站点</div>
+    </div>

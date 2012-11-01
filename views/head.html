@@ -20,8 +20,13 @@
       </form>
       <div class="nav-collapse">
         <ul class="nav pull-right">
-        <li><a href="#">登录</a></li>
-        <li><a href="#">注册</a></li>
+        <% if(userinfo){%>
+        <li><a href="#">设置</a></li>
+        <li><a href="/user/logout">退出</a></li>
+        <%}else{%>
+        <li><a href="/user/login">登录</a></li>
+        <li><a href="/user/register">注册</a></li>
+        <%}%>
         </ul>
       </div>
     </div>

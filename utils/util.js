@@ -234,7 +234,7 @@ exports.filter = function(app,maps){
             if(verfiy_auth(req, res, next)){
                 get_ctrl_func(req.path, req.method)(req,res,next);
             }else{
-                res.redirect('user/login');
+                res.redirect('user/login?p='+req.path);
             }
           
         });

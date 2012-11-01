@@ -56,18 +56,30 @@ function doCommentSubmit(url){
 }
 
 function dologin(url,ispage){
-    var param = {password:$("#password").val(),email:$("#email").val()};
+
+    var href = window.location.href;
+    var pa = "";
+    if(href.lastIndexOf('=') != -1){
+        pa = href.substring(href.lastIndexOf('=')+1);
+    }
+    var param = {password:$("#password").val(),email:$("#email").val(),p:pa};
     $.post(url, param,
         function(data){
-           if(data == 1){
+           var code = data.substring(0,data.indexOf(':'));
+           var res = data.substring(data.indexOf(':')+1);
+           if(code == 1){
               if(typeof ispage == 'undefined'){
                   window.location.reload();
               }else{
-                  window.location.href = '/';
+                  if(res != ""){
+                      window.location = res;
+                  }else{
+                      window.location = '/';
+                  }
               }
            }else{
               $("#alert-error").css({"display":"block"});
-              $("#alert-error").html(data);
+              $("#alert-error").html(res);
            }
         }
     );
