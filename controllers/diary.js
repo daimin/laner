@@ -172,6 +172,42 @@ exports.list = function(req, res, next){
 	   }
 	   var proxy = new EventProxy();
 	   var total_page = 0;
+	   
+        var get_nickname = function(diarys){
+            
+            proxy.assign("get_nickname",function(obj){
+	           var i = 0;
+	           proxy.assign("get_sub_nickname", function(obj){
+	               
+	               var diary = diarys[i];
+	                User.findOne({"email":diary.author}, function(err, user){
+	                util.log(user.nickname);
+			               diary.author = user.nickname;
+			               if(i < diarys.length){
+			                   i++;
+			                   proxy.trigger('get_sub_nickname');
+			               }else{
+			               	    var pageData = page.createPage(pageno, total_page);
+
+						        res.render('diary/list', {
+						    	title       :config.name,
+						    	diarys      :diarys,
+					            diary_config:diary_config,
+				                config      :config,
+				                pageData    :pageData,
+				                req_path    :req.path,
+				                userinfo    :user
+						        });
+                                DB.close();
+			               }
+			           });
+	            });
+	            proxy.trigger('get_sub_nickname');
+
+	       });
+	       proxy.trigger('get_nickname');
+       };
+       
 	   util.userinfo(req, function(user){
 	   proxy.once("get_list",function(){
 	       Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
@@ -185,21 +221,8 @@ exports.list = function(req, res, next){
 	               }
 	               diarys[i].content = diarys[i].summary;
 	            }
-	            var pageData = page.createPage(pageno, total_page);
-
-		        res.render('diary/list', {
-		    	title       :config.name,
-		    	diarys      :diarys,
-	            diary_config:diary_config,
-                config      :config,
-                pageData    :pageData,
-                req_path    :req.path,
-                userinfo    :user
-		    });
-	        
-	        
-            DB.close();
-
+	            
+	            get_nickname(diarys);
            });
 	   });
 	   
