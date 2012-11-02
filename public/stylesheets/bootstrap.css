@@ -143,11 +143,11 @@ textarea {
 }
 body {
   margin: 0;
-  font-family: "Microsoft YaHei","Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 14px;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
   line-height: 20px;
   color: #555555;
-  background-color: #f7f7f7;
+  /*background-color: #f7f7f7;*/
 }
 a {
   color: #23890f;
@@ -522,7 +522,7 @@ h4,
 h5,
 h6 {
   margin: 10px 0;
-  font-family: "Microsoft YaHei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:"Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
   line-height: 1;
   color: inherit;
@@ -779,7 +779,7 @@ input,
 button,
 select,
 textarea {
-  font-family: "Microsoft YaHei","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 label {
   display: block;
@@ -3596,7 +3596,7 @@ input[type="submit"].btn.btn-mini {
 .navbar-search .search-query {
   margin-bottom: 0;
   padding: 4px 14px;
-  font-family: "Microsoft YaHei","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   font-weight: normal;
   line-height: 1;
@@ -3636,7 +3636,7 @@ input[type="submit"].btn.btn-mini {
   -webkit-border-radius: 0;
   -moz-border-radius: 0;
   border-radius: 0;
-}
+  }
 .navbar-static-top .container,
 .navbar-fixed-top .container,
 .navbar-fixed-bottom .container {
@@ -3650,7 +3650,9 @@ input[type="submit"].btn.btn-mini {
   -webkit-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1), 0 1px 10px rgba(0, 0, 0, 0.1);
   -moz-box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1), 0 1px 10px rgba(0, 0, 0, 0.1);
   box-shadow: inset 0 -1px 0 rgba(0, 0, 0, 0.1), 0 1px 10px rgba(0, 0, 0, 0.1);
+
 }
+
 .navbar-fixed-bottom {
   bottom: 0;
 }
@@ -4450,12 +4452,12 @@ a.thumbnail:hover {
 .badge {
   font-size: 11.844px;
   font-weight: bold;
-  line-height: 14px;
+  line-height: 12px;
   color: #ffffff;
   vertical-align: baseline;
   white-space: nowrap;
   text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
-  background-color: #999999;
+  background-color: #dddddd;
 }
 .label {
   padding: 1px 4px 2px;
@@ -4464,10 +4466,10 @@ a.thumbnail:hover {
   border-radius: 3px;
 }
 .badge {
-  padding: 1px 9px 2px;
-  -webkit-border-radius: 9px;
-  -moz-border-radius: 9px;
-  border-radius: 9px;
+  padding: 1px 4px 1px;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 a.label:hover,
 a.badge:hover {
@@ -4889,7 +4891,7 @@ hr {
 }
 .navbar .brand {
   padding: 12px 20px 8px;
-  font-family: "Microsoft YaHei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
 }
 .navbar .brand:hover {
@@ -4897,7 +4899,7 @@ hr {
 }
 .navbar .nav > li > a {
   padding: 13px 15px 6px;
-  font-family: "Microsoft YaHei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
   text-shadow: none;
 }
@@ -4911,7 +4913,7 @@ hr {
 .navbar .navbar-text {
   padding: 13px 15px 7px;
   line-height: 19px;
-  font-family: "Microsoft YaHei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #999999;
 }
 .navbar .divider-vertical {
@@ -4925,7 +4927,7 @@ hr {
   margin-bottom: 5px;
 }
 .navbar .dropdown-menu a {
-  font-family: "Microsoft YaHei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .navbar-inverse .navbar-inner {
   -webkit-box-shadow: none;
@@ -4970,7 +4972,7 @@ div.subnav {
   -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  font-family: "Microsoft YaHei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 div.subnav.subnav-fixed {
   -webkit-box-shadow: inset 0 5px #ffffff , 1px 1px 1px rgba(0, 0, 0, 0.2);
@@ -5130,12 +5132,12 @@ div.subnav .nav > li.active > a:hover {
 }
 .btn {
   padding-top: .6em;
-  font-family: "Microsoft YaHei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
 }
 legend {
   border-bottom: 1px solid #ddd;
-  font-family: "Microsoft YaHei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .navbar-search .search-query {
   border: 1px solid #ddd;

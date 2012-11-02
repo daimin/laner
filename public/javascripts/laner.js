@@ -6,14 +6,21 @@ function set_thumbs(obj, W, H) {
 			ch = o.height();
 			w = W;
 			h = ch*W/cw;
-			if (h>H) {
-				l = 0;
-				t = (ch*W/cw-H)/2;
-			} else {
-				h = H;
-				w = H*cw/ch;
-				l = (H*cw/ch-W)/2;
-				t = 0;
+			if(cw > W){
+			    if (h>H) {
+				    l = 0;
+				    t = (ch*W/cw-H)/2;
+			    } else {
+				    h = H;
+				    w = H*cw/ch;
+				    l = (H*cw/ch-W)/2;
+				    t = 0;
+			    }
+			}else{
+			    h = ch;
+			    w = cw;
+			    l = 0
+			    t = 0;
 			}
 			o.attr('style', 'width: ' + w + 'px; height: ' + h + 'px; left: -' + l + "px; top: -" + t + "px;").hide().fadeIn('slow');
 		}

@@ -112,7 +112,7 @@ exports.config = {
 	diary_size:120,
 	user_config:{
 	    email_size   :[8,80],
-	    nickname_size:[4,40],
+	    nickname_size:[2,40],
 	    password_size:[2,20],
 	    avatar_size  :128*1024,
 	    avatar_url : '/images/avatar/',

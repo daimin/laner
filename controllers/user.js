@@ -152,6 +152,7 @@ exports.register = function(req, res, next){
 			User.save(user, function(err){
 				if(err) return next(err);
 				    gen_session(user, res);
+				    res.send('1');
 				});
 		    }
 	    });
