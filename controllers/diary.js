@@ -173,68 +173,59 @@ exports.list = function(req, res, next){
 	   var proxy = new EventProxy();
 	   var total_page = 0;
 	   
-        var get_nickname = function(diarys){
-            
-            proxy.assign("get_nickname",function(obj){
-	           var i = 0;
-	           proxy.assign("get_sub_nickname", function(obj){
-	               
-	               var diary = diarys[i];
-	                User.findOne({"email":diary.author}, function(err, user){
-	                util.log(user.nickname);
-			               diary.author = user.nickname;
-			               if(i < diarys.length){
-			                   i++;
-			                   proxy.trigger('get_sub_nickname');
-			               }else{
-			               	    var pageData = page.createPage(pageno, total_page);
+	   proxy.once("get_nickname",function(){
+	       var get_nickname = function(diarys){
+	           for(var i = 0; i < diarys.length;i++){
+		           var diary = diarys[i];
+	               User.find({"email":diary.author}, function(err, user){
+		              diary.author = user.nickname;
+		           });
+		       }
 
-						        res.render('diary/list', {
-						    	title       :config.name,
-						    	diarys      :diarys,
-					            diary_config:diary_config,
-				                config      :config,
-				                pageData    :pageData,
-				                req_path    :req.path,
-				                userinfo    :user
-						        });
-                                DB.close();
-			               }
-			           });
-	            });
-	            proxy.trigger('get_sub_nickname');
+           };
+	   });
 
-	       });
-	       proxy.trigger('get_nickname');
-       };
        
 	   util.userinfo(req, function(user){
-	   proxy.once("get_list",function(){
-	       Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
-	        if(err) return next(err);
-	            for(var i = 0 ; i < diarys.length;i++){
-	               diarys[i].create_date = util.dateFormat(diarys[i].create_date);
-	               diarys[i].edit_date = util.dateFormat(diarys[i].edit_date);
-	               if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
-	                   
-	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
-	               }
-	               diarys[i].content = diarys[i].summary;
-	            }
-	            
-	            get_nickname(diarys);
-           });
-	   });
-	   
-	   proxy.once("get_total",function(){
-	      Diary.find({}).toArray(function(err, diarys){
-	          var total_items = diarys.length;
-	          total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
-	          proxy.trigger('get_list');
-	      });
-	   });
-	   
-	   proxy.trigger('get_total');
+		   proxy.once("get_list",function(){
+		       Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
+		        if(err) return next(err);
+		            for(var i = 0 ; i < diarys.length;i++){
+		               diarys[i].create_date = util.dateFormat(diarys[i].create_date);
+		               diarys[i].edit_date = util.dateFormat(diarys[i].edit_date);
+		               if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
+		                   
+		                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
+		               }
+		               diarys[i].content = diarys[i].summary;
+		            }
+		       
+		            get_nickname(diarys);
+		            var pageData = page.createPage(pageno, total_page);
+
+				    res.render('diary/list', {
+				    	title       :config.name,
+				    	diarys      :diarys,
+			            diary_config:diary_config,
+		                config      :config,
+		                pageData    :pageData,
+		                req_path    :req.path,
+		                userinfo    :user
+				    });
+                    DB.close();
+	           });
+		   });
+		   
+		   proxy.once("get_total",function(){
+		      Diary.find({}).toArray(function(err, diarys){
+		          var total_items = diarys.length;
+		          total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
+		          
+		          proxy.trigger('get_list');
+		      });
+		   });
+		   
+		   proxy.trigger('get_total');
 	   
 
 	  });
