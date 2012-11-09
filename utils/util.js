@@ -44,8 +44,8 @@ exports.randomString = function (size) {
 };
 
 var log = function(info){
-     if(config.DEBUG == true){
-       console.log(sys.inspect(info, true, null) + '\t' + exports.dateFormat(new Date()));
+    if(config.DEBUG == true){
+        console.log(sys.inspect(info, true, null) + '\t' + exports.dateFormat(new Date()));
     }
 };
 
@@ -118,7 +118,9 @@ exports.verify_auth = function(req,res){
     return true;
 };
 
-
+/**
+获取用户信息，并回调函数
+*/
 exports.userinfo = function(req, callback){
     var proxy = new EventProxy();
     var render = function (get_user, user){
@@ -133,9 +135,11 @@ exports.userinfo = function(req, callback){
         try{
             if(req.cookies[(config.auth_cookie_name)]){
                 var email = exports.decrypt(req.cookies[(config.auth_cookie_name)], config.session_secret);
+                
                 if(email){
 	                User.findOne({"email":email}, function(err, user){
 	                    if(err) return next(err);
+	                    
                         proxy.trigger('callback', user);
 	                });   
 	            }
@@ -171,7 +175,8 @@ exports.filter = function(app,maps){
 	        if(req.cookies[(config.auth_cookie_name)]){
 	            var email = null;
 	            try{
-	                email = exports.decrypt(req.cookies[(config.auth_cookie_name)],config.session_secret);
+	                email = exports.decrypt(req.cookies[(config.auth_cookie_name)], config.session_secret);
+	                
 	            }catch(e){
 	                console.log(e.message);
 	            }
@@ -218,14 +223,10 @@ exports.filter = function(app,maps){
                 
                 if(is_march === true){
                     return objm.ctrl;
-                }
-               
-            }
-            
-           
+                }       
+            }      
         }
-        
-       
+     
     };
     
     for(var i = 0, len = maps.length;i < len; i++){

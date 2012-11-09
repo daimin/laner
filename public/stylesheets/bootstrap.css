@@ -144,7 +144,7 @@ textarea {
 body {
   margin: 0;
   font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-size: 14px;
   line-height: 22px;
   color: #555555;
   /*background-color: #f7f7f7;*/
@@ -809,9 +809,9 @@ input[type="color"],
   font-size: 14px;
   line-height: 20px;
   color: #555555;
-  -webkit-border-radius: 0;
-  -moz-border-radius: 0;
-  border-radius: 0;
+  -webkit-border-radius: 4px;
+  -moz-border-radius: 4px;
+  border-radius: 4px;
 }
 input,
 textarea,
@@ -1522,7 +1522,7 @@ legend + .control-group {
 .form-horizontal input + .help-block,
 .form-horizontal select + .help-block,
 .form-horizontal textarea + .help-block {
-  margin-top: 10px;
+  margin-top: 2px;
 }
 .form-horizontal .form-actions {
   padding-left: 180px;
@@ -3237,8 +3237,8 @@ input[type="submit"].btn.btn-mini {
   margin-bottom: -1px;
 }
 .nav-tabs > li > a {
-  padding-top: 8px;
-  padding-bottom: 8px;
+  padding-top: 4px;
+  padding-bottom: 4px;
   line-height: 20px;
   border: 1px solid transparent;
   -webkit-border-radius: 4px 4px 0 0;
@@ -3250,8 +3250,6 @@ input[type="submit"].btn.btn-mini {
 }
 .nav-tabs > .active > a,
 .nav-tabs > .active > a:hover {
-  color: #555555;
-  background-color: #ffffff;
   border: 1px solid #ddd;
   border-bottom-color: transparent;
   cursor: default;
@@ -5017,7 +5015,7 @@ div.subnav .nav > li.active > a:hover {
 }
 .nav-tabs  > li.active > a,
 .nav-tabs  > li.active > a:hover {
-  background-color: #f7f7f7;
+  background-color: #ffffff;
 }
 .nav-tabs .dropdown .dropdown-toggle .caret {
   border-top-color: #555555;
@@ -5057,7 +5055,7 @@ div.subnav .nav > li.active > a:hover {
 .tabbable.tabs-below > .nav-tabs > li.active > a,
 .tabbable.tabs-left > .nav-tabs > li.active > a,
 .tabbable.tabs-right > .nav-tabs > li.active > a {
-  border-bottom: 1px solid #ccc;
+  border-bottom: 0px solid #ccc;
 }
 .nav-pills li > a {
   color: #555555;

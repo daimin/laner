@@ -1,5 +1,5 @@
 <%- partial("head",{userinfo:userinfo}) %>
-<link rel="stylesheet" href="/stylesheets/skins/green.css"></link>
+<link rel="stylesheet" href="/stylesheets/skins/simple.css"></link>
 <div class="container">
   <div class="row show-grid">    
     <div class="row">
@@ -48,11 +48,11 @@
               <span class="comments-link"> <span class="badge"><%= comment_num%></span> 回应 </span>
               <span class="meta-sep"> | </span>
               <span class="edit-link">
-                <a class="post-edit-link" title="编辑文章" href="javascript:void(0)">编辑</a>
+                <a class="post-edit-link" title="编辑文章" href="/diary/<%= diary._id %>/edit">编辑</a>
               </span>
               <span class="meta-sep"> | </span>
               <span class="edit-link">
-                <a class="post-edit-link" title="删除文章" href="javascript:void(0)" onclick="del_diary('/diary/<%= diary._id %>/del')">删除</a>
+                <a class="post-edit-link" title="删除文章" href="javascript:void(0)" onclick="del_diary('/diary/<%= diary._id %>/del',this)">删除</a>
               </span>
               <span class="meta-sep"> | </span>
               <span class="edit-link">

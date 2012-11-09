@@ -6,7 +6,7 @@ var DB = require("../models")
     ,config = require('../config').config
     ,check = require('validator').check
     ,sanitize = require('validator').sanitize
-    ,util = require('../utils/util')
+    ,lutil = require('../utils/util')
     ,fs = require('fs')
     ,path = require('path')
     ,EventProxy = require("eventproxy").EventProxy
@@ -23,11 +23,10 @@ var diary_config = {
 };
 
 exports.add = function(req, res, next){
-    //var loguser = common.verify_auth(req, res);
     
 	var method = req.method.toLowerCase();
 	if(method == "get"){
-	    util.userinfo(req, function(user){
+	    lutil.userinfo(req, function(user){
 	        res.render('diary/add', {
 	    	    title:config.name,
 	    	    error_msg:"",
@@ -42,11 +41,11 @@ exports.add = function(req, res, next){
 	}
 	
 	if(method == "post"){
-	    util.log("Add diary post begin.");
+	    lutil.log("Add diary post begin.");
 		var title = sanitize(req.body.title).trim();
 		var content = sanitize(req.body.content).xss();
 	
-        var summary = util.get_summary(content);
+        var summary = lutil.get_summary(content);
         var diary_type = sanitize(req.body.type).trim();
 		var err_msg = "";
 		// 检测控制
@@ -89,7 +88,7 @@ exports.add = function(req, res, next){
         
 		if(req.files.up_img && req.files.up_img.size > 0){
 		    no_up_img = false;
-		    util.log("Upload img.");
+		    lutil.log("Upload img.");
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
 			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
@@ -131,8 +130,8 @@ exports.add = function(req, res, next){
             });
         }
         proxy.once("save",function(save){
-            util.log("Save diary.");
-            util.userinfo(req, function(user){
+            lutil.log("Save diary.");
+            lutil.userinfo(req, function(user){
 	        //保存日志
 			    var diary = {};
 		     	diary.title = title;
@@ -161,8 +160,149 @@ exports.add = function(req, res, next){
 };
 
 
+exports.edit = function(req, res, next){
+    
+	var method = req.method.toLowerCase();
+	var proxy = new EventProxy();
+	var diary_id = ObjID(req.params.did);
+	if(method == "get"){
+	    lutil.userinfo(req, function(user){
+	       
+
+       		Diary.findOne({"_id":diary_id}, function(err, diary){
+	               
+	               if(err) return next(err);
+	               
+	               proxy.trigger('torender', diary);
+	        }); 
+	          
+		    proxy.once("torender", function (gdiary) {
+		        res.render('diary/edit', {
+		    	    title       :config.name,
+		    	    error_msg   :"",
+		    	    diary       :gdiary,
+	                diary_config:diary_config,
+	                config      :config,
+	                userinfo    :user
+		    	});
+	        });
+
+	    });
+	}
+	
+	if(method == "post"){
+	    lutil.log("edit diary post begin.");
+		var title = sanitize(req.body.title).trim();
+		var content = sanitize(req.body.content).xss();
+	
+        var summary = lutil.get_summary(content);
+        
+        var diary_type = sanitize(req.body.type).trim();
+		var err_msg = "";
+		// 检测控制
+		if(title == ""){
+			err_msg += "标题不能是空的。 ";
+		}
+		if(content == ""){
+			err_msg += "日记内容不能是空的。";
+		}
+        if(summary == ""){
+			err_msg += "日记摘要不能是空的。";
+		}
+		
+		if(err_msg != ""){
+		    res.render('diary/edit',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
+		    return;
+		}
+		// 检验文本的长度
+		if(title.length < config.diary_title_size[0] || title.length > config.diary_title_size[1]){
+			err_msg += "日志标题的长度必须是" + config.diary_title_size[0] + "到" + config.diary_title_size[1] + "个之间 。";
+		}
+		
+		if(content.length < config.diary_content_size[0] || content.length > config.diary_content_size[1]){
+			err_msg += "日志内容的长度必须是" + config.diary_content_size[0] + "到" + config.diary_content_size[1] + "个之间。 ";
+		}
+        		
+		if(err_msg != ""){
+		    res.render('diary/edit',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
+		    return;
+		}
+		
+		var target_path = req.body.up_img;
+        var target_path_thumb = req.body.up_img_thumb;
+        var no_up_img = true;
+        
+        
+		if(req.files.up_img && req.files.up_img.size > 0){
+		    no_up_img = false;
+		    lutil.log("Upload img.");
+			// 验证文件的大小
+			if(req.files.up_img.size >= config.diary_img_size){
+			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
+			   res.render('diary/edit',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
+			   return;
+			}
+			
+			 // 获得文件的临时路径
+	        var tmp_path = req.files.up_img.path;
+	        
+	        var up_img_name = req.files.up_img.name;
+	        var fileext = path.extname(up_img_name);
+	        
+	        var is_allow_img = false;
+	        fileext = fileext.toLowerCase();
+	        for(var i = 0; i < config.allow_img.length;i++){
+	            var aimg = config.allow_img[i].toLowerCase();
+	            if(fileext == aimg){
+	               is_allow_img = true;
+	            }
+	            
+	        }
+	        
+	        if(is_allow_img == false){
+			   err_msg += "上传图片类型只能是" + config.allow_img.join(",")+"之一";
+			   res.render('diary/edit',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config});
+	           return;
+	        }
+	        // 指定文件上传后的目录 
+	        target_path =  new Date().getTime() + fileext;
+	        target_path_thumb = target_path;
+	        var full_img_path = config.site_dir + config.diary_img + target_path;
+	        
+	        fs.rename(tmp_path, full_img_path, function (err) {
+                if (err) {
+                    return next(err);
+                }
+                proxy.trigger('update');
+            });
+        }
+        proxy.once("update",function(update){
+            lutil.log("update diary.");
+            lutil.userinfo(req, function(user){
+	            //更新日志
+
+			    Diary.update( {"_id":diary_id},{$set:
+			                    {
+			                      "title":title,"content":content,"summary":summary,"edit_date":new Date(),
+			                      "up_img":target_path,"up_img_thumb":target_path_thumb,"type":diary_type
+			                    }
+			                  }, {},function(err){
+			        if(err) return next(err);
+			        res.redirect('diary/list');
+			    });
+             });
+        });
+        
+        if(no_up_img) {
+            proxy.trigger('update');
+        }
+	}
+	
+};
+
+
 exports.list = function(req, res, next){
-   util.log('Get diary list.');
+   lutil.log('Get diary list.');
    var method = req.method.toLowerCase();
    
 	if(method == "get"){
@@ -173,26 +313,46 @@ exports.list = function(req, res, next){
 	   var proxy = new EventProxy();
 	   var total_page = 0;
 	   
-	   proxy.once("get_nickname",function(){
-	       var get_nickname = function(diarys){
-	           for(var i = 0; i < diarys.length;i++){
-		           var diary = diarys[i];
-	               User.find({"email":diary.author}, function(err, user){
-		              diary.author = user.nickname;
-		           });
-		       }
-
-           };
+	   proxy.once("renderto",function(diarys,uinfo){
+            var pageData = page.createPage(pageno, total_page);
+		    res.render('diary/list', {
+		        title       :config.name,
+		    	diarys      :diarys,
+	            diary_config:diary_config,
+                config      :config,
+                pageData    :pageData,
+                req_path    :req.path,
+                userinfo    :uinfo
+		    });
+            DB.close();
+	   });
+	   
+	   proxy.once("get_nickname",function(diarys,uinfo){
+	       var diarys_len = diarys.length;
+	       proxy.assignAlways("get_sub_nickname",function(idx){
+	           var diary = diarys[idx];
+		       User.findOne({"email":diary.author}, function(err, user){
+			      diary.author = user.nickname;
+			      idx++;
+			      if(idx < diarys_len){
+			          proxy.trigger('get_sub_nickname',idx);
+			      }else{
+			          proxy.trigger('renderto',diarys,uinfo);
+			      }
+			   });
+	       });
+	       
+		   proxy.trigger('get_sub_nickname',0);
 	   });
 
        
-	   util.userinfo(req, function(user){
+	   lutil.userinfo(req, function(uinfo){
 		   proxy.once("get_list",function(){
 		       Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
 		        if(err) return next(err);
 		            for(var i = 0 ; i < diarys.length;i++){
-		               diarys[i].create_date = util.dateFormat(diarys[i].create_date);
-		               diarys[i].edit_date = util.dateFormat(diarys[i].edit_date);
+		               diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
+		               diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
 		               if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
 		                   
 		                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
@@ -200,19 +360,7 @@ exports.list = function(req, res, next){
 		               diarys[i].content = diarys[i].summary;
 		            }
 		       
-		            get_nickname(diarys);
-		            var pageData = page.createPage(pageno, total_page);
-
-				    res.render('diary/list', {
-				    	title       :config.name,
-				    	diarys      :diarys,
-			            diary_config:diary_config,
-		                config      :config,
-		                pageData    :pageData,
-		                req_path    :req.path,
-		                userinfo    :user
-				    });
-                    DB.close();
+		            proxy.trigger('get_nickname',diarys,uinfo);
 	           });
 		   });
 		   
@@ -257,8 +405,8 @@ exports.view = function(req, res, next){
 	   proxy.once("get_diary", function (img) {
 	       Diary.findOne({"_id":diary_id}, function(err, diary){
 	           
-	           diary.create_date = util.dateFormat(diary.create_date);
-               diary.edit_date = util.dateFormat(diary.edit_date);
+	           diary.create_date = lutil.dateFormat(diary.create_date);
+               diary.edit_date = lutil.dateFormat(diary.edit_date);
                if(diary.up_img_thumb){
                    diary.up_img_thumb = config.diary_url + diary.up_img_thumb;
                }
@@ -291,11 +439,11 @@ exports.view = function(req, res, next){
 	           if(err) return next(err);
 	           for(var i = 0 ; i < comments.length;i++){
 	              
-	               comments[i].comment_date = util.dateFormat(comments[i].comment_date);
+	               comments[i].comment_date = lutil.dateFormat(comments[i].comment_date);
 	               comments[i].floor = "#" + (i + 1);
 	               
 	           }
-	           util.userinfo(req, function(user){
+	           lutil.userinfo(req, function(user){
 		           res.render('diary/view', {
 			    	 title:config.name,
 			    	 diary:gdiary,
@@ -314,7 +462,7 @@ exports.view = function(req, res, next){
 };
 
 exports.del = function(req, res, next){
-    util.log(req.params.did);
+    lutil.log(req.params.did);
     var diary_id = ObjID(req.params.did);
 
     // 先删图片，所以要先查图片的链接

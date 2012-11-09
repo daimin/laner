@@ -1,66 +1,120 @@
 <%- partial("head",{userinfo:userinfo}) %>
-
+<%
+var motto = "";
+if(userinfo.motto){
+   motto = userinfo.motto;
+}
+%>
 <link rel="stylesheet" type="text/css" href="/stylesheets/imgareaselect/imgareaselect-animated.css" />
-<script type="text/javascript" src="/javascripts/jquery.imgareaselect.pack.js" charset="utf-8"> </script>
 
 <div class="container">
   <div class="row show-grid">
-    <div class="span8">
-      <div class="panel">
-        <div class="alert alert-error" id="alert-error" style="display:none;">
-          <button class="close" data-dismiss="alert" onclick="close_alter_error()">×</button>
-          <div id="error_msg"></div>
-        </div>
-        <hr/>
-        <form class="form-horizontal" method="POST" action="" onsubmit="return doregister('/user/register')">
-          <fieldset>
-            <input type="hidden" name="action" value="register">
-            <div class="control-group">
-            <div class="control-group">
-              <label class="control-label" for="nickname">昵称</label>
-              <div class="controls">
-                <input class="input input-xlarge" type="text" id="nickname" name="nickname" placeholder="昵称" value="<%= nickname%>">
-                <small class="help-block">字数控制在<%= user_config.nickname_size[0]%>到<%= user_config.nickname_size[1]%>个之间</small>
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label" for="password">密码</label>
-              <div class="controls">
-                <input class="input input-xlarge" type="password" id="password" name="password" placeholder="密码" value="<%= email%>">
-                <small class="help-block">字数控制在<%= user_config.password_size[0]%>到<%= user_config.password_size[0]%>个之间</small>
-              </div>
-            </div>
-            <div class="control-group">
-              <label class="control-label" for="password">确认密码</label>
-              <div class="controls">
-                <input class="input input-xlarge" type="password" id="repassword" name="repassword" placeholder="确认密码" value="<%= email%>">
-              </div>
-            </div> 
-            <div class="form-actions">
-              <button class="btn btn-primary" type="submit">注 册</button>
-            </div>                  
-          </fieldset>
-        </form>
-      </div>
+    <div class="span12">
+        <div class="tabbable"> <!-- Only required for left/right tabs -->
+			  <ul class="nav nav-tabs">
+			    <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
+			    <li><a href="#tab2" data-toggle="tab">修改密码</a></li>
+			    <li><a href="#tab3" data-toggle="tab">编辑头像</a></li>
+			  </ul>
+			  <div class="tab-content">
+			    <div class="tab-pane active" id="tab1" >
+			    <form class="form-horizontal" method="POST" action="" onsubmit="return doregister('/user/register')">
+                   <fieldset>
+			          <div class="control-group">
+		                  <label class="control-label" for="email">Email</label>
+		                  <div class="controls">
+		                    <input class="input input-xlarge" type="text" id="email" name="email" disabled placeholder="Email" value="<%= userinfo.email%>">
+		                    <small class="help-block">字数控制在<%= user_config.email_size[0]%>到<%= user_config.email_size[1]%>个之间</small>
+		                  </div>
+		               </div>
+		               <div class="control-group">
+		                  <label class="control-label" for="nickname">昵称</label>
+		                  <div class="controls">
+		                    <input class="input input-xlarge" type="text" id="nickname" name="nickname" placeholder="昵称" value="<%= userinfo.nickname%>">
+		                    <small class="help-block">字数控制在<%= user_config.nickname_size[0]%>到<%= user_config.nickname_size[1]%>个之间</small>
+		                  </div>
+		               </div>
+		               <div class="control-group">
+		                  <label class="control-label" for="motto">箴言</label>
+		                  <div class="controls">
+                            <textarea class="input-xlarge" id="motto" name="motto" placeholder="箴言" style="width:82%;height:80px;"><%= motto%></textarea>
+		                    <small class="help-block">字数控制在<%= user_config.motto_size[0]%>到<%= user_config.motto_size[1]%>个之间</small>
+		                  </div>
+	                  </div>
+	                  <div class="form-actions">
+                          <button class="btn btn-primary" type="submit">更新</button>&nbsp;&nbsp;
+                      </div>
+	                  </fieldset>
+	                </form>
+			    </div>
+			    <div class="tab-pane" id="tab2">
+			       <form class="form-horizontal" method="POST" action="" onsubmit="return doregister('/user/register')">
+                   <fieldset>
+			          <div class="control-group">
+		                  <label class="control-label" for="email">当前密码</label>
+		                  <div class="controls">
+		                    <input class="input input-xlarge" type="password" id="cur_password" name="cur_password" disabled placeholder="当前密码" value="<%= userinfo.email%>">
+		                  </div>
+		              </div>
+		              <div class="control-group">
+		                  <label class="control-label" for="nickname">新密码</label>
+		                  <div class="controls">
+		                    <input class="input input-xlarge" type="password" id="new_password" name="new_password" placeholder="新密码" value="<%= userinfo.nickname%>">
+		                  </div>
+		              </div>
+		              <div class="control-group">
+		                  <label class="control-label" for="nickname">重复新密码</label>
+		                  <div class="controls">
+		                    <input class="input input-xlarge" type="password" id="re_new_password" name="re_new_password" placeholder="重复新密码" value="<%= userinfo.nickname%>">
+		                  </div>
+	                  </div>
+	                  <div class="form-actions">
+                          <button class="btn btn-primary" type="submit">更新</button>&nbsp;&nbsp;
+                      </div>
+	                  </fieldset>
+	                </form>
+			    </div>
+			    <div class="tab-pane" id="tab3">
+			       <div class="panel">
+			       <div style="float:left;">
+			       <img id="selectbanner" src="/images/avatar/1000424335a2db2036.jpg" />
+			       </div>
+			       <div id="#preview"><img src="/images/avatar/1000424335a2db2036.jpg" /></div>
+			       </div>
+			    </div>
+			  </div>
+          </div>
     </div>
-    <div class="span4">
-      <div class="panel">
-        <div class="header">关于</div>
-        <div> 在这里你可以：
-          <ul>
-            <li>向别人提出你遇到的问题</li>
-            <li>帮助遇到问题的人</li>
-            <li>分享自己的知识</li>
-            <li>和其它人一起进步</li>
-          </ul>
-        </div>
-      </div>
-    </div>
+  
   </div>  
   <hr/>
   <%- partial("footer") %>
 </div>
+<script type="text/javascript" src="/javascripts/jquery.imgareaselect.pack.js" charset="utf-8"> </script>
+<script type="text/javascript" src="/javascripts/bootstrap-tab.js" charset="utf-8"> </script>
+<script type="text/javascript">
+function preview(img, selection)
+{
+        
+        if(!selection.width || !selection.height)
+            return;
+       
+        var scaleX = 100 / selection.width;
+        var scaleY = 100 / selection.height;
+       
+        $('#preview img').css( {
+            width : Math.round(scaleX * 700),
+            height: Math.round(scaleY * 1276),
+            marginLeft: -Math.round(scaleX * selection.x1),
+            marginTop: -Math.round(scaleY * selection.y1)
+        });
+       
+}
 
+$(function(){
+   $('#selectbanner').imgAreaSelect({aspectRatio:"1:1",maxWidth: 200, maxHeight: 200, handles: true,onSelectEnd : preview }); 
+});
+</script>
           
 
                 

@@ -65,6 +65,16 @@ exports = module.exports = function(app){
 	   method:'get'
 	},
 	{
+	   path:"/diary/:did/edit",
+	   ctrl:diary.edit,
+	   method:'get'
+	},
+		{
+	   path:"/diary/:did/edit",
+	   ctrl:diary.edit,
+	   method:'post'
+	},
+	{
 	   path:"/comment/add",
 	   ctrl: comment.add,
 	   method:'post'

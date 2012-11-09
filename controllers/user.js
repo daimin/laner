@@ -6,7 +6,7 @@ var DB = require("../models")
     ,sanitize = require('validator').sanitize
     ,Validator = require('validator').Validator
     ,check = require('validator').check
-    ,util = require('../utils/util')
+    ,lutil = require('../utils/util')
     ,fs = require('fs')
     ,path = require('path')
     ,EventProxy = require("eventproxy").EventProxy;
@@ -41,13 +41,13 @@ exports.login = function(req, res, next){
             res.send(e.message);
         }
 		
-		User.findOne({"email":email,"password":util.md5(password)}, function(err, user){
+		User.findOne({"email":email,"password":lutil.md5(password)}, function(err, user){
 		    if(err) return next(err);
 		    if(user == null){
 		       res.send('0:用户名或密码错误!');
 		    }else{
 		       gen_session(user, res);
-		       util.log(req.body.p);
+		       lutil.log(req.body.p);
 		       if(req.body.p){
 		          res.send('1:'+ req.body.p);
 		       }else{
@@ -66,14 +66,14 @@ exports.logout = function(req, res, next){
 };
 
 function gen_session(user,res) {
-  var auth_token = util.encrypt(user.email, config.session_secret);
+  var auth_token = lutil.encrypt(user.email, config.session_secret);
   res.cookie(config.auth_cookie_name, auth_token, { expires: new Date(Date.now() + 1000*60*60*2), httpOnly: true }); //cookie 有效期2个小时      
 }
 
 exports.register = function(req, res, next){
     var method = req.method.toLowerCase();
     if(method == "get"){
-    util.userinfo(req, function(user){
+    lutil.userinfo(req, function(user){
 	    res.render('user/register', {
 	    	title:config.name,
 	    	error_msg:"",
@@ -137,14 +137,14 @@ exports.register = function(req, res, next){
         }catch(e){
             res.send(e.message);
         }
-	   User.findOne({"email":email,"password":util.md5(password)}, function(err, user){
+	   User.findOne({"email":email,"password":lutil.md5(password)}, function(err, user){
 	   if(user != null){
 		        res.send('邮箱已存在，请登录');
 		}else{
 		        //保存日志
 			var user = {};
 			user.email = email;
-			user.password = util.md5(password);
+			user.password = lutil.md5(password);
 		    user.nickname = nickname;
 			user.reg_date = new Date();
 			user.avatar = "default.jpg";
@@ -162,26 +162,19 @@ exports.register = function(req, res, next){
 	}
 };
 
-exports.del = function(req, res, next){
-    
-    var diary_id = ObjID(req.params.did);
-
-    // 先删图片，所以要先查图片的链接
-    Diary.findOne({"_id":diary_id}, function(err, diary){
-        if(err) return next(err);
-        // 删除图片啊个
-        var tar_img_path = config.site_dir + config.diary_img + diary.up_img;
-        fs.unlink(tar_img_path, function() {
-	        if (err) throw err;
-	        console.log('remove img ' + tar_img_path);
-	    });
-	    if(diary){
-		    Diary.remove({"_id":diary_id}, function(err){
-		       if(err) return next(err);
-			    res.redirect('diary/list');
-		    }); 
-        } 
-    });  
+exports.setting = function(req, res, next){
+    var method = req.method.toLowerCase();
+    if(method == "get"){
+        lutil.userinfo(req, function(user){
+	        res.render('user/setting', {
+	            title:config.name,
+	            error_msg:"",
+	            config:config,
+	            user_config:config.user_config,
+	            userinfo:user
+	            });
+        });
+     }
+}
 
 
-};

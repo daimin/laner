@@ -35,13 +35,14 @@ function add_diary(){
 }
 
 
-function del_diary(did){
+function del_diary(did, delobj){
 	art.dialog({
 	    content: '确定删除该篇日志？',
 	    ok: function () {
 	        window.location = did;
 	        return false;
 	    },
+	    follow:delobj,
 	    cancelVal: '取消',
 	    cancel: true
 	});
@@ -116,4 +117,39 @@ function doregister(url){
 
 function close_alter_error(alter_error){
     $(".alert-error").first().css({"display":"none"});
+}
+
+
+function get_today_fmt(){
+    var date = new Date();
+    var year = date.getFullYear();
+    var month = date.getMonth() + 1;
+    var cdate = date.getDate();
+    var day = date.getDay();
+    var sday = "";
+    switch(day){
+       case 0:
+           sday = "星期日";
+           break;
+       case 1:
+           sday = "星期一";
+           break;
+       case 2:
+           sday = "星期二";
+           break;
+       case 3:
+           sday = "星期三";
+           break;
+       case 4:
+           sday = "星期四";
+           break;
+       case 5:
+           sday = "星期五";
+           break;
+       case 6:
+           sday = "星期六";
+           break;       
+    }
+    
+    return year+"年"+month+"月"+cdate+"日 "+sday; 
 }

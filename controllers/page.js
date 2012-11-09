@@ -1,5 +1,5 @@
 var config = require('../config').config
-    ,util = require('../utils/util')
+    ,lutil = require('../utils/util')
     ,path = require('path')
     ,EventProxy = require("eventproxy").EventProxy;
 

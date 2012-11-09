@@ -79,7 +79,7 @@ exports.config = {
 	    return generate_mongo_url(mongo);;
 	})(),
 	session_secret  : 'WOWILOVEYOU',
-	auth_cookie_name: 'laner_diary',
+	auth_cookie_name: 'lanerdiarycookiename',
 	port            : 3000,
 	
 	// admin 可删除话题，编辑标签
@@ -114,6 +114,7 @@ exports.config = {
 	    email_size   :[8,80],
 	    nickname_size:[2,40],
 	    password_size:[2,20],
+	    motto_size   :[2,70],
 	    avatar_size  :128*1024,
 	    avatar_url : '/images/avatar/',
 	},

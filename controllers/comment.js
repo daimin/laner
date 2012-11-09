@@ -5,7 +5,7 @@ var DB = require("../models")
     ,config = require('../config').config
     ,check = require('validator').check
     ,sanitize = require('validator').sanitize
-    ,util = require('../utils/util')
+    ,lutil = require('../utils/util')
     ,fs = require('fs')
     ,path = require('path')
     ,EventProxy = require("eventproxy").EventProxy;
@@ -24,8 +24,8 @@ var comment_config = {
 
 function view_diary(did){
 	Diary.findOne({"_id":diary_id}, function(err, diary){
-	    diary.create_date = util.dateFormat(diary.create_date);
-        diary.edit_date = util.dateFormat(diary.edit_date);
+	    diary.create_date = lutil.dateFormat(diary.create_date);
+        diary.edit_date = lutil.dateFormat(diary.edit_date);
         if(err) return next(err);
         return diary;
     });
@@ -34,7 +34,7 @@ function view_diary(did){
 exports.add = function(req, res, next){
 	var method = req.method.toLowerCase();
 	if(method == "post"){
-		var comment_cont = sanitize(util.html_entries(req.body.comment)).xss();
+		var comment_cont = sanitize(lutil.html_entries(req.body.comment)).xss();
         var diary_id = sanitize(req.body.diary_id).trim();
         var commenter = sanitize(req.body.commenter).trim();
         
@@ -108,8 +108,8 @@ exports.list = function(req, res, next){
 	        if(err) return next(err);
 	            // console.log(diarys);
 	            for(var i = 0 ; i < diarys.length;i++){
-	               diarys[i].create_date = util.dateFormat(diarys[i].create_date);
-	               diarys[i].edit_date = util.dateFormat(diarys[i].edit_date);
+	               diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
+	               diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
 	               if(diarys[i].up_img_thumb){
 	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
 	               }
