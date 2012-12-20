@@ -114,7 +114,7 @@ exports.config = {
 	    email_size   :[8,80],
 	    nickname_size:[2,40],
 	    password_size:[2,20],
-	    motto_size   :[2,70],
+	    motto_size   :[0,70],
 	    avatar_size  :128*1024,
 	    avatar_url : '/images/avatar/',
 	},

@@ -87,7 +87,7 @@ function dologin(url,ispage){
               }
            }else{
               $("#alert-error").css({"display":"block"});
-              $("#alert-error").html(res);
+              $("#error_msg").html(res);
            }
         }
     );
@@ -115,9 +115,105 @@ function doregister(url){
     return false;
 }
 
+function doupdate_info(url){
+	var actionVal = url.substring(url.lastIndexOf('/')+1);
+	url = url.substring(0,url.lastIndexOf('/'));
+    var param = {
+    		     nickname:$("#nickname").val(),
+                 email:$("#email").val(),
+                 motto:$("#motto").val(),
+                 action:actionVal
+                 };
+
+    $.post(url, param,
+        function(data){
+           if(data == 1){
+              $("#alert-error").css({"display":"none"});
+			  $("#alert-success").css({"display":"block"});
+              $("#success_msg").html("更新成功");
+           }else{
+              $("#alert-error").css({"display":"block"});
+			  $("#alert-success").css({"display":"none"});
+              $("#error_msg").html(data);
+           }
+        }
+    );
+    return false;
+}
+
+function doupdate_pass(url){
+    var actionVal = url.substring(url.lastIndexOf('/')+1);
+	url = url.substring(0,url.lastIndexOf('/'));
+    var param = {
+	             email:$("#email").val(),
+    		     cur_password:$("#cur_password").val(),
+                 new_password:$("#new_password").val(),
+                 re_new_password:$("#re_new_password").val(),
+                 action:actionVal
+                 };
+
+    $.post(url, param,
+        function(data){
+           if(data == 1){
+              $("#alert-error").css({"display":"none"});
+			  $("#alert-success").css({"display":"block"});
+              $("#success_msg").html("更新成功");
+           }else{
+              $("#alert-error").css({"display":"block"});
+			  $("#alert-success").css({"display":"none"});
+              $("#error_msg").html(data);
+           }
+        }
+    );
+    return false;
+}
+
+function doupdate_avatar(url){
+    var actionVal = url.substring(url.lastIndexOf('/')+1);
+	url = url.substring(0,url.lastIndexOf('/'));
+    var param = {
+	             email:$("#email").val(),
+    		     new_avatar:$("#new_avatar").val(),
+                 action:actionVal
+                 };
+
+    $.post(url, param,
+        function(data){
+		   var tpos = data.indexOf(':');
+		   var tag = msg = "";
+		   if(tpos != -1){
+		   		tag = data.substring(0,tpos);
+		        msg = data.substring(tpos + 1);
+		   }else{
+		      tag = data;
+		   }
+
+           if(tag == 1){
+              $("#alert-error").css({"display":"none"});
+			  $("#alert-success").css({"display":"block"});
+              $("#success_msg").html("更新成功");
+			  $("#avatar_img").attr({"src":msg});
+           }else{
+              $("#alert-error").css({"display":"block"});
+			  $("#alert-success").css({"display":"none"});
+              $("#error_msg").html(data);
+           }
+        }
+    );
+    return false;
+}
+
+
+
 function close_alter_error(alter_error){
     $(".alert-error").first().css({"display":"none"});
 }
+
+function close_alter_success(alter_success){
+    $(".alert-success").first().css({"display":"none"});
+}
+
+
 
 
 function get_today_fmt(){

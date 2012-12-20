@@ -12,10 +12,19 @@
     </form>
     <%}else{%>
     <div class="panel">
-      <img src="<%= config.user_config.avatar_url+userinfo.avatar%>">
+	<%
+		var avatar_url = "";
+		
+		 if(userinfo.avatar.indexOf("default") == -1){
+			avatar_url = userinfo.avatar; 
+		 }else{
+			avatar_url = config.user_config.avatar_url+userinfo.avatar;
+		 }
+	%>
+      <img src="<%= avatar_url%>">
       <div class="user-nickname"><%= userinfo.nickname%></div>
       <div class="proverbs">
-        人生过处惟存悔，知识增时只益疑。
+        <%= userinfo.motto%>
       </div>
       <div class="userinfo">
        0日记收藏 &nbsp;&nbsp; 0关注 &nbsp;&nbsp; 0积分
@@ -25,8 +34,17 @@
     <div class="panel">
         <div class="header">热门日记</div>
         <ul class="unstyled">
-          <li><a href="#">Node.js简单介绍并实现一个简单的Web MVC框架</a></li>
-          <li><a href="#">websocket与node.js的完美结合 </a></li>
+		<% 
+          if(hot_diarys && hot_diarys.length > 0){
+          for(var i = 0; i < hot_diarys.length; i++) {
+             var diary = hot_diarys[i];
+             var view_num = comment_num = 0;
+             
+         %>
+          <li><a href="/diary/<%= diary._id %>/view"><%= diary.title%></a></li>
+		  <%
+		    }
+		  %>
         </ul>       
     </div>
     <div class="panel">

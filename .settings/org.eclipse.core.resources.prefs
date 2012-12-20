@@ -1,5 +1,11 @@
 eclipse.preferences.version=1
+encoding//public/javascripts/laner.js=UTF-8
 encoding//views/diary/add.html=UTF-8
 encoding//views/diary/list.html=UTF-8
 encoding//views/index.html=UTF-8
+encoding//views/indexside.html=UTF-8
+encoding//views/user/login.html=UTF-8
+encoding//views/user/setting.html=UTF-8
 encoding/<project>=UTF-8
+encoding/views=UTF-8
+instance/org.eclipse.core.net/org.eclipse.core.net.hasMigrated=true

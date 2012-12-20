@@ -133,6 +133,7 @@ exports.add = function(req, res, next){
             lutil.log("Save diary.");
             lutil.userinfo(req, function(user){
 	        //保存日志
+			// 还是最好先确认数据格式
 			    var diary = {};
 		     	diary.title = title;
 		    	diary.content = content;
@@ -143,6 +144,7 @@ exports.add = function(req, res, next){
 			    diary.up_img_thumb = target_path_thumb;
 			    diary.author = user.email;
 			    diary.view_num = 0;
+				diary.comment_num = 0;
 			    diary.type = diary_type;
 			
 			    Diary.save(diary, function(err){
@@ -302,7 +304,6 @@ exports.edit = function(req, res, next){
 
 
 exports.list = function(req, res, next){
-   lutil.log('Get diary list.');
    var method = req.method.toLowerCase();
    
 	if(method == "get"){
@@ -489,3 +490,6 @@ exports.del = function(req, res, next){
 
 
 };
+
+
+

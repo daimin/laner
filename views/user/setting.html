@@ -5,21 +5,30 @@ if(userinfo.motto){
    motto = userinfo.motto;
 }
 %>
-<link rel="stylesheet" type="text/css" href="/stylesheets/imgareaselect/imgareaselect-animated.css" />
 
 <div class="container">
   <div class="row show-grid">
     <div class="span12">
+        <div id="alert-success" class="alert alert-success" style="display:none">
+          <button class="close" data-dismiss="alert" onclick="close_alter_success()">x</button>
+          <div id="success_msg"></div>
+        </div>
+        <div id="alert-error" class="alert alert-error" style="display:none">
+          <button class="close" data-dismiss="alert" onclick="close_alter_error()">x</button>
+          <div id="error_msg"></div>
+        </div>
         <div class="tabbable"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs">
 			    <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
 			    <li><a href="#tab2" data-toggle="tab">修改密码</a></li>
-			    <li><a href="#tab3" data-toggle="tab">编辑头像</a></li>
+			    <li><a href="#tab3" data-toggle="tab">修改头像</a></li>
 			  </ul>
 			  <div class="tab-content">
 			    <div class="tab-pane active" id="tab1" >
-			    <form class="form-horizontal" method="POST" action="" onsubmit="return doregister('/user/register')">
+			    <form class="form-horizontal" method="POST" action="" onsubmit="return doupdate_info('/user/setting/update_info')">
+			     
                    <fieldset>
+                   
 			          <div class="control-group">
 		                  <label class="control-label" for="email">Email</label>
 		                  <div class="controls">
@@ -48,24 +57,26 @@ if(userinfo.motto){
 	                </form>
 			    </div>
 			    <div class="tab-pane" id="tab2">
-			       <form class="form-horizontal" method="POST" action="" onsubmit="return doregister('/user/register')">
+			       <form class="form-horizontal" method="POST" action="" onsubmit="return doupdate_pass('/user/setting/update_pass')">
+			       <input type="hidden" value="update_pass" name="action" />
                    <fieldset>
 			          <div class="control-group">
-		                  <label class="control-label" for="email">当前密码</label>
+		                  <label class="control-label" for="password">当前密码</label>
 		                  <div class="controls">
-		                    <input class="input input-xlarge" type="password" id="cur_password" name="cur_password" disabled placeholder="当前密码" value="<%= userinfo.email%>">
+		                    <input class="input input-xlarge" type="password" id="cur_password" name="cur_password" placeholder="当前密码" >
 		                  </div>
 		              </div>
 		              <div class="control-group">
-		                  <label class="control-label" for="nickname">新密码</label>
+		                  <label class="control-label" for="new_password">新密码</label>
 		                  <div class="controls">
-		                    <input class="input input-xlarge" type="password" id="new_password" name="new_password" placeholder="新密码" value="<%= userinfo.nickname%>">
-		                  </div>
+		                    <input class="input input-xlarge" type="password" id="new_password" name="new_password" placeholder="新密码">
+		                    <small class="help-block">字数控制在<%= user_config.password_size[0]%>到<%= user_config.password_size[1]%>个之间</small>
+						  </div>
 		              </div>
 		              <div class="control-group">
-		                  <label class="control-label" for="nickname">重复新密码</label>
+		                  <label class="control-label" for="re_new_password">重复新密码</label>
 		                  <div class="controls">
-		                    <input class="input input-xlarge" type="password" id="re_new_password" name="re_new_password" placeholder="重复新密码" value="<%= userinfo.nickname%>">
+		                    <input class="input input-xlarge" type="password" id="re_new_password" name="re_new_password" placeholder="重复新密码">
 		                  </div>
 	                  </div>
 	                  <div class="form-actions">
@@ -75,12 +86,38 @@ if(userinfo.motto){
 	                </form>
 			    </div>
 			    <div class="tab-pane" id="tab3">
-			       <div class="panel">
-			       <div style="float:left;">
-			       <img id="selectbanner" src="/images/avatar/1000424335a2db2036.jpg" />
-			       </div>
-			       <div id="#preview"><img src="/images/avatar/1000424335a2db2036.jpg" /></div>
-			       </div>
+			     <form class="form-horizontal" method="POST" action="" onsubmit="return doupdate_avatar('/user/setting/update_avatar')">
+			     <input type="hidden" value="update_avatar" name="action" />
+                   <fieldset>
+			          <div class="control-group">
+		                  <label class="control-label" for="email">当前头像</label>
+		                  <div class="controls">
+						  <%
+						    var avatar_url = "";
+							
+						     if(userinfo.avatar.indexOf("default") == -1){
+							    avatar_url = userinfo.avatar; 
+							 }else{
+							    avatar_url = config.user_config.avatar_url+userinfo.avatar;
+							 }
+						  %>
+		                    <img id="avatar_img" src="<%= avatar_url%>">
+		                  </div>
+		              </div>
+		              <div class="control-group">
+		                  <label class="control-label" for="new_avatar">新头像URL地址</label>
+		                  <div class="controls">
+		                    <input class="input input-xxlarge" type="text" id="new_avatar" name="new_avatar" placeholder="新头像URL地址" value="">
+		                   <small class="help-block">填写可靠的图片URL地址，推荐在 <a href="http://en.gravatar.com/">Gravatar</a> 注册或更改您的头像。</small>
+		                  </div>
+		              </div>
+		  
+	                  <div class="form-actions">
+                          <button class="btn btn-primary" type="submit">更新</button>&nbsp;&nbsp;
+                      </div>
+	                  </fieldset>
+	                </form>
+	                
 			    </div>
 			  </div>
           </div>
@@ -90,30 +127,9 @@ if(userinfo.motto){
   <hr/>
   <%- partial("footer") %>
 </div>
-<script type="text/javascript" src="/javascripts/jquery.imgareaselect.pack.js" charset="utf-8"> </script>
 <script type="text/javascript" src="/javascripts/bootstrap-tab.js" charset="utf-8"> </script>
 <script type="text/javascript">
-function preview(img, selection)
-{
-        
-        if(!selection.width || !selection.height)
-            return;
-       
-        var scaleX = 100 / selection.width;
-        var scaleY = 100 / selection.height;
-       
-        $('#preview img').css( {
-            width : Math.round(scaleX * 700),
-            height: Math.round(scaleY * 1276),
-            marginLeft: -Math.round(scaleX * selection.x1),
-            marginTop: -Math.round(scaleY * selection.y1)
-        });
-       
-}
 
-$(function(){
-   $('#selectbanner').imgAreaSelect({aspectRatio:"1:1",maxWidth: 200, maxHeight: 200, handles: true,onSelectEnd : preview }); 
-});
 </script>
           
 

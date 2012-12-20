@@ -15,6 +15,7 @@
       <div class="row panel">
          <!-- 文章内容开始 -->
          <% 
+          if(diarys && diarys.length > 0){
           for(var i = 0; i < diarys.length; i++) {
              var diary = diarys[i];
              var view_num = comment_num = 0;
@@ -61,7 +62,9 @@
             </div>
           </div>
           <div class="ul">&nbsp;</div>
-          <% } %>
+          <% }
+          }
+           %>
           <!-- 文章内容结束 -->
 <script type="text/javascript">
     jQuery('.nailthumb-container').nailthumb({width:100,height:100});
@@ -70,7 +73,7 @@
           </div>
     </div>
     <div class="span4">
-       <%- partial("indexside",{userinfo:userinfo, config:config}) %>
+       <%- partial("indexside",{userinfo:userinfo, config:config, "hot_diarys":hot_diarys}) %>
     </div>
   <hr/>
 

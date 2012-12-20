@@ -7,7 +7,7 @@ var sys = require("sys")
     ,ObjID = DB.ObjID
     ,EventProxy = require("eventproxy").EventProxy
     ,htmlparser = require("htmlparser"),
-    sys = require('sys');
+    sys = require('util');
     
     
 exports.encrypt = function(str,secret) {

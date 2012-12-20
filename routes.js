@@ -108,7 +108,12 @@ exports = module.exports = function(app){
 	   path:"/user/setting",
 	   ctrl:user.setting,
 	   method:'get'
-	}
+	},
+	{
+		   path:"/user/setting",
+		   ctrl:user.setting,
+		   method:'post'
+		}
 	];
 	
 	filter(app, maps);

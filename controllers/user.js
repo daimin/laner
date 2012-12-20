@@ -174,6 +174,122 @@ exports.setting = function(req, res, next){
 	            userinfo:user
 	            });
         });
+     }else{
+//    	 console.log(req.body);
+    	 var action = sanitize(req.body.action).trim();
+    	 if(action == "update_info"){ // 更新用户基本信息
+    		 var email = sanitize(req.body.email).trim();
+    		 var nickname = sanitize(req.body.nickname).trim();
+    		 var motto = sanitize(req.body.motto).trim();
+    		 try{
+    			 check(nickname,'昵称不能是空的！').notEmpty();
+    	     }catch(e){
+    	           res.send(e.message);
+    	     }
+    	     try{
+				check(nickname,'昵称长度必须在'+config.user_config.nickname_size[0]+'到'+config.user_config.nickname_size[1]+'个之间!')
+				.len(config.user_config.nickname_size[0],config.user_config.nickname_size[1]);
+			}catch(e){
+				res.send(e.message);
+			}
+    	     User.update( {"email":email},{$set:
+			                    {
+			                      "nickname":nickname,"motto":motto,
+			                    }
+			                  }, {},function(err){
+			        if(err) return next(err);
+			        res.send("1");
+			    });
+    	        
+    	 }else if(action == "update_pass"){ // 更新用户密码
+		     var email = sanitize(req.body.email).trim();
+    		 var cur_password = sanitize(req.body.cur_password).trim();
+    		 var new_password = sanitize(req.body.new_password).trim();
+    		 var re_new_password = sanitize(req.body.re_new_password).trim();
+    		 try{
+    			 check(cur_password,'当前密码不能是空的！').notEmpty();
+    	     }catch(e){
+    	           res.send(e.message);
+    	     }
+			 
+			 try{
+    			 check(new_password,'新密码不能是空的！').notEmpty();
+    	     }catch(e){
+    	           res.send(e.message);
+    	     }
+			 
+			 try{
+    			 check(re_new_password,'重复新密码不能是空的！').notEmpty();
+    	     }catch(e){
+    	           res.send(e.message);
+    	     }
+			try{
+				check(cur_password,'当前密码长度必须在'+config.user_config.password_size[0]+'到'+config.user_config.password_size[1]+'个之间!')
+				.len(config.user_config.password_size[0],config.user_config.password_size[1]);
+			}catch(e){
+				res.send(e.message);
+			}
+			
+			try{
+				check(new_password,'新密码长度必须在'+config.user_config.password_size[0]+'到'+config.user_config.password_size[1]+'个之间!')
+				.len(config.user_config.password_size[0],config.user_config.password_size[1]);
+			}catch(e){
+				res.send(e.message);
+			}
+
+			try{
+				check(re_new_password,'重复新密码长度必须在'+config.user_config.password_size[0]+'到'+config.user_config.password_size[1]+'个之间!')
+				.len(config.user_config.password_size[0],config.user_config.password_size[1]);
+			}catch(e){
+				res.send(e.message);
+			}
+			
+			try{
+				check(new_password,"输入重复新密码错误").equals(re_new_password);
+            }catch(e){
+                res.send(e.message);
+            }
+			
+			User.findOne({"email":email,"password":lutil.md5(cur_password)}, function(err, user){
+		    if(err) return next(err);
+		    if(user == null){
+		       res.send('当前密码输入错误!');
+		    }else{
+		        User.update( {"email":email},{$set:
+			                    {
+			                      "password":lutil.md5(new_password),
+			                    }
+			                  }, {},function(err){
+			        if(err) 
+					   return next(err);
+			        res.send("1");
+			    });
+		    }
+		   });
+    	     
+
+    	        
+    	 }else if(action == "update_avatar"){
+		 
+		     var email = sanitize(req.body.email).trim();
+    		 var new_avatar = sanitize(req.body.new_avatar).trim();
+    		 try{
+    			 check(new_avatar,'新头像地址不能为空！').notEmpty();
+    	     }catch(e){
+    	           res.send(e.message);
+    	     }
+			 
+			
+			User.update( {"email":email},{$set:
+			                {
+			                  "avatar":new_avatar,
+			                }
+			             }, {},function(err){
+			    if(err) 
+					return next(err);
+			    res.send("1:" + new_avatar);
+			});
+		 }
      }
 }
 
