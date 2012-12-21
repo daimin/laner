@@ -9,7 +9,8 @@ var DB = require("../models")
     ,lutil = require('../utils/util')
     ,fs = require('fs')
     ,path = require('path')
-    ,EventProxy = require("eventproxy").EventProxy;
+    ,EventProxy = require("eventproxy").EventProxy
+    ,dbutil = require("../models/dbutil");
 
 exports.login = function(req, res, next){
     var method = req.method.toLowerCase();
@@ -48,11 +49,15 @@ exports.login = function(req, res, next){
 		    }else{
 		       gen_session(user, res);
 		       lutil.log(req.body.p);
-		       if(req.body.p){
-		          res.send('1:'+ req.body.p);
-		       }else{
-		          res.send('1:');
-		       }
+               dbutil.update_user_score(email,1,function(){
+
+                   if(req.body.p){
+                      res.send('1:'+ req.body.p);
+                   }else{
+                      res.send('1:');
+                   }
+               });
+
 		    }
 		});
 		
@@ -148,6 +153,7 @@ exports.register = function(req, res, next){
 		    user.nickname = nickname;
 			user.reg_date = new Date();
 			user.avatar = "default.jpg";
+            user.score = 5;
 				
 			User.save(user, function(err){
 				if(err) return next(err);

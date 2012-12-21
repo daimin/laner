@@ -261,10 +261,10 @@ body.page .edit-link {
   color:#aaaaff;
 }
 .user-nickname{
-	margin-left:24px;
+	text-align: left;
 	font-size:large;
-	display: inline;
 	color: #444;
+  margin-left: 24px;
 }
 .userinfo{
 	line-height:18px;
@@ -330,4 +330,8 @@ span .number{
     height:100px;
     border:1px solid #000;
     overflow:hidden;
+}
+
+.cursor-hand{
+  cursor: pointer;
 }

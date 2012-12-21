@@ -2,6 +2,7 @@ var DB = require("../models")
     ,Diary = DB.Table('Diary')
     ,User = DB.Table('User')
     ,Comment = DB.Table('Comment')
+    ,UserFocusDiary = DB.Table('UserFocusDiary')
     ,ObjID = DB.ObjID
     ,config = require('../config').config
     ,check = require('validator').check
@@ -10,7 +11,8 @@ var DB = require("../models")
     ,fs = require('fs')
     ,path = require('path')
     ,EventProxy = require("eventproxy").EventProxy
-    ,page = require('./page');
+    ,page = require('./page')
+    ,dbutil = require("../models/dbutil");
 
 var diary_config = {
 	diary_title_size : config.diary_title_size,
@@ -149,7 +151,10 @@ exports.add = function(req, res, next){
 			
 			    Diary.save(diary, function(err){
 			        if(err) return next(err);
-			        res.redirect('diary/list');
+			        dbutil.update_user_score(user.email,2,function(){
+                        res.redirect('diary/list');
+                    });
+			        
 			    });
              });
         });
@@ -313,6 +318,8 @@ exports.list = function(req, res, next){
 	   }
 	   var proxy = new EventProxy();
 	   var total_page = 0;
+	   var hot_diarys = [];
+	   var active_users = [];
 	   
 	   proxy.once("renderto",function(diarys,uinfo){
             var pageData = page.createPage(pageno, total_page);
@@ -323,10 +330,43 @@ exports.list = function(req, res, next){
                 config      :config,
                 pageData    :pageData,
                 req_path    :req.path,
-                userinfo    :uinfo
+                userinfo    :uinfo,
+                hot_diarys  :hot_diarys,
+				active_users:active_users,
 		    });
             DB.close();
 	   });
+
+	   	proxy.once("get_active_users", function(diarys, uinfo){
+			   User.find({},{sort:[['score', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, users){
+	           if(err) return next(err);
+	               for(var i = 0 ; i < users.length;i++){
+					   active_users[active_users.length ] = users[i];
+	                }
+	               
+	                proxy.trigger('renderto',diarys, uinfo);
+
+                 });
+			});
+
+	    proxy.once("get_hot_diarys", function(diarys, uinfo){
+		   Diary.find({},{sort:[['view_num', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, diarys){
+           if(err) return next(err);
+               for(var i = 0 ; i < diarys.length;i++){
+                   diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
+                   diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
+                   if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
+                   
+                       diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
+                   }
+                   diarys[i].content = diarys[i].summary;
+				   hot_diarys[hot_diarys.length ] = diarys[i];
+                }
+               
+                proxy.trigger('get_active_users',diarys, uinfo);
+
+             });
+		});
 	   
 	   proxy.once("get_nickname",function(diarys,uinfo){
 	       var diarys_len = diarys.length;
@@ -338,7 +378,7 @@ exports.list = function(req, res, next){
 			      if(idx < diarys_len){
 			          proxy.trigger('get_sub_nickname',idx);
 			      }else{
-			          proxy.trigger('renderto',diarys,uinfo);
+			          proxy.trigger('get_hot_diarys',diarys,uinfo);
 			      }
 			   });
 	       });
@@ -391,6 +431,7 @@ exports.view = function(req, res, next){
 	   var gdiary = null;
 	   var proxy = new EventProxy();
        var nickname = "";
+       var diary_id_p = req.params.did;
        var diary_id = ObjID(req.params.did);
        
        var get_nickname = function(diary){
@@ -444,16 +485,27 @@ exports.view = function(req, res, next){
 	               comments[i].floor = "#" + (i + 1);
 	               
 	           }
-	           lutil.userinfo(req, function(user){
-		           res.render('diary/view', {
-			    	 title:config.name,
-			    	 diary:gdiary,
-			    	 comments:comments,
-		             diary_config:diary_config,
-	                 config:config,
-	                 userinfo:user
-			      });
-		      });
+
+	           
+	           dbutil.get_focus_num(diary_id_p,function(focus_num){
+	           	   dbutil.has_focus(diary_id_p,gdiary.author,function(has_focus){
+
+                      lutil.userinfo(req, function(user){
+			             res.render('diary/view', {
+					    	 title:config.name,
+					    	 diary:gdiary,
+					    	 focus_num:focus_num,
+					    	 has_focus:has_focus,
+					    	 comments:comments,
+				             diary_config:diary_config,
+			                 config:config,
+			                 userinfo:user
+				          });
+			         });
+
+	           	   });
+	           });
+
            });
        });
        
@@ -489,6 +541,53 @@ exports.del = function(req, res, next){
  
 
 
+};
+
+exports.focus = function(req, res, next){
+
+   var diary_id_p = req.params.did;
+   var diary_id = ObjID(req.params.did);
+   var email = req.params.email;
+   var userFocusDiary = {};
+   userFocusDiary.diary_id = diary_id;
+   userFocusDiary.email = email;
+
+   UserFocusDiary.findOne({"email":email,"diary_id":diary_id}, function(err, userFocusDiary){
+	    if(err) return next(err);
+	    if(userFocusDiary == null){
+	         userFocusDiary.save(userDiary, function(err){
+   		        if(err) return next(err);
+			    dbutil.get_focus_num(diary_id_p,function(focus_num){
+                    res.send(focus_num);
+
+			    });
+
+			        
+	          });
+	    }else{
+	    	res.send("0");
+	    }
+	});
+  
+};
+
+
+exports.cancel_focus = function(req, res, next){
+   var diary_id_p = req.params.did;
+   var diary_id = ObjID(req.params.did);
+   var email = req.params.email;
+   var userFocusDiary = {};
+   userFocusDiary.diary_id = diary_id;
+   userFocusDiary.email = email;
+
+
+   UserFocusDiary.remove({"email":email,"diary_id":diary_id_p}, function(err){
+		   if(err) return next(err);
+		   dbutil.get_focus_num(diary_id_p,function(focus_num){
+                   res.send(focus_num);
+		   });
+   });
+  
 };
 
 

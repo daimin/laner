@@ -128,6 +128,8 @@ exports.config = {
 	// 程序是否是调试模式
 	DEBUG:true,
 	PAGE_SIZE:10,
+
+	related_sites : ["当前版本：v0.1 ","<a href=\"mailto:daiming253685@126.com\">联系站长</a> "]
 	
 };
 

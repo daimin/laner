@@ -40,9 +40,14 @@
               <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=1334623036661201" charset="utf-8"></script>
             </div>
             <div class="pull-right">
-              <a href="javascript:void(0)">
-                <span class="badge badge-warning">&nbsp;喜 欢&nbsp;</span>
-              </a>
+              <span class="badge"><%= focus_num%></span>
+              
+                 <% if(has_focus <= 0){%>
+                 <span class="label label-warning cursor-hand">&nbsp;关 注&nbsp;</span>
+                 <%}else{%>
+                 <span class="label cursor-hand">&nbsp;取消关注&nbsp;</span>
+                 <%}%>
+             
             </div>
           </div>
         </div>

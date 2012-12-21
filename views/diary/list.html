@@ -70,17 +70,8 @@
       </div>
       
         <div class="span4">
-          <div class="panel">
-            <div class="header">作者</div>
-          </div>
-          
-          <div class="panel">
-            <div class="header">作者其它日志</div>
-          </div>
-          
-          <div class="panel">
-            <div class="header">作者感兴趣的日志</div>
-          </div>
+         <%- partial("../indexside",{"userinfo":userinfo, "config":config, "hot_diarys":hot_diarys,
+          "active_users":active_users}) %>
           
       </div>
    

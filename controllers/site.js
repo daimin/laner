@@ -20,6 +20,7 @@ exports.index = function(req, res, next){
 	       var total_page = 0;
 		   
 		   var hot_diarys = [];
+		   var active_users = [];
 	       
 	   	   proxy.once("renderto",function(diarys, uinfo){
 	   	       if(total_page > config.INDEX_ITEM_SIZE){
@@ -33,11 +34,24 @@ exports.index = function(req, res, next){
                    pageData    :pageData,
                    req_path    :req.path,
                    userinfo    :uinfo,
-				   hot_diarys  :hot_diarys
+				   hot_diarys  :hot_diarys,
+				   active_users:active_users
 		       });
                DB.close();
 	       });
 	       
+	       	proxy.once("get_active_users", function(diarys, uinfo){
+			   User.find({},{sort:[['score', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, users){
+	           if(err) return next(err);
+	               for(var i = 0 ; i < users.length;i++){
+					   active_users[active_users.length ] = users[i];
+	                }
+	               
+	                proxy.trigger('renderto',diarys, uinfo);
+
+                 });
+			});
+
 		    proxy.once("get_hot_diarys", function(diarys, uinfo){
 			   Diary.find({},{sort:[['view_num', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, diarys){
 	           if(err) return next(err);
@@ -52,10 +66,12 @@ exports.index = function(req, res, next){
 					   hot_diarys[hot_diarys.length ] = diarys[i];
 	                }
 	               
-	                proxy.trigger('renderto',diarys, uinfo);
+	                proxy.trigger('get_active_users',diarys, uinfo);
 
                  });
 			});
+
+
 	       
 		   proxy.once("get_nickname",function(diarys,uinfo){
 			   if(!diarys || diarys.length <= 0){
