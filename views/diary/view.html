@@ -52,42 +52,18 @@
           </div>
         </div>
         <div class="panel">
-          <div class="comment">评论 <%= comments.length%>
-            <%
-               if(comments.length){
-            %>
-              <div class="comment-list">
-                <%
-                 comments.forEach(function(comment){
-                    %>
-                      <div class="comment-item row">
-                        <div class="comment-left span1 thumbs_block48">
-                          <a href="javascript:void(0)"><img src="/images/avatar/default.jpg"></a>
-                        </div>
-                        <div class="comment-right span6">
-                          <div class="comment-header">
-                            &nbsp;在 <%= comment.comment_date%>&nbsp;&nbsp;
-                            <a href="javascript:void(0)"><%= comment.commenter%></a>
-                            <span class="comment-floor"><%= comment.floor%></span>
-                          </div>
-                          <div class="comment-cont">
-                            <%= comment.content%>
-                          </div>
-                        </div>
-                      </div>
-                    <%
-                 });
-                %>
-              </div>
-            <%
-               }
-            %>
-          </div>
+          <div id="comment_div"></div>
           <div class="alert alert-error" id="alert-error" style="display:none;"></div>
           <form method="POST" action="" onsubmit="return doCommentSubmit('/comment/add');">
             <fieldset>
               <input type="hidden" name="action" value="comment">
-              <input type="hidden" name="commenter" id="commenter" value="vagasnail">
+              <%
+              var uemail = "";
+              if(userinfo){
+                uemail = userinfo.email;
+              }
+              %>
+              <input type="hidden" name="commenter" id="commenter" value="<%= uemail%>">
               <input id="diary_id" type="hidden" name="diary_id" value="<%=diary._id%>">
               <div class="control-group">
                 <div class="controls">
@@ -121,10 +97,11 @@
   <hr/>
 <%- partial("footer") %>
 </div>
-
+<script type="text/javascript" src="/javascripts/ejs_production.js"></script>
 <script type="text/javascript">
     $(function(){
            set_thumbs(".nailthumb-container", 500,500);
+
            $('.fancybox').fancybox({
                closeClick : true,
                openEffect : 'elastic',
@@ -133,6 +110,10 @@
 				closeEffect : 'elastic',
 				closeSpeed  : 150
            });
+
+
+         render_viewlist("<%= diary._id%>");
+        
     });
            
 </script>

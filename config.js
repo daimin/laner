@@ -42,7 +42,7 @@ exports.config = {
 		"/diary/list"    : 1,
 		"/user/login"    : 1,
 		"/user/register" : 1,
-		"/comment/add"   : 2
+		"/comment/add"   : 1
 	}
 	,
 	host: '', // host 结尾不要添加'/'

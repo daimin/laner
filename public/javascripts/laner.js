@@ -53,7 +53,8 @@ function doCommentSubmit(url){
     $.post(url, param,
         function(data){
            if(data == 1){
-              window.location.reload();
+              render_viewlist($("#diary_id").val());
+              $("#comment").val("");
            }else{
               $("#alert-error").css({"display":"block"});
               $("#alert-error").html(data);
@@ -145,8 +146,8 @@ function doupdate_pass(url){
     var actionVal = url.substring(url.lastIndexOf('/')+1);
 	url = url.substring(0,url.lastIndexOf('/'));
     var param = {
-	             email:$("#email").val(),
-    		     cur_password:$("#cur_password").val(),
+	               email:$("#email").val(),
+    		         cur_password:$("#cur_password").val(),
                  new_password:$("#new_password").val(),
                  re_new_password:$("#re_new_password").val(),
                  action:actionVal
@@ -167,6 +168,16 @@ function doupdate_pass(url){
     );
     return false;
 }
+
+
+function render_viewlist(diary_id){
+          $.post("/comment/list", { "diary_id":diary_id},
+            function(data){
+              var dataObj = eval("("+data+")");
+            var html = new EJS({url: '/client_tmp/comment.ejs'}).render(dataObj);
+               $("#comment_div").html(html);
+        });
+        }
 
 function doupdate_avatar(url){
     var actionVal = url.substring(url.lastIndexOf('/')+1);

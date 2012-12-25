@@ -471,44 +471,27 @@ exports.view = function(req, res, next){
            }
            Diary.update({_id:diary_id}, {$set: {view_num : n_view_num}},{},function(err){
               if(err)  return next(err);
-              proxy.trigger('get_comment_list');
-           });
-       });
-       
-       
-       proxy.once("get_comment_list", function (img) {
-	       Comment.find({'diary_id':diary_id},{sort:[['comment_date', 1]]}).toArray(function(err, comments){
-	           if(err) return next(err);
-	           for(var i = 0 ; i < comments.length;i++){
-	              
-	               comments[i].comment_date = lutil.dateFormat(comments[i].comment_date);
-	               comments[i].floor = "#" + (i + 1);
-	               
-	           }
+                  dbutil.get_focus_num(diary_id_p,function(focus_num){
+	           	      dbutil.has_focus(diary_id_p,gdiary.author,function(has_focus){
+                          lutil.userinfo(req, function(user){
+			                  res.render('diary/view', {
+					    	      title:config.name,
+					    	      diary:gdiary,
+					    	      focus_num:focus_num,
+					    	      has_focus:has_focus,
+				                  diary_config:diary_config,
+			                      config:config,
+			                      userinfo:user
+				              });
+			             });
 
-	           
-	           dbutil.get_focus_num(diary_id_p,function(focus_num){
-	           	   dbutil.has_focus(diary_id_p,gdiary.author,function(has_focus){
-
-                      lutil.userinfo(req, function(user){
-			             res.render('diary/view', {
-					    	 title:config.name,
-					    	 diary:gdiary,
-					    	 focus_num:focus_num,
-					    	 has_focus:has_focus,
-					    	 comments:comments,
-				             diary_config:diary_config,
-			                 config:config,
-			                 userinfo:user
-				          });
-			         });
-
-	           	   });
+	           	    });
 	           });
-
            });
        });
-       
+
+
+
        proxy.trigger('get_diary');
 
 	}

@@ -101,31 +101,19 @@ exports.add = function(req, res, next){
 };
 
 
+
 exports.list = function(req, res, next){
-   var method = req.method.toLowerCase();
-	if(method == "get"){
-	   Diary.find({},{sort:[['create_date', 1]]}).toArray(function(err, diarys){
-	        if(err) return next(err);
-	            // console.log(diarys);
-	            for(var i = 0 ; i < diarys.length;i++){
-	               diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
-	               diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
-	               if(diarys[i].up_img_thumb){
-	                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
-	               }
-	               diarys[i].content = diarys[i].summary;
-	            }
-		        res.render('diary/list', {
-		    	title:config.name,
-		    	diarys:diarys,
-	            comment_config:comment_config
-		    });
-	        
-	        
-            DB.close();
-
-        });
-
-	}
-};
+   var diary_id = ObjID(req.body.diary_id);
+     Comment.find({'diary_id':diary_id},{sort:[['comment_date', 1]]}).toArray(function(err, comments){
+	           if(err) return next(err);
+	           for(var i = 0 ; i < comments.length;i++){
+	              
+	               comments[i].comment_date = lutil.dateFormat(comments[i].comment_date);
+	               comments[i].floor = "#" + (i + 1);
+	               
+	           }
+	           comments_obj = {"comments":comments};
+	           res.send(JSON.stringify(comments_obj));
+      });
+};       
 

@@ -1,0 +1,33 @@
+<div class="comment">评论 <%= comments.length%>
+
+   <%
+               if(comments.length){
+            %>
+              <div class="comment-list">
+                <%
+                 comments.forEach(function(comment){
+                    %>
+                      <div class="comment-item row">
+                        <div class="comment-left span1 thumbs_block48">
+                          <a href="javascript:void(0)"><img src="/images/avatar/default.jpg"></a>
+                        </div>
+                        <div class="comment-right span6">
+                          <div class="comment-header">
+                            &nbsp;在 <%= comment.comment_date%>&nbsp;&nbsp;
+                            <a href="javascript:void(0)"><%= comment.commenter%></a>
+                            <span class="comment-floor"><%= comment.floor%></span>
+                          </div>
+                          <div class="comment-cont">
+                            <%= comment.content%>
+                          </div>
+                        </div>
+                      </div>
+                    <%
+                 });
+                %>
+              </div>
+            <%
+               }
+            %>
+
+</div>

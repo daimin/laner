@@ -110,10 +110,15 @@ exports = module.exports = function(app){
 	   method:'get'
 	},
 	{
-		   path:"/user/setting",
-		   ctrl:user.setting,
-		   method:'post'
-		}
+		path:"/user/setting",
+		ctrl:user.setting,
+		method:'post'
+	},
+	{
+	   path:"/comment/list",
+	   ctrl:comment.list,
+	   method:'post'
+	},
 	];
 	
 	filter(app, maps);
