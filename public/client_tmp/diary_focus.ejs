@@ -1,0 +1,15 @@
+              <span class="badge"><%= focus_num%></span>
+                 <%
+                   var cursor_css = "cursor-disable";
+
+                   if(focus_email){
+                       cursor_css = "cursor-hand";
+                   }
+
+                 %>
+              
+                 <% if(has_focus <= 0){%>
+                 <span class="label label-warning <%= cursor_css%>" onclick="render_focus('<%= focus_email%>','<%= diary_id%>',0)">&nbsp;关 注&nbsp;</span>
+                 <%}else{%>
+                 <span class="label <%= cursor_css%> " onclick="render_focus('<%= focus_email%>','<%= diary_id%>',0)">&nbsp;取消关注&nbsp;</span>
+                 <%}%>

@@ -6,6 +6,12 @@
               <div class="comment-list">
                 <%
                  comments.forEach(function(comment){
+                    var commenter_link = "";
+                    if(!comment.commenter || comment.commenter == ""){
+                          commenter_link = "游客";
+                    }else{
+                          commenter_link = '<a href="javascript:void(0)">' + comment.commenter + '</a>';
+                    }
                     %>
                       <div class="comment-item row">
                         <div class="comment-left span1 thumbs_block48">
@@ -14,7 +20,7 @@
                         <div class="comment-right span6">
                           <div class="comment-header">
                             &nbsp;在 <%= comment.comment_date%>&nbsp;&nbsp;
-                            <a href="javascript:void(0)"><%= comment.commenter%></a>
+                            <%= commenter_link%>
                             <span class="comment-floor"><%= comment.floor%></span>
                           </div>
                           <div class="comment-cont">

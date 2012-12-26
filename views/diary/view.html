@@ -1,4 +1,10 @@
 <%- partial("head",{userinfo:userinfo}) %>
+<%
+    var uemail = "";
+    if(userinfo){
+        uemail = userinfo.email;
+    }
+%>
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.fancybox.css" />
 <script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
 <div class="container">
@@ -39,15 +45,9 @@
               </div>
               <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=1334623036661201" charset="utf-8"></script>
             </div>
-            <div class="pull-right">
-              <span class="badge"><%= focus_num%></span>
-              
-                 <% if(has_focus <= 0){%>
-                 <span class="label label-warning cursor-hand">&nbsp;关 注&nbsp;</span>
-                 <%}else{%>
-                 <span class="label cursor-hand">&nbsp;取消关注&nbsp;</span>
-                 <%}%>
-             
+            <div id="focus_div" class="pull-right">
+
+
             </div>
           </div>
         </div>
@@ -57,12 +57,7 @@
           <form method="POST" action="" onsubmit="return doCommentSubmit('/comment/add');">
             <fieldset>
               <input type="hidden" name="action" value="comment">
-              <%
-              var uemail = "";
-              if(userinfo){
-                uemail = userinfo.email;
-              }
-              %>
+
               <input type="hidden" name="commenter" id="commenter" value="<%= uemail%>">
               <input id="diary_id" type="hidden" name="diary_id" value="<%=diary._id%>">
               <div class="control-group">
@@ -113,6 +108,7 @@
 
 
          render_viewlist("<%= diary._id%>");
+         render_focus("<%= uemail%>","<%= diary._id%>",1);
         
     });
            

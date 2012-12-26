@@ -177,11 +177,23 @@ function render_viewlist(diary_id){
             var html = new EJS({url: '/client_tmp/comment.ejs'}).render(dataObj);
                $("#comment_div").html(html);
         });
-        }
+}
+
+function render_focus(email, diary_id, isload){
+      if(email == "" && isload == 0){
+          return false;
+      }
+      $.post("/diary/focus", {"email":email, "diary_id":diary_id,"isload":isload},
+            function(data){
+              var dataObj = eval("("+data+")");
+              var html = new EJS({url: '/client_tmp/diary_focus.ejs'}).render(dataObj);
+               $("#focus_div").html(html);
+        });
+}
 
 function doupdate_avatar(url){
     var actionVal = url.substring(url.lastIndexOf('/')+1);
-	url = url.substring(0,url.lastIndexOf('/'));
+	  url = url.substring(0,url.lastIndexOf('/'));
     var param = {
 	             email:$("#email").val(),
     		     new_avatar:$("#new_avatar").val(),

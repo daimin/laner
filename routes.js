@@ -75,6 +75,11 @@ exports = module.exports = function(app){
 	   method:'post'
 	},
 	{
+	   path:"/diary/focus",
+	   ctrl:diary.focus,
+	   method:'post'
+	},
+	{
 	   path:"/comment/add",
 	   ctrl: comment.add,
 	   method:'post'

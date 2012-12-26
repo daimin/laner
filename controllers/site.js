@@ -26,6 +26,7 @@ exports.index = function(req, res, next){
 	   	       if(total_page > config.INDEX_ITEM_SIZE){
 	               total_page = config.INDEX_ITEM_SIZE;
 	           }
+
                var pageData = page.createPage(pageno, total_page);
 		       res.render('index', {
 		           title       :config.name,
@@ -53,17 +54,17 @@ exports.index = function(req, res, next){
 			});
 
 		    proxy.once("get_hot_diarys", function(diarys, uinfo){
-			   Diary.find({},{sort:[['view_num', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, diarys){
+			   Diary.find({},{sort:[['view_num', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, s_diarys){
 	           if(err) return next(err);
-	               for(var i = 0 ; i < diarys.length;i++){
-	                   diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
-	                   diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
-	                   if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
+	               for(var i = 0 ; i < s_diarys.length;i++){
+	                   s_diarys[i].create_date = lutil.dateFormat(s_diarys[i].create_date);
+	                   s_diarys[i].edit_date = lutil.dateFormat(s_diarys[i].edit_date);
+	                   if(s_diarys[i].up_img_thumb && s_diarys[i].up_img_thumb != ""){
 	                   
-	                       diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
+	                       s_diarys[i].up_img_thumb = config.diary_url + s_diarys[i].up_img_thumb;
 	                   }
-	                   diarys[i].content = diarys[i].summary;
-					   hot_diarys[hot_diarys.length ] = diarys[i];
+	                   s_diarys[i].content = s_diarys[i].summary;
+					   hot_diarys[hot_diarys.length ] = s_diarys[i];
 	                }
 	               
 	                proxy.trigger('get_active_users',diarys, uinfo);
@@ -81,11 +82,13 @@ exports.index = function(req, res, next){
 			       proxy.assignAlways("get_sub_nickname",function(idx){
 			           var diary = diarys[idx];
 				       User.findOne({"email":diary.author}, function(err, user){
-					      diary.author = user.nickname;
+                          
+					      diary.author_nickname = user.nickname;
 					      idx++;
 					      if(idx < diarys_len){
 					          proxy.trigger('get_sub_nickname',idx);
 					      }else{
+
 					          proxy.trigger('get_hot_diarys',diarys,uinfo);
 					      }
 					   });
