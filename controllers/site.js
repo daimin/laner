@@ -82,8 +82,10 @@ exports.index = function(req, res, next){
 			       proxy.assignAlways("get_sub_nickname",function(idx){
 			           var diary = diarys[idx];
 				       User.findOne({"email":diary.author}, function(err, user){
-                          
-					      diary.author_nickname = user.nickname;
+                          if(user){
+                          	diary.author_nickname = user.nickname;
+                          }
+					      
 					      idx++;
 					      if(idx < diarys_len){
 					          proxy.trigger('get_sub_nickname',idx);
@@ -122,7 +124,11 @@ exports.index = function(req, res, next){
 	   
 	        proxy.once("get_total",function(){
 	            Diary.find({}).toArray(function(err, diarys){
-	            var total_items = diarys.length;
+	            var total_items = 0;
+	            if(diarys){
+	            	total_items = diarys.length;
+	            }
+	            
 	            total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
 	            proxy.trigger('get_list');
 	        });
