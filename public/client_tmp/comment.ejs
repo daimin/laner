@@ -10,12 +10,19 @@
                     if(!comment.commenter || comment.commenter == ""){
                           commenter_link = "游客";
                     }else{
-                          commenter_link = '<a href="javascript:void(0)">' + comment.commenter + '</a>';
+                          commenter_link = '<a href="javascript:void(0)">' + comment.commenter.nickname + '</a>';
                     }
+                    var avatar_url = "";
+                    
+                     if(comment.commenter && comment.commenter.avatar.indexOf("default") == -1){
+                        avatar_url = comment.commenter.avatar; 
+                     }else{
+                        avatar_url = config.user_config.avatar_url + config.user_config.default_avatar;
+                     }
                     %>
                       <div class="comment-item row">
-                        <div class="comment-left span1 thumbs_block48">
-                          <a href="javascript:void(0)"><img src="/images/avatar/default.jpg"></a>
+                        <div class="comment-left span1 nailthumb-container">
+                          <a href="javascript:void(0)"><img src="<%= avatar_url%>"></a>
                         </div>
                         <div class="comment-right span6">
                           <div class="comment-header">
@@ -37,3 +44,6 @@
             %>
 
 </div>
+<script type="text/javascript">
+    jQuery('.nailthumb-container').nailthumb({width:48,height:48});
+</script>

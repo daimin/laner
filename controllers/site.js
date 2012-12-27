@@ -42,7 +42,7 @@ exports.index = function(req, res, next){
 	       });
 	       
 	       	proxy.once("get_active_users", function(diarys, uinfo){
-			   User.find({},{sort:[['score', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, users){
+			   User.find({},{sort:[['score', -1]], limit:10}).toArray(function(err, users){
 	           if(err) return next(err);
 	               for(var i = 0 ; i < users.length;i++){
 					   active_users[active_users.length ] = users[i];
@@ -54,7 +54,7 @@ exports.index = function(req, res, next){
 			});
 
 		    proxy.once("get_hot_diarys", function(diarys, uinfo){
-			   Diary.find({},{sort:[['view_num', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, s_diarys){
+			   Diary.find({},{sort:[['view_num', -1]], limit:10}).toArray(function(err, s_diarys){
 	           if(err) return next(err);
 	               for(var i = 0 ; i < s_diarys.length;i++){
 	                   s_diarys[i].create_date = lutil.dateFormat(s_diarys[i].create_date);
@@ -102,7 +102,7 @@ exports.index = function(req, res, next){
 		   });
 	       
 	       proxy.once("get_list",function(){
-	           Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
+	           Diary.find({"type":"public"},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
 	           if(err) return next(err);
 	               for(var i = 0 ; i < diarys.length;i++){
 	                   diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
@@ -123,7 +123,7 @@ exports.index = function(req, res, next){
 
 	   
 	        proxy.once("get_total",function(){
-	            Diary.find({}).toArray(function(err, diarys){
+	            Diary.find({"type":"public"}).toArray(function(err, diarys){
 	            var total_items = 0;
 	            if(diarys){
 	            	total_items = diarys.length;

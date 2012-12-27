@@ -12,7 +12,10 @@
           <li><a href="/">首页</a></li>
           <li><a href="/diary/add">添加日记</a></li>
           <li><a href="/diary/list">所有日记</a></li>
+          <% if(userinfo){%>
+          <li><a href="/diary/<%= userinfo._id%>/mlist">我的日记</a></li>
           <li><a href="/diary/attent">关注日记</a></li>
+          <%}%>
         </ul>
       </div>
       <form class="navbar-form pull-left">

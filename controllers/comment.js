@@ -1,6 +1,7 @@
 var DB = require("../models")
     ,Comment = DB.Table('Comment')
     ,Diary = DB.Table('Diary')
+    ,User = DB.Table('User')
     ,ObjID = DB.ObjID
     ,config = require('../config').config
     ,check = require('validator').check
@@ -104,16 +105,43 @@ exports.add = function(req, res, next){
 
 exports.list = function(req, res, next){
    var diary_id = ObjID(req.body.diary_id);
-     Comment.find({'diary_id':diary_id},{sort:[['comment_date', 1]]}).toArray(function(err, comments){
-	           if(err) return next(err);
-	           for(var i = 0 ; i < comments.length;i++){
-	              
-	               comments[i].comment_date = lutil.dateFormat(comments[i].comment_date);
-	               comments[i].floor = "#" + (i + 1);
-	               
-	           }
-	           comments_obj = {"comments":comments};
-	           res.send(JSON.stringify(comments_obj));
+   var proxy = new EventProxy ();
+
+   proxy.once("renderto",function(comments){
+   	    lutil.log("renderto");
+	    comments_obj = {"comments":comments, "config":config};
+	    res.send(JSON.stringify(comments_obj));
+   });
+
+   Comment.find({'diary_id':diary_id},{sort:[['comment_date', 1]]}).toArray(function(err, comments){
+   	    var comments_len = comments.length;
+
+   	    var idx = 0;
+	    if(err) return next(err);
+	    proxy.assignAlways("get_commenter_user",function(idx){
+	         var comment = comments[idx];
+	         comment.floor = '#' + (idx + 1);
+		       User.findOne({"email":comment.commenter}, function(err, user){
+
+		       	  if(user){
+		       	  	 comment.commenter = user;
+		       	  }
+			      
+			      idx++;
+			      if(idx < comments_len){
+			          proxy.trigger('get_commenter_user',idx);
+			      }else{
+			          proxy.trigger('renderto',comments);
+			      }
+			   });
+	       });
+
+          if(comments_len > 0){
+          	  proxy.trigger('get_commenter_user',idx);
+          }else{
+          	  proxy.trigger('renderto', comments);
+          }
+
       });
 };       
 

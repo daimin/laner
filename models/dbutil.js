@@ -3,7 +3,8 @@ var DB = require("../models")
     ,Diary = DB.Table('Diary')
     ,User = DB.Table('User')
     ,Comment = DB.Table('Comment')
-    ,UserFocusDiary = DB.Table('UserFocusDiary');
+    ,UserFocusDiary = DB.Table('UserFocusDiary')
+    ,lutil = require('../utils/util');
 
 
 exports.update_user_score = function(email,score,callback){
@@ -58,6 +59,31 @@ exports.has_focus = function(diary_id,email,callback){
 
         	callback(true);
         }
+    });
+		   
+};
+
+exports.find_user_by_email = function(email,callback){
+    
+    User.findOne({"email":email},function(err, user){
+        callback(user);
+    });
+		   
+};
+
+exports.find_user_by_id = function(uid,callback){
+    uid = ObjID('' + uid);
+
+    User.findOne({"_id":uid},function(err, user){
+        callback(user);
+    });
+};
+
+exports.find_diary_by_id = function(did,callback){
+	did = '' + did;
+    var diary_id = ObjID(did);
+    Diary.findOne({"_id":diary_id},function(err, diary){
+        callback(diary);
     });
 		   
 };

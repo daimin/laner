@@ -25,22 +25,6 @@
 </div>
 
 <div class="panel">
-  <div class="header">作者其它日志</div>
-  <ul class="unstyled">
-    <% 
-          if(author_diarys && author_diarys.length > 0){
-          for(var i = 0; i < author_diarys.length; i++) {
-             var diary = author_diarys[i];
-         %>
-          <li><i class="icon-fire"></i>&nbsp;<a href="/diary/<%= diary._id %>/view"><%= diary.title%></a></li>
-      <%
-        }
-      }
-      %>
-        </ul>  
-</div>
-
-<div class="panel">
   <div class="header">作者感兴趣的日志</div>
   <ul class="unstyled">
     <% 

@@ -7,6 +7,8 @@
 %>
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.fancybox.css" />
 <script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
 <div class="container">
   <div class="row show-grid">    
     <div class="row">
@@ -24,7 +26,7 @@
           <%
             if(diary.up_img_thumb && diary.up_img_thumb != ""){
             %>
-              <div class="nailthumb-container">
+              <div>
                 <a class="fancybox" data-fancybox-group="gallery" href="<%= diary.up_img%>"><img id="entry_img" class="entry-img" src="<%= diary.up_img%>"></a>
               </div>
             <%
@@ -73,18 +75,8 @@
       </div>
       
         <div class="span4">
-          <div class="panel">
-            <div class="header">作者</div>
-          </div>
-          
-          <div class="panel">
-            <div class="header">作者其它日志</div>
-          </div>
-          
-          <div class="panel">
-            <div class="header">作者感兴趣的日志</div>
-          </div>
-          
+            <%- partial("../viewside",{"author_info":author_info, "config":config, "author_diarys":author_diarys,
+          "author_focus_diarys":author_focus_diarys}) %>
       </div>
    
   
@@ -92,11 +84,11 @@
   <hr/>
 <%- partial("footer") %>
 </div>
+
 <script type="text/javascript" src="/javascripts/ejs_production.js"></script>
 <script type="text/javascript">
     $(function(){
-           set_thumbs(".nailthumb-container", 500,500);
-
+     
            $('.fancybox').fancybox({
                closeClick : true,
                openEffect : 'elastic',

@@ -168,10 +168,29 @@ var do_with_right_menu = function(user){
   过滤路径
 */
 exports.filter = function(app,maps){
+    
+
+    var deal_path = function(rpath){
+        var spos = rpath.lastIndexOf('/');
+        var path_tail = rpath.substring(spos);
+        rpath = rpath.substring(0,spos);
+        spos = rpath.lastIndexOf('/');
+        rpath = rpath.substring(0,spos) + path_tail;
+        return rpath;
+    };
     // 验证用户登录
     var verfiy_auth = function(req,res,next){
 	    var pass = false;
-	    if(config.path_access[req.path] == config.ACCESS_VERIFY){
+      var rpath = req.path;
+      var a_verify = config.path_access[rpath];
+      if(!a_verify){
+           rpath = deal_path(rpath); 
+           a_verify = config.path_access[rpath];
+      }
+
+
+	    if(a_verify == config.ACCESS_VERIFY){
+
 	        if(req.cookies[(config.auth_cookie_name)]){
 	            var email = null;
 	            try{
@@ -195,42 +214,50 @@ exports.filter = function(app,maps){
         method = method.toLowerCase();
         // 示例url /diary/add 或者/comment/add以及/diary/2131232dfsddsds/view
         var paths = path.split('/');
+        var paths_obj = {};
+        var dpath_len = paths.length;
+        for(var i = 0; i < paths.length ;i++){
+             if(paths[i] != ""){
+                paths_obj[paths[i]] = 1;
+             }else{
+                dpath_len--;
+             }
+             
+        }
+
+        if(dpath_len >= 3 && path.length > 24){
+           dpath_len--;
+        }
+
         for(var i = 0, len = maps.length;i < len; i++){
-            var objm = maps[i];
-            
-            if(path == objm.path && method == objm.method){
+             var objm = maps[i];
+             if(path == objm.path && method == objm.method){
                  return objm.ctrl;
-            }else if(path != objm.path && method == objm.method){
+             }else if(path != objm.path && method == objm.method){
                 var ops = objm.path.split('/');
                 
-                var is_march = true;
-                
-                for(var j = 1;j < ops.length;j++){
-                   var p = ops[j];
-                   
-                   if(p.indexOf(':') != -1 && p.indexOf(':') == 0){
-                       if(ops.length <= 2 && paths.length > 2){
-                           is_march = false;
-                       }
-                       continue;
-                   }else{
-                      if(!p || p == "" || path.indexOf(p) == -1){
-                         is_march = false;
-                         break;
-                      }
+                var march_count = 0;
+                for(var j = 0;j < ops.length;j++){
+                   if(paths_obj[ops[j]]){
+                      march_count++;
                    }
                 }
-                
-                if(is_march === true){
+
+                if(march_count >= dpath_len){
                     return objm.ctrl;
-                }       
-            }      
+                }else{
+                  continue;
+                }
+             }else{
+                continue;
+             }
         }
      
     };
     
     for(var i = 0, len = maps.length;i < len; i++){
         var objm = maps[i];
+
         app[objm.method](objm.path, function(req,res,next){
             if(verfiy_auth(req, res, next)){
                 get_ctrl_func(req.path, req.method)(req,res,next);

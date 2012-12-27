@@ -69,7 +69,12 @@ exports = module.exports = function(app){
 	   ctrl:diary.edit,
 	   method:'get'
 	},
-		{
+	{
+	   path:"/diary/:uid/mlist",
+	   ctrl:diary.mlist,
+	   method:'get'
+	},
+	{
 	   path:"/diary/:did/edit",
 	   ctrl:diary.edit,
 	   method:'post'
@@ -79,6 +84,12 @@ exports = module.exports = function(app){
 	   ctrl:diary.focus,
 	   method:'post'
 	},
+	{
+	   path:"/diary/attent",
+	   ctrl:diary.attent,
+	   method:'get'
+	},
+	
 	{
 	   path:"/comment/add",
 	   ctrl: comment.add,

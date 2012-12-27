@@ -43,7 +43,6 @@
           if(hot_diarys && hot_diarys.length > 0){
           for(var i = 0; i < hot_diarys.length; i++) {
              var diary = hot_diarys[i];
-             var view_num = comment_num = 0;
              
          %>
           <li><i class="icon-fire"></i>&nbsp;<a href="/diary/<%= diary._id %>/view"><%= diary.title%></a></li>
@@ -85,5 +84,5 @@
     </div>
 
     <script type="text/javascript">
-    jQuery('#uinfo_div').nailthumb({width:50,height:50});
+    jQuery('#uinfo_div').nailthumb({width:48,height:48});
 </script>

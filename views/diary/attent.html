@@ -7,6 +7,7 @@
     <div class="row">
       <div class="span8">
         <div class="panel">
+          <div class="header">关注日记 <span class="badge"><%=diarys.length %></span></div>
         <!-- 文章内容开始 -->
          <% 
           for(var i = 0; i < diarys.length; i++) {
@@ -49,6 +50,7 @@
               <span class="meta-sep"> | </span>
               <span class="comments-link"> <span class="badge"><%= comment_num%></span> 回应 </span>
               <span class="meta-sep"> | </span>
+              
               <span class="edit-link">
                 <a class="post-edit-link" title="阅读全文" href="/diary/<%= diary._id %>/view">阅读全文</a>
               </span>

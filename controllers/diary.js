@@ -122,7 +122,7 @@ exports.add = function(req, res, next){
 	        // 指定文件上传后的目录 
 	        target_path =  new Date().getTime() + fileext;
 	        target_path_thumb = target_path;
-	        var full_img_path = config.site_dir + config.diary_img + target_path;
+	        var full_img_path = process.cwd() + config.diary_img + target_path;
 	        
 	        fs.rename(tmp_path, full_img_path, function (err) {
                 if (err) {
@@ -132,7 +132,6 @@ exports.add = function(req, res, next){
             });
         }
         proxy.once("save",function(save){
-            lutil.log("Save diary.");
             lutil.userinfo(req, function(user){
 	        //保存日志
 			// 还是最好先确认数据格式
@@ -152,7 +151,7 @@ exports.add = function(req, res, next){
 			    Diary.save(diary, function(err){
 			        if(err) return next(err);
 			        dbutil.update_user_score(user.email,2,function(){
-                        res.redirect('diary/list');
+                        res.redirect('/diary/list');
                     });
 			        
 			    });
@@ -242,7 +241,6 @@ exports.edit = function(req, res, next){
         
 		if(req.files.up_img && req.files.up_img.size > 0){
 		    no_up_img = false;
-		    lutil.log("Upload img.");
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
 			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
@@ -274,7 +272,7 @@ exports.edit = function(req, res, next){
 	        // 指定文件上传后的目录 
 	        target_path =  new Date().getTime() + fileext;
 	        target_path_thumb = target_path;
-	        var full_img_path = config.site_dir + config.diary_img + target_path;
+	        var full_img_path = process.cwd() + config.diary_img + target_path;
 	        
 	        fs.rename(tmp_path, full_img_path, function (err) {
                 if (err) {
@@ -309,7 +307,7 @@ exports.edit = function(req, res, next){
 
 
 exports.list = function(req, res, next){
-   var method = req.method.toLowerCase();
+    var method = req.method.toLowerCase();
    
 	if(method == "get"){
 	   var pageno = 1;
@@ -370,6 +368,7 @@ exports.list = function(req, res, next){
 	   
 	   proxy.once("get_nickname",function(diarys,uinfo){
 	       var diarys_len = diarys.length;
+
 	       proxy.assignAlways("get_sub_nickname",function(idx){
 	           var diary = diarys[idx];
 		       User.findOne({"email":diary.author}, function(err, user){
@@ -385,14 +384,18 @@ exports.list = function(req, res, next){
 			      }
 			   });
 	       });
-	       
-		   proxy.trigger('get_sub_nickname',0);
+	       if(diarys_len <= 0){
+	       	   proxy.trigger('get_hot_diarys',diarys,uinfo);
+	       }else{
+	       	   proxy.trigger('get_sub_nickname',0);
+	       }
+		   
 	   });
 
        
 	   lutil.userinfo(req, function(uinfo){
 		   proxy.once("get_list",function(){
-		       Diary.find({},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
+		       Diary.find({"type":"public"},{sort:[['create_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:config.PAGE_SIZE}).toArray(function(err, diarys){
 		        if(err) return next(err);
 		            for(var i = 0 ; i < diarys.length;i++){
 		               diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
@@ -409,7 +412,7 @@ exports.list = function(req, res, next){
 		   });
 		   
 		   proxy.once("get_total",function(){
-		      Diary.find({}).toArray(function(err, diarys){
+		      Diary.find({"type":"public"}).toArray(function(err, diarys){
 		      	  var total_items = 0;
 		      	  if(diarys){
 		      	  	total_items = diarys.length;
@@ -440,16 +443,35 @@ exports.view = function(req, res, next){
        var nickname = "";
        var diary_id_p = req.params.did;
        var diary_id = ObjID(req.params.did);
+       var author_diarys = [];
+       var author_focus_diarys = [];
+       var author_info = null;
        
        var get_nickname = function(diary){
 	       proxy.assign("get_nickname",function(obj){
 	          User.findOne({"email":diary.author}, function(err, user){
-	              diary.author = user.nickname;
+	              diary.author_nickname = user.nickname;
 	              proxy.trigger('update_view_num');
 	          });
 	       });
 	       proxy.trigger('get_nickname');
        };
+
+       proxy.once("renderto",function(){
+            lutil.userinfo(req, function(user){
+                res.render('diary/view', {
+	    	      title:config.name,
+	    	      diary:gdiary,
+                  diary_config:diary_config,
+                  config:config,
+                  userinfo:user,
+                  "author_info":author_info,
+
+                  "author_diarys":author_diarys,
+                  "author_focus_diarys":author_focus_diarys
+                });
+            });
+       });
        
 	   proxy.once("get_diary", function (img) {
 	       Diary.findOne({"_id":diary_id}, function(err, diary){
@@ -469,6 +491,7 @@ exports.view = function(req, res, next){
           }); 
        });
        
+
        proxy.once("update_view_num", function (img) {
            var n_view_num = 0;
            if(gdiary['view_num']){
@@ -476,18 +499,60 @@ exports.view = function(req, res, next){
            }else{
                n_view_num = 1;
            }
-           Diary.update({_id:diary_id}, {$set: {view_num : n_view_num}},{},function(err){
-              if(err)  return next(err);
-                   lutil.userinfo(req, function(user){
-			                  res.render('diary/view', {
-					    	      title:config.name,
-					    	      diary:gdiary,
-				                  diary_config:diary_config,
-			                      config:config,
-			                      userinfo:user
-				              });
-			             });
-           });
+
+            Diary.update({_id:diary_id}, {$set: {view_num : n_view_num}},{},function(err){
+			    if(err)  return next(err);
+			    proxy.trigger('get_author_info');
+
+			});
+           
+       });
+
+        proxy.once("get_author_info",function(){
+        	dbutil.find_user_by_email(gdiary.author, function(a_info){
+                 author_info = a_info;
+                 proxy.trigger('get_author_diarys');
+        	});
+       });
+
+       proxy.once("get_author_diarys",function(){
+            Diary.find({"author":gdiary.author},{sort:[['create_date', -1]], limit:10}).toArray(function(err, s_diarys){
+	           if(err) return next(err);
+	               for(var i = 0 ; i < s_diarys.length;i++){
+					   author_diarys[author_diarys.length ] = s_diarys[i];
+	                }
+	               
+	                proxy.trigger('get_author_focus_diarys');
+
+            });
+       });
+
+        proxy.once("get_author_focus_diarys",function(diary){
+            UserFocusDiary.find({"email":gdiary.author},{sort:[['focus_date', -1]], limit:10}).toArray(function(err, s_focus_diarys){
+	           if(err) return next(err);
+               var idx = 0;
+               var s_focus_diarys_len = s_focus_diarys.length;
+               
+	           proxy.assignAlways("get_focus_diary",function(idx){
+	               var s_focus_diary = s_focus_diarys[idx];
+
+	               dbutil.find_diary_by_id(s_focus_diary.diary_id,function(s_diary){
+                        author_focus_diarys[author_focus_diarys.length] = s_diary;
+	                        idx++;
+						    if(idx < s_focus_diarys_len){
+						        proxy.trigger('get_focus_diary',idx);
+						    }else{
+						        proxy.trigger('renderto');
+						    }
+	                    });
+	              });
+	              if(s_focus_diarys_len > 0){
+	              	 proxy.trigger('get_focus_diary',idx);
+	              }else{
+	              	 proxy.trigger('renderto');
+	              }
+
+            });
        });
 
 
@@ -505,7 +570,7 @@ exports.del = function(req, res, next){
     Diary.findOne({"_id":diary_id}, function(err, diary){
         if(err) return next(err);
         // 删除图片啊个
-        var tar_img_path = config.site_dir + config.diary_img + diary.up_img;
+        var tar_img_path = process.cwd() + config.diary_img + diary.up_img;
         fs.unlink(tar_img_path, function() {
 	        if (err) throw err;
 	        console.log('remove img ' + tar_img_path);
@@ -544,9 +609,10 @@ exports.focus = function(req, res, next){
         var d_focus_num = 0;
       	dbutil.get_focus_num(diary_id_p,function(focus_num){
       		d_focus_num = focus_num;
-             if(email && email != ""){
+            if(email && email != ""){
              	dbutil.has_focus(diary_id_p,email,function(has_focus){
                      d_has_focus = has_focus;
+
                      var resobj = {"has_focus":d_has_focus,"focus_num":d_focus_num,"focus_email":email,"diary_id":diary_id_p};
                      res.send(JSON.stringify(resobj));
              	});
@@ -568,11 +634,11 @@ exports.focus = function(req, res, next){
 				     var userDiary = {};
 				     userDiary.email = email;
 				     userDiary.diary_id = diary_id;
-
+				     userDiary.focus_date = new Date();
+                     
 			         UserFocusDiary.save(userDiary, function(err){
 		   		        if(err) return next(err);
 		   		        proxy.trigger('get_focus_num');
-
 					        
 			          });
 			    }else{
@@ -589,6 +655,280 @@ exports.focus = function(req, res, next){
    }
 
 
+};
+
+exports.attent = function(req, res, next){
+
+   var pageno = 1;
+   if(req.params.page){
+      pageno = parseInt(req.params.page);
+   }
+   var proxy = new EventProxy();
+   var total_page = 0;
+   var hot_diarys = [];
+   var active_users = [];
+   
+   proxy.once("renderto",function(diarys,uinfo){
+        var pageData = page.createPage(pageno, total_page);
+	    res.render('diary/attent', {
+	        title       :config.name,
+	    	diarys      :diarys,
+            diary_config:diary_config,
+            config      :config,
+            pageData    :pageData,
+            req_path    :req.path,
+            userinfo    :uinfo,
+            hot_diarys  :hot_diarys,
+			active_users:active_users,
+	    });
+        DB.close();
+   });
+
+   	proxy.once("get_active_users", function(diarys, uinfo){
+		   User.find({},{sort:[['score', -1]], limit:10}).toArray(function(err, users){
+           if(err) return next(err);
+               for(var i = 0 ; i < users.length;i++){
+				   active_users[active_users.length ] = users[i];
+                }
+               
+                proxy.trigger('renderto',diarys, uinfo);
+
+             });
+    });
+
+    proxy.once("get_hot_diarys", function(diarys, uinfo){
+	   Diary.find({},{sort:[['view_num', -1]], limit:10}).toArray(function(err, s_diarys){
+       if(err) return next(err);
+           for(var i = 0 ; i < s_diarys.length;i++){
+               s_diarys[i].create_date = lutil.dateFormat(s_diarys[i].create_date);
+               s_diarys[i].edit_date = lutil.dateFormat(s_diarys[i].edit_date);
+               if(s_diarys[i].up_img_thumb && s_diarys[i].up_img_thumb != ""){
+               
+                   s_diarys[i].up_img_thumb = config.diary_url + s_diarys[i].up_img_thumb;
+               }
+               s_diarys[i].content = s_diarys[i].summary;
+			   hot_diarys[hot_diarys.length ] = s_diarys[i];
+            }
+           
+            proxy.trigger('get_active_users',diarys, uinfo);
+
+         });
+	});
+   
+   proxy.once("get_nickname",function(diarys,uinfo){
+       var diarys_len = diarys.length;
+
+       proxy.assignAlways("get_sub_nickname",function(idx){
+           var diary = diarys[idx];
+	       User.findOne({"email":diary.author}, function(err, user){
+	       	  if(user){
+	       	  	 diary.author_nickname = user.nickname;
+	       	  }
+		      
+		      idx++;
+		      if(idx < diarys_len){
+		          proxy.trigger('get_sub_nickname',idx);
+		      }else{
+		          proxy.trigger('get_hot_diarys',diarys,uinfo);
+		      }
+		   });
+       });
+       if(diarys_len <= 0){
+       	   proxy.trigger('get_hot_diarys',diarys,uinfo);
+       }else{
+       	   proxy.trigger('get_sub_nickname',0);
+       }
+	   
+   });
+
+   
+   
+	proxy.once("get_list",function(uinfo){
+	    UserFocusDiary.find({"email":uinfo.email},{sort:[['focus_date', -1]],skip: config.PAGE_SIZE * (pageno - 1), limit:10}).toArray(function(err, s_focus_diarys){
+           if(err) return next(err);
+           var idx = 0;
+           var s_focus_diarys_len = s_focus_diarys.length;
+
+           var author_focus_diarys = [];
+           proxy.assignAlways("get_focus_diary",function(idx){
+               var s_focus_diary = s_focus_diarys[idx];
+
+               dbutil.find_diary_by_id(s_focus_diary.diary_id,function(s_diary){
+               	    s_diary.create_date = lutil.dateFormat(s_diary.create_date);
+		            s_diary.edit_date = lutil.dateFormat(s_diary.edit_date);
+		            if(s_diary.up_img_thumb && s_diary.up_img_thumb != ""){
+		                   
+		                s_diary.up_img_thumb = config.diary_url + s_diary.up_img_thumb;
+		            }
+		            s_diary.content = s_diary.summary;
+
+                    author_focus_diarys[author_focus_diarys.length] = s_diary;
+                        idx++;
+					    if(idx < s_focus_diarys_len){
+					        proxy.trigger('get_focus_diary',idx);
+					    }else{
+					        proxy.trigger('get_nickname',author_focus_diarys,uinfo);
+					    }
+                    });
+              });
+              if(s_focus_diarys_len > 0){
+              	 proxy.trigger('get_focus_diary',idx);
+              }else{
+              	 proxy.trigger('get_nickname',author_focus_diarys,uinfo);
+              }
+
+        });
+	});
+
+	lutil.userinfo(req, function(uinfo){
+	   proxy.once("get_total",function(){
+	      UserFocusDiary.find({"email":uinfo.email}).toArray(function(err, userFocusDiary){
+	      	  var total_items = 0;
+	      	  if(userFocusDiary){
+	      	  	  total_items = userFocusDiary.length;
+	      	  }
+	          
+	          total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
+	          
+	          proxy.trigger('get_list',uinfo);
+	      });
+	   });
+	   proxy.trigger('get_total');
+	});
+	   
+	
+      
+};
+
+
+exports.mlist = function(req, res, next){
+   lutil.log(req.path);
+   var pageno = 1;
+   if(req.params.page){
+      pageno = parseInt(req.params.page);
+   }
+   var uid = req.params.uid;
+
+   var proxy = new EventProxy();
+   var total_page = 0;
+   var author_focus_diarys = [];
+   var author_info = null;
+   var userinfo = null;
+   
+   proxy.once("renderto",function(diarys,uinfo){
+        var pageData = page.createPage(pageno, total_page);
+	    res.render('diary/mlist', {
+	        title       :config.name,
+	    	diarys      :diarys,
+            diary_config:diary_config,
+            config      :config,
+            pageData    :pageData,
+            req_path    :req.path,
+            userinfo    :uinfo,
+            "author_info":author_info,
+            "author_focus_diarys"  :author_focus_diarys
+	    });
+        DB.close();
+   });
+
+
+    proxy.once("get_author_focus_diarys",function(diary){
+        UserFocusDiary.find({"email":author_info.email},{sort:[['focus_date', -1]], limit:10}).toArray(function(err, s_focus_diarys){
+           if(err) return next(err);
+           var idx = 0;
+           var s_focus_diarys_len = s_focus_diarys.length;
+           
+           proxy.assignAlways("get_focus_diary",function(idx){
+               var s_focus_diary = s_focus_diarys[idx];
+
+               dbutil.find_diary_by_id(s_focus_diary.diary_id,function(s_diary){
+                    author_focus_diarys[author_focus_diarys.length] = s_diary;
+                        idx++;
+					    if(idx < s_focus_diarys_len){
+					        proxy.trigger('get_focus_diary',idx);
+					    }else{
+					        proxy.trigger('renderto');
+					    }
+                    });
+              });
+              if(s_focus_diarys_len > 0){
+              	 proxy.trigger('get_focus_diary',idx);
+              }else{
+              	 proxy.trigger('renderto');
+              }
+
+        });
+   });
+   
+   proxy.once("get_nickname",function(){
+       var diarys_len = author_diarys.length;
+
+       proxy.assignAlways("get_sub_nickname",function(idx){
+           var diary = author_diarys[idx];
+	       User.findOne({"email":diary.author}, function(err, user){
+	       	  if(user){
+	       	  	 diary.author_nickname = user.nickname;
+	       	  }
+		      
+		      idx++;
+		      if(idx < diarys_len){
+		          proxy.trigger('get_sub_nickname',idx);
+		      }else{
+		          proxy.trigger('get_author_focus_diarys');
+		      }
+		   });
+       });
+       if(diarys_len <= 0){
+       	   proxy.trigger('get_author_focus_diarys',uinfo);
+       }else{
+       	   proxy.trigger('get_sub_nickname',0);
+       }
+	   
+   });
+
+   
+   
+	proxy.once("get_list",function(){
+		Diary.find({"author":author_info.email},{sort:[['create_date', -1]], limit:10}).toArray(function(err, s_diarys){
+           if(err) return next(err);
+               for(var i = 0 ; i < s_diarys.length;i++){
+				   author_diarys[author_diarys.length ] = s_diarys[i];
+                }
+               
+                proxy.trigger('get_nickname');
+
+        });
+	});
+
+    proxy.once("get_login_userinfo", function(){
+	    lutil.userinfo(req, function(uinfo){
+	       userinfo = uinfo;
+           proxy.trigger('get_list');
+	    });
+    });
+
+    dbutil.find_user_by_id(uid, function(ainfo){
+       author_info = ainfo;
+       
+	   proxy.once("get_total",function(){
+	      UserFocusDiary.find({"email":ainfo.email}).toArray(function(err, userFocusDiary){
+	      	  var total_items = 0;
+	      	  if(userFocusDiary){
+	      	  	  total_items = userFocusDiary.length;
+	      	  }
+	          
+	          total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
+	          
+	          proxy.trigger('get_login_userinfo');
+	      });
+
+	    });
+
+	    proxy.trigger('get_total');
+    });
+	   
+	
+      
 };
 
 

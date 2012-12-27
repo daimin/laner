@@ -1,10 +1,15 @@
 /**
  * config
  */
+ var g_cfg = {};
+
 exports.config = {
 	name       : '晓知+',
 	description: 'Diary',
-	version    : '0.0.1',
+	version    : (function(){
+		  g_cfg.version = '0.0.2';
+		  return g_cfg.version;
+	  })(),
 	// 配置网站头部
 	site_headers:
 	{
@@ -38,15 +43,18 @@ exports.config = {
 	{
 		"/"              : 1,
 		"/diary/add"     : 2,
+		"/diary/del"     : 2,
+		"/diary/edit"    : 2,
 		"/diary/view"    : 1,
 		"/diary/list"    : 1,
+		"/diary/attent"  : 2,
+		"/diary/mlist"   : 1,
 		"/user/login"    : 1,
 		"/user/register" : 1,
 		"/comment/add"   : 1
 	}
 	,
 	host: '', // host 结尾不要添加'/'
-	site_dir:'d:/nodework/laner',
 	db : (function(){
 	    var mongo = null;
 	    if(process.env.VCAP_SERVICES){
@@ -117,6 +125,7 @@ exports.config = {
 	    motto_size   :[0,70],
 	    avatar_size  :128*1024,
 	    avatar_url : '/images/avatar/',
+	    default_avatar:"default.jpg"
 	},
 	INDEX_ITEM_SIZE : 100,
 	// 公告配置，h1，为大标题，h2,次之，总是都是标题
@@ -129,7 +138,10 @@ exports.config = {
 	DEBUG:true,
 	PAGE_SIZE:10,
 
-	related_sites : ["当前版本：v0.1 ","<a href=\"mailto:daiming253685@126.com\">联系站长</a> "]
+	related_sites : [
+	         "当前版本： v " + g_cfg.version,
+	         "<a href=\"mailto:daiming253685@126.com\">联系站长</a> "
+	         ]
 	
 };
 

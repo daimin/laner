@@ -7,6 +7,13 @@
     <div class="row">
       <div class="span8">
         <div class="panel">
+          <%
+              var head_txt = "我的日记";
+              if(userinfo.email != author_info.email){
+                   head_txt = author_info.nickname + "的日记";
+              }
+          %>
+          <div class="header"><%= head_txt%> <span class="badge"><%=diarys.length %></span></div>
         <!-- 文章内容开始 -->
          <% 
           for(var i = 0; i < diarys.length; i++) {
@@ -49,6 +56,16 @@
               <span class="meta-sep"> | </span>
               <span class="comments-link"> <span class="badge"><%= comment_num%></span> 回应 </span>
               <span class="meta-sep"> | </span>
+              <% if(userinfo){%>
+              <span class="edit-link">
+                <a class="post-edit-link" title="编辑文章" href="/diary/<%= diary._id %>/edit">编辑</a>
+              </span>
+              <span class="meta-sep"> | </span>
+              <span class="edit-link">
+                <a class="post-edit-link" title="删除文章" href="javascript:void(0)" onclick="del_diary('/diary/<%= diary._id %>/del',this)">删除</a>
+              </span>
+              <span class="meta-sep"> | </span>
+              <%}%>
               <span class="edit-link">
                 <a class="post-edit-link" title="阅读全文" href="/diary/<%= diary._id %>/view">阅读全文</a>
               </span>
@@ -64,9 +81,7 @@
       </div>
       
         <div class="span4">
-         <%- partial("../indexside",{"userinfo":userinfo, "config":config, "hot_diarys":hot_diarys,
-          "active_users":active_users}) %>
-          
+            <%- partial("../mlistside",{"author_info":author_info, "config":config,"author_focus_diarys":author_focus_diarys}) %>
       </div>
    
   
