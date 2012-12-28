@@ -113,8 +113,8 @@ exports.config = {
 	},
 	// 日志类型(公开，私密)
 	diary_type:{
-	   public : 1,
-	   private:0
+	   public : "public",
+	   private: "private"
 	},
 	// 首页日志的内容显示字数
 	diary_size:120,
@@ -135,7 +135,7 @@ exports.config = {
 	  h3:"",
 	},
 	// 程序是否是调试模式
-	DEBUG:true,
+	DEBUG:false,
 	PAGE_SIZE:10,
 
 	related_sites : [

@@ -75,6 +75,12 @@ exports = module.exports = function(app){
 	   method:'get'
 	},
 	{
+	   path:"/diary/:uid/mlist/:page",
+	   ctrl:diary.mlist,
+	   method:'get'
+	},
+	
+	{
 	   path:"/diary/:did/edit",
 	   ctrl:diary.edit,
 	   method:'post'
@@ -87,6 +93,21 @@ exports = module.exports = function(app){
 	{
 	   path:"/diary/attent",
 	   ctrl:diary.attent,
+	   method:'get'
+	},
+	{
+	   path:"/diary/attent/:page",
+	   ctrl:diary.attent,
+	   method:'get'
+	},
+	{
+	   path:"/diary/:keyword/search",
+	   ctrl:diary.search,
+	   method:'get'
+	},
+	{
+	   path:"/diary/:keyword/search/:page",
+	   ctrl:diary.search,
 	   method:'get'
 	},
 	

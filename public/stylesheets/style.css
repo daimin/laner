@@ -339,3 +339,8 @@ span .number{
 .cursor-disable{
   cursor: not-allowed;
 }
+
+.keyword{
+  font-weight: bold;
+  color: red;
+}

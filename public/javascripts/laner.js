@@ -272,3 +272,17 @@ function get_today_fmt(){
     
     return year+"年"+month+"月"+cdate+"日 "+sday; 
 }
+
+function dosearch(formobj, action){
+   var keyword = formobj.keyword.value;
+   if(keyword.length == 0){
+      return false;
+   }
+   var actions = action.split('/');
+   
+   var shref = '/' + actions[1] + '/:' + keyword + '/' + actions[2];
+
+   window.location.href =  shref;
+
+   return false;
+}

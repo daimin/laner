@@ -41,12 +41,12 @@
             <div class="control-group">
               <div class="controls">
                 <select name="type">
-                <% if(diary.type == 'public'){%>
-                  <option value="public" selected="selected" >公开</option>
-                  <option value="private">私密</option>
+                <% if(diary.type == config.diary_type.public){%>
+                  <option value="<%= config.diary_type.public%>" selected="selected" >公开</option>
+                  <option value="<%= config.diary_type.private%>">私密</option>
                 <%}else{%>
-                  <option value="public" >公开</option>
-                   <option value="private" selected="selected">私密</option>
+                  <option value="<%= config.diary_type.public%>" >公开</option>
+                   <option value="<%= config.diary_type.private%>" selected="selected">私密</option>
                 <%}%>
                  
                 </select>

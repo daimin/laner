@@ -1,4 +1,4 @@
-<%- partial("head",{userinfo:userinfo}) %>
+<%- partial("head",{"userinfo":userinfo}) %>
 
 <script type="text/javascript" charset="utf-8" src="/kindeditor/kindeditor-min.js"></script>
 <script type="text/javascript" charset="utf-8" src="/kindeditor/lang/zh_CN.js"></script>
@@ -39,8 +39,8 @@
             <div class="control-group">
               <div class="controls">
                 <select name="type">
-                  <option value="public">公开</option>
-                  <option value="private">私密</option>
+                  <option value="<%= config.diary_type.public%>">公开</option>
+                  <option value="<%= config.diary_type.private%>">私密</option>
                 </select>
               </div>
             </div>

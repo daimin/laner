@@ -18,8 +18,8 @@
           <%}%>
         </ul>
       </div>
-      <form class="navbar-form pull-left">
-        <input class="search-query span3" type="text" placeholder="Search" />
+      <form class="navbar-form pull-left" method="get" onsubmit="return dosearch(this,'/diary/search')">
+        <input class="search-query span3 input-large" type="text" name="keyword" placeholder="Search" />
       </form>
       <div class="nav-collapse">
         <ul class="nav pull-right">

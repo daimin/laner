@@ -43,6 +43,15 @@ exports.randomString = function (size) {
   return new_pass;
 };
 
+
+exports.isint = function(val){
+   if(!isNaN(val)){
+      return true;
+   }else{
+      return false;
+   }
+};
+
 var log = function(info){
     if(config.DEBUG == true){
         console.log(sys.inspect(info, true, null) + '\t' + exports.dateFormat(new Date()));
@@ -217,9 +226,15 @@ exports.filter = function(app,maps){
         var paths_obj = {};
         var dpath_len = paths.length;
         for(var i = 0; i < paths.length ;i++){
+
              if(paths[i] != ""){
                 paths_obj[paths[i]] = 1;
              }else{
+
+                dpath_len--;
+             }
+
+             if(paths[i].indexOf(':') == 0){
                 dpath_len--;
              }
              
@@ -238,11 +253,20 @@ exports.filter = function(app,maps){
                 
                 var march_count = 0;
                 for(var j = 0;j < ops.length;j++){
+
                    if(paths_obj[ops[j]]){
                       march_count++;
                    }
                 }
 
+                // 如果最后一个是:page 而且当前paths_obj最后一个元素是数字也匹配
+                if(ops && ops.length > 0 && paths && paths.length > 0){
+                      if(ops[ops.length - 1] == ":page" && exports.isint(paths[paths.length - 1])){
+                          march_count++;
+                      }
+                }
+
+                
                 if(march_count >= dpath_len){
                     return objm.ctrl;
                 }else{

@@ -12,12 +12,12 @@
       <div style="height:50px;">
 
       <div id="uinfo_div" class="nailthumb-container" style="float:left">
-            <a href="javascript:void(0)"><img class="entry-img" src="<%= avatar_url%>"></a>
+            <a href="/diary/<%= author_info._id %>/mlist"><img class="entry-img" src="<%= avatar_url%>"></a>
       </div>
             <div class="userinfo">
                 <i class="icon-flag"></i>&nbsp;<%= author_info.score%>
             </div>
-            <div class="user-nickname"><%= author_info.nickname%></div>
+            <div class="user-nickname"><a href="/diary/<%= author_info._id %>/mlist"><%= author_info.nickname%></a></div>
       </div>
       <div class="proverbs">
         <%= author_info.motto%>
@@ -32,7 +32,7 @@
           for(var i = 0; i < author_diarys.length; i++) {
              var diary = author_diarys[i];
          %>
-          <li><i class="icon-fire"></i>&nbsp;<a href="/diary/<%= diary._id %>/view"><%= diary.title%></a></li>
+          <li><i class="icon-list-alt"></i>&nbsp;<a href="/diary/<%= diary._id %>/view"><%= diary.title%></a></li>
       <%
         }
       }
@@ -52,7 +52,7 @@
              }
              
          %>
-          <li><i class="icon-fire"></i>&nbsp;<a href="/diary/<%= diary._id %>/view"><%= diary.title%></a></li>
+          <li><i class="icon-heart"></i>&nbsp;<a href="/diary/<%= diary._id %>/view"><%= diary.title%></a></li>
       <%
         }
       }

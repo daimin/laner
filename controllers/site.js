@@ -57,6 +57,15 @@ exports.index = function(req, res, next){
 			   Diary.find({},{sort:[['view_num', -1]], limit:10}).toArray(function(err, s_diarys){
 	           if(err) return next(err);
 	               for(var i = 0 ; i < s_diarys.length;i++){
+	               	    if(uinfo){
+                           if(s_diarys[i].author != uinfo.email && s_diarys[i].type == config.diary_type.private){
+                               continue;
+                           }
+               	        }else{
+               	   	       if(s_diarys[i].type == config.diary_type.private){
+               	   	   	       continue;
+               	   	       }
+               	        }
 	                   s_diarys[i].create_date = lutil.dateFormat(s_diarys[i].create_date);
 	                   s_diarys[i].edit_date = lutil.dateFormat(s_diarys[i].edit_date);
 	                   if(s_diarys[i].up_img_thumb && s_diarys[i].up_img_thumb != ""){
