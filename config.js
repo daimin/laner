@@ -7,7 +7,7 @@ exports.config = {
 	name       : '晓知+',
 	description: 'Diary',
 	version    : (function(){
-		  g_cfg.version = '0.0.2';
+		  g_cfg.version = '0.0.3';
 		  return g_cfg.version;
 	  })(),
 	// 配置网站头部

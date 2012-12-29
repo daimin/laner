@@ -624,7 +624,7 @@ exports.del = function(req, res, next){
 		       // 删评论
 		       Comment.remove({"diary_id":diary_id}, function(err){
 		         if(err) return next(err);
-			      res.redirect('diary/list');
+			       res.send(1);
 		       });
 		    }); 		    
         } 

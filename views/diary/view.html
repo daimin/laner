@@ -16,7 +16,7 @@
         <div class="panel">
           <div class="diary-title"><%= diary.title%>
             <span class="diary-subtitle">
-              来自：&nbsp;<a href="javascript:void(0)"><%= diary.author %>&nbsp;&nbsp;</a>
+              来自：&nbsp;<a href="/diary/<%= author_info._id %>/mlist"><%= author_info.nickname %>&nbsp;&nbsp;</a>
               <span class="entry-date"><%= diary.create_date%></span>
             </span>
           </div>
@@ -26,7 +26,7 @@
           <%
             if(diary.up_img_thumb && diary.up_img_thumb != ""){
             %>
-              <div>
+              <div id="diary_up_img">
                 <a class="fancybox" data-fancybox-group="gallery" href="<%= diary.up_img%>"><img id="entry_img" class="entry-img" src="<%= diary.up_img%>"></a>
               </div>
             <%
@@ -88,8 +88,8 @@
 <script type="text/javascript" src="/javascripts/ejs_production.js"></script>
 <script type="text/javascript">
     $(function(){
-     
-           $('.fancybox').fancybox({
+        jQuery('#diary_up_img').nailthumb({width:380,height:380});
+        $('.fancybox').fancybox({
                closeClick : true,
                openEffect : 'elastic',
 				openSpeed  : 150,
