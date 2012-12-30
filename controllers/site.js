@@ -21,44 +21,46 @@ exports.index = function(req, res, next){
 		   
 		   var hot_diarys = [];
 		   var active_users = [];
+		   var userinfo = uinfo;
 	       
-	   	   proxy.once("renderto",function(diarys, uinfo){
+	   	   proxy.once("renderto",function(diarys){
 	   	       if(total_page > config.INDEX_ITEM_SIZE){
 	               total_page = config.INDEX_ITEM_SIZE;
 	           }
 
                var pageData = page.createPage(pageno, total_page);
+               
 		       res.render('index', {
 		           title       :config.name,
 		    	   diarys      :diarys,
                    config      :config,
                    pageData    :pageData,
                    req_path    :req.path,
-                   userinfo    :uinfo,
+                   userinfo    :userinfo,
 				   hot_diarys  :hot_diarys,
 				   active_users:active_users
 		       });
                DB.close();
 	       });
 	       
-	       	proxy.once("get_active_users", function(diarys, uinfo){
+	       	proxy.once("get_active_users", function(diarys){
 			   User.find({},{sort:[['score', -1]], limit:10}).toArray(function(err, users){
 	           if(err) return next(err);
 	               for(var i = 0 ; i < users.length;i++){
 					   active_users[active_users.length ] = users[i];
 	                }
 	               
-	                proxy.trigger('renderto',diarys, uinfo);
+	                proxy.trigger('renderto',diarys);
 
                  });
 			});
 
-		    proxy.once("get_hot_diarys", function(diarys, uinfo){
+		    proxy.once("get_hot_diarys", function(diarys){
 			   Diary.find({},{sort:[['view_num', -1]], limit:10}).toArray(function(err, s_diarys){
 	           if(err) return next(err);
 	               for(var i = 0 ; i < s_diarys.length;i++){
-	               	    if(uinfo){
-                           if(s_diarys[i].author != uinfo.email && s_diarys[i].type == config.diary_type.private){
+	               	    if(userinfo){
+                           if(s_diarys[i].author != userinfo.email && s_diarys[i].type == config.diary_type.private){
                                continue;
                            }
                	        }else{
@@ -76,16 +78,16 @@ exports.index = function(req, res, next){
 					   hot_diarys[hot_diarys.length ] = s_diarys[i];
 	                }
 	               
-	                proxy.trigger('get_active_users',diarys, uinfo);
+	                proxy.trigger('get_active_users',diarys);
 
                  });
 			});
 
 
 	       
-		   proxy.once("get_nickname",function(diarys,uinfo){
+		   proxy.once("get_nickname",function(diarys){
 			   if(!diarys || diarys.length <= 0){
-				   proxy.trigger('get_hot_diarys', null);
+				   proxy.trigger('get_hot_diarys');
 			   }else{
 				   var diarys_len = diarys.length;
 			       proxy.assignAlways("get_sub_nickname",function(idx){
@@ -100,7 +102,7 @@ exports.index = function(req, res, next){
 					          proxy.trigger('get_sub_nickname',idx);
 					      }else{
 
-					          proxy.trigger('get_hot_diarys',diarys,uinfo);
+					          proxy.trigger('get_hot_diarys',diarys);
 					      }
 					   });
 			       });
@@ -123,7 +125,7 @@ exports.index = function(req, res, next){
 	                   diarys[i].content = diarys[i].summary;
 	                }
 	               
-	                proxy.trigger('get_nickname',diarys, uinfo);
+	                proxy.trigger('get_nickname',diarys);
 
                  });
 	        });

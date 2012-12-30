@@ -32,7 +32,13 @@
             <div class="user-nickname"><a href="/diary/<%= userinfo._id %>/mlist"><%= userinfo.nickname%></a></div>
       </div>
       <div class="proverbs">
-        <%= userinfo.motto%>
+        <%
+        var motto = "";
+        if(userinfo && userinfo.motto){
+            motto = userinfo.motto;
+        }
+        %>
+        <%= motto%>
       </div>
     </div>
     <%}%>
@@ -84,5 +90,5 @@
     </div>
 
     <script type="text/javascript">
-    jQuery('#uinfo_div').nailthumb({width:48,height:48});
+    jQuery('#uinfo_div').nailthumb({width:48,height:48,method:'resize',fitDirection:'top center'});
 </script>
