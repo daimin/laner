@@ -135,7 +135,7 @@ exports.config = {
 	  h3:"",
 	},
 	// 程序是否是调试模式
-	DEBUG:false,
+	DEBUG:true,
 	PAGE_SIZE:10,
 
 	related_sites : [

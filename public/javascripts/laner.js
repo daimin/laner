@@ -35,12 +35,17 @@ function add_diary(){
 }
 
 
-function del_diary(did, delobj){
+function del_diary(durl, delobj){
 	art.dialog({
 	    content: '确定删除该篇日志？',
 	    ok: function () {
-	        window.location = did;
-	        return false;
+          $.get(durl, {}, function(data){
+                 if(data == 1){
+                    window.location.reload();
+                 }
+
+          });
+	        return true;
 	    },
 	    follow:delobj,
 	    cancelVal: '取消',

@@ -152,7 +152,7 @@ exports.add = function(req, res, next){
 				    Diary.save(diary, function(err){
 				        if(err) return next(err);
 				        dbutil.update_user_score(user.email,2,function(){
-	                        res.redirect('/diary/list');
+	                        res.redirect('/diary/'+user._id+'/mlist');
 	                    });
 				        
 				    });
@@ -296,7 +296,7 @@ exports.edit = function(req, res, next){
 			                    }
 			                  }, {},function(err){
 			        if(err) return next(err);
-			        res.redirect('diary/list');
+			        res.redirect('/diary/'+user._id+'/mlist');
 			    });
              });
         });
@@ -465,7 +465,10 @@ exports.view = function(req, res, next){
        var get_nickname = function(diary){
 	       proxy.assign("get_nickname",function(obj){
 	          User.findOne({"email":diary.author}, function(err, user){
-	              diary.author_nickname = user.nickname;
+	          	  if(user){
+	          	     diary.author_nickname = user.nickname;
+	          	  }
+	              
 	              proxy.trigger('update_view_num');
 	          });
 	       });
@@ -606,7 +609,6 @@ exports.view = function(req, res, next){
 };
 
 exports.del = function(req, res, next){
-    lutil.log(req.params.did);
     var diary_id = ObjID(req.params.did);
 
     // 先删图片，所以要先查图片的链接
@@ -619,13 +621,25 @@ exports.del = function(req, res, next){
 	        console.log('remove img ' + tar_img_path);
 	    });
 	    if(diary){
+	    	
 		    Diary.remove({"_id":diary_id}, function(err){
+               
 		       if(err) return next(err);
 		       // 删评论
-		       Comment.remove({"diary_id":diary_id}, function(err){
-		         if(err) return next(err);
-			       res.send(1);
-		       });
+
+		       Comment.findOne({"diary_id":diary_id},function(err, comment){
+		       	   lutil.log(comment);
+		       	   if(comment){
+		       	   	    Comment.remove({"diary_id":diary_id}, function(err){
+		                    if(err) return next(err);
+			                res.send('1');
+		                });
+		       	   }else{
+		       	   	    res.send('1');
+		       	   }
+               });
+
+
 		    }); 		    
         } 
     });  
