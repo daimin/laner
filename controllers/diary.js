@@ -91,7 +91,6 @@ exports.add = function(req, res, next){
 	        
 			if(req.files.up_img && req.files.up_img.size > 0){
 			    no_up_img = false;
-			    lutil.log("Upload img.");
 				// 验证文件的大小
 				if(req.files.up_img.size >= config.diary_img_size){
 				   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
@@ -120,23 +119,38 @@ exports.add = function(req, res, next){
 				   res.render('diary/add',{title:config.name,error_msg:err_msg,content:content,summary:summary,diary_title:title,diary_config:diary_config,config:config,userinfo:user});
 		           return;
 		        }
-		        // 指定文件上传后的目录 
-		        target_path =  new Date().getTime() + fileext;
-		        target_path_thumb = target_path;
-		        var full_img_path = process.cwd() + config.diary_img + target_path;
+		        target_path = "";
+		        target_path_thumb = "";
+		        if(config.IMG_PERSISTENT == "file"){
+		        	// 指定文件上传后的目录 
+			        // 不适用图片的扩展名
+			        target_path =  lutil.genId("g");
+			        target_path_thumb = target_path;
+			        var full_img_path = process.cwd() + config.diary_img + target_path;
+			        
+			        fs.rename(tmp_path, full_img_path, function (err) {
+		                if (err) {
+		                    return next(err);
+		                }
+		                proxy.trigger('save');
+		            });
+		        }else{
+		        	// 这里解决保存到数据库中了
+		        	fs.readFile(tmp_path, function (err, data) {
+                         target_path = data;
+                         target_path_thumb = "";
+                         proxy.trigger('save');
+                    });
+			        
+		        }
 		        
-		        fs.rename(tmp_path, full_img_path, function (err) {
-	                if (err) {
-	                    return next(err);
-	                }
-	                proxy.trigger('save');
-	            });
 	        }
 	        proxy.once("save",function(save){
 	            lutil.userinfo(req, function(user){
 		        //保存日志
 				// 还是最好先确认数据格式
 				    var diary = {};
+				    diary._id = lutil.genId("d");
 			     	diary.title = title;
 			    	diary.content = content;
 		            diary.summary = summary;
@@ -273,7 +287,7 @@ exports.edit = function(req, res, next){
 	           return;
 	        }
 	        // 指定文件上传后的目录 
-	        target_path =  new Date().getTime() + fileext;
+	        target_path =  lutil.genId("g");
 	        target_path_thumb = target_path;
 	        var full_img_path = process.cwd() + config.diary_img + target_path;
 	        
@@ -689,6 +703,7 @@ exports.focus = function(req, res, next){
 
 			    if(userFocusDiary == null){
 				     var userDiary = {};
+				     userDiary._id = lutil.genId("ud");
 				     userDiary.email = email;
 				     userDiary.diary_id = diary_id;
 				     userDiary.focus_date = new Date();

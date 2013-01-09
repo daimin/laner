@@ -4,7 +4,8 @@ var DB = require("../models")
     ,lutil = require('../utils/util')
     ,config = require('../config').config
     ,EventProxy = require("eventproxy").EventProxy
-    ,page = require('./page');
+    ,page = require('./page')
+    ,fs = require('fs');
 
 var ObjID = DB.ObjID;
 
@@ -118,9 +119,16 @@ exports.index = function(req, res, next){
 	               for(var i = 0 ; i < diarys.length;i++){
 	                   diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
 	                   diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
+	                   var tmp_file_name = lutil.genId('g');
+	                   var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+	                   fs.writeFileSync(tmp_img_url,diarys[i].up_img);
+	                   diarys[i].up_img = config.diary_url + tmp_file_name;
 	                   if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
-	                   
+	                       
 	                       diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
+	                   }else{
+	                   	   lutil.log("up_img_thumb is empty" + tmp_img_url);
+                           diarys[i].up_img_thumb = diarys[i].up_img;
 	                   }
 	                   diarys[i].content = diarys[i].summary;
 	                }

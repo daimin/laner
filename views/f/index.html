@@ -1,0 +1,26 @@
+<div class="container">
+  <div class="row show-grid">
+    <div class="span12">
+      <table class="table table-condensed table-hover">
+        <thead>
+          <tr>
+            <th>文件名</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if(files && files.length > 0){%>
+          <% files.forEach(function(file){ %>
+          <tr>
+            <td><%- file%></td>
+          </tr>
+          <% }); %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  <hr/>
+
+</div>
+<%- partial("footer") %>
+</div>
+

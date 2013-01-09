@@ -6,8 +6,8 @@ var sys = require("sys")
     ,User = DB.Table('User')
     ,ObjID = DB.ObjID
     ,EventProxy = require("eventproxy").EventProxy
-    ,htmlparser = require("htmlparser"),
-    sys = require('util');
+    ,htmlparser = require("htmlparser")
+    ,sys = require('util');
     
     
 exports.encrypt = function(str,secret) {
@@ -29,6 +29,13 @@ exports.md5 = function(str) {
   md5sum.update(str);
   str = md5sum.digest('hex');
   return str;
+};
+
+exports.genId = function(tag){
+    var d = new Date();
+    var tmp_id = d.getTime();
+
+    return tag + parseInt(tmp_id, 16) + exports.randomString(8);
 };
 
 exports.randomString = function (size) {

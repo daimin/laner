@@ -15,5 +15,6 @@ exports.close = function(){
  * db.collection.id()这个也可以
 */
 exports.ObjID = function(id){
-  return db.ObjectID.createFromHexString(id);
+  //return db.ObjectID.createFromHexString(id);
+  return id;
 };

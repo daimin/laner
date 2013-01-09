@@ -141,7 +141,10 @@ exports.config = {
 	related_sites : [
 	         "当前版本： v " + g_cfg.version,
 	         "<a href=\"mailto:daiming253685@126.com\">联系站长</a> "
-	         ]
+	         ],
+    // 由于appfog我们将图片保存到数据库中，这里是开关
+    // file/db
+	IMG_PERSISTENT : "db",
 	
 };
 

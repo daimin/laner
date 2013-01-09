@@ -344,3 +344,12 @@ span .number{
   font-weight: bold;
   color: red;
 }
+
+.f-dir{
+   color:blue;
+   cursor: pointer;
+}
+
+.f-file{
+   cursor: pointer;
+}

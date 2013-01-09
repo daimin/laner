@@ -64,6 +64,7 @@ exports.add = function(req, res, next){
 
         //保存评论
 		var comment = {};
+		comment._id = lutil.genId("m");
 		comment.content = comment_cont;
         comment.commenter = commenter;
         comment.diary_id = ObjID(diary_id);

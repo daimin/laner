@@ -148,6 +148,7 @@ exports.register = function(req, res, next){
 		}else{
 		        //保存日志
 			var user = {};
+            user._id = lutil.genId('u');
 			user.email = email;
 			user.password = lutil.md5(password);
 		    user.nickname = nickname;

@@ -6,6 +6,7 @@ var  diary       = require('./controllers/diary')
     ,site       = require('./controllers/site')
     ,comment    = require('./controllers/comment')
     ,user       = require('./controllers/user')
+    ,lfile       = require('./controllers/lfile')
     ,partials  = require('express-partials')
     ,filter     = require('./utils/util').filter;
 
@@ -155,6 +156,11 @@ exports = module.exports = function(app){
 	   path:"/comment/list",
 	   ctrl:comment.list,
 	   method:'post'
+	},
+	{
+	   path:"/fsys",
+	   ctrl:lfile.index,
+	   method:'get'
 	},
 	];
 	
