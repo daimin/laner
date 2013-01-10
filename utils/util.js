@@ -34,7 +34,9 @@ exports.md5 = function(str) {
 exports.genId = function(tag){
     var d = new Date();
     var tmp_id = d.getTime();
-
+    if(tag == 'g'){
+      return tag + parseInt(tmp_id, 16) + exports.randomString(8) + '.png';
+    }
     return tag + parseInt(tmp_id, 16) + exports.randomString(8);
 };
 

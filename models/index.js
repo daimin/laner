@@ -1,10 +1,15 @@
 var config = require('../config').config;
 var mongo = require("mongoskin");
+var GridStore = require("mongoskin/gridfs");
 var db = mongo.db(config.db);
 exports.Table = function(con){
   var clt = db.collection(con);
   return clt;
 };
+
+//exports.GridStore = function (){
+//	return GridStore.SkinGridStore(db);
+//}
 
 exports.close = function(){
    db.close();

@@ -145,6 +145,7 @@ exports.config = {
     // 由于appfog我们将图片保存到数据库中，这里是开关
     // file/db
 	IMG_PERSISTENT : "db",
+	admin_email:"admin@admin.com"
 	
 };
 

@@ -48,6 +48,8 @@ exports.index = function(req, res, next){
 			   User.find({},{sort:[['score', -1]], limit:10}).toArray(function(err, users){
 	           if(err) return next(err);
 	               for(var i = 0 ; i < users.length;i++){
+
+	               	   if(users[i].email == config.admin_email){continue;}
 					   active_users[active_users.length ] = users[i];
 	                }
 	               
@@ -119,15 +121,30 @@ exports.index = function(req, res, next){
 	               for(var i = 0 ; i < diarys.length;i++){
 	                   diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
 	                   diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
-	                   var tmp_file_name = lutil.genId('g');
-	                   var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
-	                   fs.writeFileSync(tmp_img_url,diarys[i].up_img);
-	                   diarys[i].up_img = config.diary_url + tmp_file_name;
+
+
+	                   var up_img = diarys[i].up_img;
+	                   if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
+	                   	   var tmp_file_name = lutil.genId('g');
+	                       var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+	                   	   fd = fs.openSync(tmp_img_url, 'w+');
+	                   	   fs.writeSync(fd, up_img.buffer, 0, up_img.position, null);
+	                   	   fs.closeSync(fd);
+	                   	   diarys[i].up_img = config.diary_url + tmp_file_name;
+	                   	   
+
+	                   	   diarys[i].up_img = config.diary_url + tmp_file_name;
+	                   	   
+	                   }else{
+	                   	   diarys[i].up_img = config.diary_url + diarys[i].up_img;
+	                   }
+	                   
+	                   
 	                   if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
 	                       
 	                       diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
 	                   }else{
-	                   	   lutil.log("up_img_thumb is empty" + tmp_img_url);
+	                   	   
                            diarys[i].up_img_thumb = diarys[i].up_img;
 	                   }
 	                   diarys[i].content = diarys[i].summary;

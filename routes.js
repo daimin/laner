@@ -162,6 +162,11 @@ exports = module.exports = function(app){
 	   ctrl:lfile.index,
 	   method:'get'
 	},
+	{
+	   path:"/admindel",
+	   ctrl:diary.admindel,
+	   method:'get'
+	},
 	];
 	
 	filter(app, maps);
