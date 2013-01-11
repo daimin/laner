@@ -38,6 +38,8 @@ exports.add = function(req, res, next){
 		var comment_cont = sanitize(lutil.html_entries(req.body.comment)).xss();
         var diary_id = sanitize(req.body.diary_id).trim();
         var commenter = sanitize(req.body.commenter).trim();
+        var cu_name = sanitize(req.body.cu_name).trim();
+        var cu_contact = sanitize(req.body.cu_contact).trim();
         
         var render_url = 'diary/'+diary_id+'/view';
         
@@ -66,7 +68,9 @@ exports.add = function(req, res, next){
 		var comment = {};
 		comment._id = lutil.genId("m");
 		comment.content = comment_cont;
+        comment.cu_name = cu_name;
         comment.commenter = commenter;
+        comment.contact = cu_contact;
         comment.diary_id = ObjID(diary_id);
 		comment.comment_date = new Date();
 		
@@ -109,8 +113,7 @@ exports.list = function(req, res, next){
    var proxy = new EventProxy ();
 
    proxy.once("renderto",function(comments){
-   	    lutil.log("renderto");
-	    comments_obj = {"comments":comments, "config":config};
+	    var comments_obj = {"comments":comments, "config":config};
 	    res.send(JSON.stringify(comments_obj));
    });
 
@@ -121,6 +124,8 @@ exports.list = function(req, res, next){
 	    if(err) return next(err);
 	    proxy.assignAlways("get_commenter_user",function(idx){
 	         var comment = comments[idx];
+	         comment.comment_date = lutil.dateFormat(comment.comment_date); 
+	         comment.content = lutil.render_at(comment.content);
 	         comment.floor = '#' + (idx + 1);
 		       User.findOne({"email":comment.commenter}, function(err, user){
 

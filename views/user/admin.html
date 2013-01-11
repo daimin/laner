@@ -1,0 +1,57 @@
+<%- partial("head",{userinfo:userinfo,"config":config}) %>
+<link rel="stylesheet" href="/stylesheets/skins/simple.css"></link>
+<%
+var motto = "";
+if(userinfo.motto){
+   motto = userinfo.motto;
+}
+%>
+
+<div class="container">
+  <div class="row show-grid">
+    <div class="span12">
+        <div id="alert-success" class="alert alert-success" style="display:none">
+          <button class="close" data-dismiss="alert" onclick="close_alter_success()">x</button>
+          <div id="success_msg"></div>
+        </div>
+        <div id="alert-error" class="alert alert-error" style="display:none">
+          <button class="close" data-dismiss="alert" onclick="close_alter_error()">x</button>
+          <div id="error_msg"></div>
+        </div>
+            <div class="tabbable tabs-left">
+              <ul class="nav nav-tabs">
+                <li class="active"><a href="#lA" onclick="render_notice();" data-toggle="tab">公告编辑</a></li>
+                <li><a href="#lB" onclick="render_diarys();" data-toggle="tab">日志管理</a></li>
+                <li><a href="#lC" onclick="render_users();" data-toggle="tab">用户管理</a></li>
+              </ul>
+              <div class="tab-content">
+                <div class="tab-pane active" id="lA">
+                  <p><div id="notice-div"></div></p>
+                </div>
+                <div class="tab-pane" id="lB">
+                  <p><div id="diarys-div"></div></p>
+                </div>
+                <div class="tab-pane" id="lC">
+                  <p><div id="users-div"></div></p>
+                </div>
+              </div>
+            </div>
+    </div>
+  
+  </div>  
+  <hr/>
+  <%- partial("footer",{"config":config}) %>
+</div>
+<script type="text/javascript" src="/javascripts/jquery.artDialog.js"></script>
+<script type="text/javascript" src="/javascripts/bootstrap-tab.js" charset="utf-8"> </script>
+<script type="text/javascript" src="/javascripts/ejs_production.js"></script>
+<script type="text/javascript">
+$(function(){
+    render_notice();
+});
+</script>
+          
+
+                
+
+    

@@ -7,6 +7,7 @@
     <div class="row">
       <div class="span8">
         <div class="panel">
+          <div class="header">收藏日记 <span class="badge"><%=diarys.length %></span></div>
         <!-- 文章内容开始 -->
          <% 
           for(var i = 0; i < diarys.length; i++) {
@@ -49,6 +50,7 @@
               <span class="meta-sep"> | </span>
               <span class="comments-link"> <span class="badge"><%= comment_num%></span> 回应 </span>
               <span class="meta-sep"> | </span>
+              
               <span class="edit-link">
                 <a class="post-edit-link" title="阅读全文" href="/diary/<%= diary._id %>/view">阅读全文</a>
               </span>
@@ -64,7 +66,7 @@
       </div>
       
         <div class="span4">
-         <%- partial("../listside",{"userinfo":userinfo, "config":config, "hot_diarys":hot_diarys,
+         <%- partial("../indexside",{"userinfo":userinfo, "config":config, "hot_diarys":hot_diarys,
           "active_users":active_users}) %>
           
       </div>
@@ -77,7 +79,7 @@
 
 <script type="text/javascript" src="/javascripts/jquery.artDialog.js"></script>
 <script type="text/javascript">
-     jQuery('.nailthumb-container').nailthumb({width:100,height:100,method:'resize',fitDirection:'top center'});
+     jQuery('.nailthumb-container').nailthumb({width:100,height:100,method:'resize',fitDirection:'top left'});
 </script>
 
 

@@ -1,5 +1,6 @@
 var DB = require("../models")
     ,User = DB.Table('User')
+    ,UserCollectDiary = DB.Table('UserCollectDiary')
     ,ObjID = DB.ObjID
     ,config = require('../config').config
     ,check = require('validator').check
@@ -142,8 +143,8 @@ exports.register = function(req, res, next){
         }catch(e){
             res.send(e.message);
         }
-	   User.findOne({"email":email,"password":lutil.md5(password)}, function(err, user){
-	   if(user != null){
+	   User.findOne({"email":email}, function(err, user){
+	    if(user != null){
 		        res.send('邮箱已存在，请登录');
 		}else{
 		        //保存日志
@@ -299,5 +300,29 @@ exports.setting = function(req, res, next){
 		 }
      }
 }
+
+
+exports.del = function(req, res, next){
+   var user_id = ObjID(req.params.did);
+   lutil.userinfo(req, function(uinfo){
+       if(uinfo.email == config.admin_email){
+              User.findOne({"_id":user_id}, function(err, user){
+                if(user){
+                   User.remove({"_id":user_id},function(err){
+                       UserCollectDiary.remove({"email":user.email},function(err){
+                            res.send('1');
+                       });
+                   });
+                }
+
+              });     
+       }else{
+          res.send('2');
+       }
+
+   });
+
+
+};
 
 

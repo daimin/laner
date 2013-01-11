@@ -254,8 +254,18 @@ body.page .edit-link {
   padding-left:12px;
 }
 
-.comment-floor{
+.comment-float{
   float:right;
+  margin: 0 0 0 0;
+}
+.comment-floor{
+  
+  font-size:10px;
+  padding-right:10px;
+  color:#aaaaff;
+}
+
+.comment-reply{
   font-size:10px;
   padding-right:10px;
   color:#aaaaff;
@@ -352,4 +362,12 @@ span .number{
 
 .f-file{
    cursor: pointer;
+}
+
+.at-span{
+   background: #ffd;
+   color: #22f;
+   text-align: left;
+   font-weight: bold;
+   margin: 0 0 0 0;
 }

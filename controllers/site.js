@@ -73,10 +73,6 @@ exports.index = function(req, res, next){
                	        }
 	                   s_diarys[i].create_date = lutil.dateFormat(s_diarys[i].create_date);
 	                   s_diarys[i].edit_date = lutil.dateFormat(s_diarys[i].edit_date);
-	                   if(s_diarys[i].up_img_thumb && s_diarys[i].up_img_thumb != ""){
-	                   
-	                       s_diarys[i].up_img_thumb = config.diary_url + s_diarys[i].up_img_thumb;
-	                   }
 	                   s_diarys[i].content = s_diarys[i].summary;
 					   hot_diarys[hot_diarys.length ] = s_diarys[i];
 	                }
@@ -136,7 +132,10 @@ exports.index = function(req, res, next){
 	                   	   diarys[i].up_img = config.diary_url + tmp_file_name;
 	                   	   
 	                   }else{
-	                   	   diarys[i].up_img = config.diary_url + diarys[i].up_img;
+	                   	   if(diarys[i].up_img && diarys[i].up_img != ""){
+                                diarys[i].up_img = config.diary_url + diarys[i].up_img;
+	                   	   }
+	                   	   
 	                   }
 	                   
 	                   
@@ -177,5 +176,17 @@ exports.index = function(req, res, next){
     });
   
 
+};
+
+exports.p404 = function(req, res, next){
+   lutil.userinfo(req, function(uinfo){
+   	      res.render('404', {
+		           title       :config.name,
+                   config      :config,
+                   req_path    :req.path,
+                   userinfo    :uinfo,
+		       });
+               DB.close();
+   });
 };
 

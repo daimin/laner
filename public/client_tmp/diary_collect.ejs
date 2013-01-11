@@ -1,0 +1,15 @@
+              <span class="badge"><%= collect_num%></span>
+                 <%
+                   var cursor_css = "cursor-disable";
+
+                   if(collect_email){
+                       cursor_css = "cursor-hand";
+                   }
+
+                 %>
+              
+                 <% if(has_collect <= 0){%>
+                 <span class="label label-warning <%= cursor_css%>" onclick="render_collect('<%= collect_email%>','<%= diary_id%>',0)">&nbsp;收 藏&nbsp;</span>
+                 <%}else{%>
+                 <span class="label <%= cursor_css%> " onclick="render_collect('<%= collect_email%>','<%= diary_id%>',0)">&nbsp;取消收藏&nbsp;</span>
+                 <%}%>

@@ -7,6 +7,7 @@ var  diary       = require('./controllers/diary')
     ,comment    = require('./controllers/comment')
     ,user       = require('./controllers/user')
     ,lfile       = require('./controllers/lfile')
+    ,admin       = require('./controllers/admin')
     ,partials  = require('express-partials')
     ,filter     = require('./utils/util').filter;
 
@@ -87,13 +88,13 @@ exports = module.exports = function(app){
 	   method:'post'
 	},
 	{
-	   path:"/diary/focus",
-	   ctrl:diary.focus,
+	   path:"/diary/collect",
+	   ctrl:diary.collect,
 	   method:'post'
 	},
 	{
-	   path:"/diary/attent",
-	   ctrl:diary.attent,
+	   path:"/diary/collection",
+	   ctrl:diary.collection,
 	   method:'get'
 	},
 	{
@@ -153,6 +154,11 @@ exports = module.exports = function(app){
 		method:'post'
 	},
 	{
+	   path:"/user/:did/del",
+	   ctrl:user.del,
+	   method:'get'
+	},
+	{
 	   path:"/comment/list",
 	   ctrl:comment.list,
 	   method:'post'
@@ -163,14 +169,41 @@ exports = module.exports = function(app){
 	   method:'get'
 	},
 	{
-	   path:"/admindel",
-	   ctrl:diary.admindel,
+	   path:"/user/admin",
+	   ctrl:admin.index,
 	   method:'get'
 	},
+	{
+	   path:"/admin/notice",
+	   ctrl:admin.notice,
+	   method:'post'
+	},
+	{
+	   path:"/admin/diarys",
+	   ctrl:admin.diarys,
+	   method:'post'
+	},
+	{
+	   path:"/admin/users",
+	   ctrl:admin.users,
+	   method:'post'
+	},
+	{
+	   path:"/admin/update_notice",
+	   ctrl:admin.update_notice,
+	   method:'post'
+	},
+	{
+	   path:"/404",
+	   ctrl:site.p404,
+	   method:'get'
+	}
 	];
 	
 	filter(app, maps);
 	
-    
+    app.get("/*", function(req, res, next){
+         site.p404(req, res, next);
+    });
 };
 

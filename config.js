@@ -44,6 +44,7 @@ exports.config = {
 		"/"              : 1,
 		"/diary/add"     : 2,
 		"/diary/del"     : 2,
+		"/user/del"      : 2,
 		"/diary/edit"    : 2,
 		"/diary/view"    : 1,
 		"/diary/list"    : 1,
@@ -51,7 +52,8 @@ exports.config = {
 		"/diary/mlist"   : 1,
 		"/user/login"    : 1,
 		"/user/register" : 1,
-		"/comment/add"   : 1
+		"/comment/add"   : 1,
+		"/user/admin"    : 2
 	}
 	,
 	host: '', // host 结尾不要添加'/'
@@ -128,7 +130,7 @@ exports.config = {
 	    default_avatar:"default.jpg"
 	},
 	INDEX_ITEM_SIZE : 100,
-	// 公告配置，h1，为大标题，h2,次之，总是都是标题
+	// 公告配置，h1，为大标题，h2,次之，总是都是标题,默认的
 	announcement:{
 	  h1:"douban.fm",
 	  h2:'<div class="radio"><iframe src="http://douban.fm/partner/baidu/"></iframe></div>',

@@ -1,4 +1,4 @@
-<%- partial("head",{userinfo:userinfo}) %>
+<%- partial("head",{userinfo:userinfo,"config":config}) %>
 <%
 var motto = "";
 if(userinfo.motto){
@@ -125,7 +125,7 @@ if(userinfo.motto){
   
   </div>  
   <hr/>
-  <%- partial("footer") %>
+  <%- partial("footer",{"config":config}) %>
 </div>
 <script type="text/javascript" src="/javascripts/bootstrap-tab.js" charset="utf-8"> </script>
 <script type="text/javascript">

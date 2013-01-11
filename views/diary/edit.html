@@ -1,4 +1,4 @@
-<%- partial("head",{userinfo:userinfo}) %>
+<%- partial("head",{userinfo:userinfo,"config":config}) %>
 
 <script type="text/javascript" charset="utf-8" src="/kindeditor/kindeditor-min.js"></script>
 <script type="text/javascript" charset="utf-8" src="/kindeditor/lang/zh_CN.js"></script>
@@ -62,7 +62,7 @@
     </div>
   </div>
   <hr/>
-<%- partial("footer") %>
+<%- partial("footer",{"config":config}) %>
 </div>
 <script type="javascript/text">
 $(function(){  

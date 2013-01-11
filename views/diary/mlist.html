@@ -1,4 +1,4 @@
-<%- partial("head",{userinfo:userinfo}) %>
+<%- partial("head",{userinfo:userinfo,"config":config}) %>
 <link rel="stylesheet" href="/stylesheets/skins/simple.css"></link>
 <script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
@@ -87,18 +87,18 @@
       </div>
       
         <div class="span4">
-            <%- partial("../mlistside",{"author_info":author_info, "config":config,"author_focus_diarys":author_focus_diarys}) %>
+            <%- partial("../mlistside",{"author_info":author_info, "config":config,"author_collect_diarys":author_collect_diarys}) %>
       </div>
    
   
   </div>
   <hr/>
-<%- partial("footer") %>
+<%- partial("footer",{"config":config}) %>
 </div>
 
 <script type="text/javascript" src="/javascripts/jquery.artDialog.js"></script>
 <script type="text/javascript">
-     jQuery('.nailthumb-container').nailthumb({width:100,height:100,method:'resize',fitDirection:'top center'});
+     jQuery('.nailthumb-container').nailthumb({width:100,height:100,method:'resize',fitDirection:'top left'});
 </script>
 
 

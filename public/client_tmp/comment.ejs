@@ -8,11 +8,15 @@
                  comments.forEach(function(comment){
                     var commenter_link = "";
                     var mlist_link = "javascript:void(0)";
+                    var reply_target = "";
+
                     if(!comment.commenter || comment.commenter == ""){
-                          commenter_link = "游客";
+                          commenter_link = '<a target="_blank" href="' + comment.contact + '">' + comment.cu_name + '</a>';
+                          reply_target = comment.cu_name;
                     }else{
                           mlist_link = "/diary/" + comment.commenter._id + "/mlist";
                           commenter_link = '<a href="' + mlist_link + '">' + comment.commenter.nickname + '</a>';
+                          reply_target = comment.commenter.nickname;
                     }
                     var avatar_url = "";
                     
@@ -30,7 +34,10 @@
                           <div class="comment-header">
                             &nbsp;在 <%= comment.comment_date%>&nbsp;&nbsp;
                             <%= commenter_link%>
-                            <span class="comment-floor"><%= comment.floor%></span>
+                            <div class="comment-float">
+                              <span class="comment-reply"><a href="javascript:void(0)" onclick="replyComment('<%=reply_target %>')">回复</a></span>
+                              <span class="comment-floor"><%= comment.floor%></span>
+                            </div>
                           </div>
                           <div class="comment-cont">
                             <%= comment.content%>
@@ -47,5 +54,8 @@
 
 </div>
 <script type="text/javascript">
+    jQuery('#diary_up_img').nailthumb({width:350,height:350,method:'resize',fitDirection:'top left'});
     jQuery('.nailthumb-container').nailthumb({width:48,height:48,method:'resize',fitDirection:'top center'});
+    
+
 </script>

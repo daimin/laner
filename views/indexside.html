@@ -1,7 +1,10 @@
   <%if(!userinfo){%>
   <form class="panel form-vertical" action="" method="post" onsubmit="return dologin('/user/login')">
     <div class="header">登录</div>
-      <div class="alert alert-error" id="alert-error" style="display:none"></div>
+      <div class="alert alert-error" id="alert-error" style="display:none">
+          <button class="close" data-dismiss="alert" type="button" onclick="close_alter_error()"><i class="icon-remove"></i></button>
+          <div id="error_msg"></div>
+      </div>
       <i class="icon-user" ></i>
       <input class="input-large" type="text" placeholder="Email" name="email" id="email">
       <br/>

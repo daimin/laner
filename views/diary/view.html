@@ -1,4 +1,4 @@
-<%- partial("head",{userinfo:userinfo}) %>
+<%- partial("head",{userinfo:userinfo,"config":config}) %>
 <%
     var uemail = "";
     if(userinfo){
@@ -47,7 +47,7 @@
               </div>
               <script type="text/javascript" src="http://v3.jiathis.com/code_mini/jia.js?uid=1334623036661201" charset="utf-8"></script>
             </div>
-            <div id="focus_div" class="pull-right">
+            <div id="collect_div" class="pull-right">
 
 
             </div>
@@ -64,6 +64,10 @@
               <input id="diary_id" type="hidden" name="diary_id" value="<%=diary._id%>">
               <div class="control-group">
                 <div class="controls">
+                  <% if(userinfo == null){%>
+                  <input class="input" type="text" id="cu_name" name="cu_name" placeholder="填入称呼" ><br/>
+                  <input class="input input-xlarge" type="text" id="cu_contact" name="cu_contact" placeholder="邮箱或主页" >
+                  <%}%>
                   <textarea class="input-xlarge" id="comment" name="comment" placeholder="发表你的评论" style="width:98%;height:80px;"></textarea>
                 </div>
                 <button class="btn btn-success" type="submit">发表评论</button>
@@ -76,16 +80,16 @@
       
         <div class="span4">
             <%- partial("../viewside",{"author_info":author_info, "config":config, "author_diarys":author_diarys,
-          "author_focus_diarys":author_focus_diarys}) %>
+          "author_collect_diarys":author_collect_diarys}) %>
       </div>
    
   
   </div>
   <hr/>
-<%- partial("footer") %>
+<%- partial("footer",{"config":config}) %>
 </div>
 
-<script type="text/javascript" src="/javascripts/ejs_production.js"></script>
+
 <script type="text/javascript">
     $(function(){
         jQuery('#diary_up_img').nailthumb({width:350,height:350,method:'resize',fitDirection:'top left'});
@@ -100,13 +104,16 @@
 
 
          render_viewlist("<%= diary._id%>");
-         render_focus("<%= uemail%>","<%= diary._id%>",1);
+         render_collect("<%= uemail%>","<%= diary._id%>",1);
+
+
         
     });
            
 </script>
 
-
+<script type="text/javascript" src="/javascripts/ejs_production.js"></script>
+<script type="text/javascript" src="/javascripts/jquery.textbox.js"></script>
 
 
           

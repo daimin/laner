@@ -1,15 +1,12 @@
-<%- partial("head",{userinfo:userinfo}) %> 
+<%- partial("head",{userinfo:userinfo,"config":config}) %> 
 <script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
 <script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
 
 <div class="container">
   <div class="row show-grid">
     <div class="span8">
-      <div class="row panel">
-        <div class="ann_h1"><a href="http://douban.fm/"><%- config.announcement.h1%></a></div>
-        <div class="ann_h2">
-          <%- config.announcement.h2%>
-        </div>
+      <div class="row panel" id="index-notice">
+
       </div>
       
       <div class="row panel">
@@ -42,6 +39,7 @@
               </span>
             </div>
             <div class="entry-content">
+
               <% if(diary['up_img_thumb'] ){ %>
                 <div class="nailthumb-container" style="float:left;">
                   <a href="javascript:void(0)"><img class="entry-img" src="<%- diary['up_img_thumb'] %>"></a>
@@ -67,7 +65,7 @@
            %>
           <!-- 文章内容结束 -->
 <script type="text/javascript">
-    jQuery('.nailthumb-container').nailthumb({width:100,height:100,method:'resize',fitDirection:'top center'});
+    jQuery('.nailthumb-container').nailthumb({width:100,height:100,method:'resize',fitDirection:'top left'});
 </script>
            <%- partial("page",{pageData:pageData,path:req_path}) %>
           </div>
@@ -76,9 +74,16 @@
        <%- partial("indexside",{"userinfo":userinfo, "config":config, "hot_diarys":hot_diarys,
           "active_users":active_users}) %>
     </div>
-  <hr/>
+  
 
 </div>
-<%- partial("footer") %>
+<hr/>
+<%- partial("footer",{"config":config}) %>
 </div>
+<script type="text/javascript" src="/javascripts/ejs_production.js"></script>
+<script type="text/javascript">
+$(function(){
+   render_index_notice();
+});
+</script>
 

@@ -47,12 +47,12 @@
 </div>
 
 <div class="panel">
-  <div class="header">作者感兴趣的日志</div>
+  <div class="header">作者收藏的日志</div>
   <ul class="unstyled">
     <% 
-          if(author_focus_diarys && author_focus_diarys.length > 0){
-          for(var i = 0; i < author_focus_diarys.length; i++) {
-             var diary = author_focus_diarys[i];
+          if(author_collect_diarys && author_collect_diarys.length > 0){
+          for(var i = 0; i < author_collect_diarys.length; i++) {
+             var diary = author_collect_diarys[i];
              if(!diary){
                 continue;
              }

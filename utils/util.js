@@ -97,9 +97,13 @@ exports.index_cut_cont = function(cont){
 };
 
 exports.html_entries = function(str){
+  if(typeof str == 'undefined'){
+    return '';
+  }
   var s = str.replace(/\n/g,'<br/>');
   s = s.replace(/\n\r/g,'<br/>');
   s = s.replace(/' '/g,'&nbsp;');
+  s = s.replace(/'"'/g,'&quot;');
   return s;
 };
 
@@ -274,7 +278,6 @@ exports.filter = function(app,maps){
                           march_count++;
                       }
                 }
-
                 
                 if(march_count >= dpath_len){
                     return objm.ctrl;
@@ -285,6 +288,7 @@ exports.filter = function(app,maps){
                 continue;
              }
         }
+
      
     };
     
@@ -293,16 +297,44 @@ exports.filter = function(app,maps){
 
         app[objm.method](objm.path, function(req,res,next){
             if(verfiy_auth(req, res, next)){
-                get_ctrl_func(req.path, req.method)(req,res,next);
+                var gcfunc = get_ctrl_func(req.path, req.method);
+                
+                if(gcfunc){
+                    gcfunc(req,res,next);
+                }else{
+                    res.redirect('/');
+                }
             }else{
                 res.redirect('user/login?p='+req.path);
             }
-          
         });
         
     }
    
 };
+
+exports.render_at = function(str){
+    if(typeof str == 'undefined' || str == ""){
+       return "";
+    }
+    var nstr = str;
+    var atP = /@\S+[:\s]/g;
+    var index = 0;
+    while(1){
+         var matches = atP.exec(str);
+
+         if(matches == null || typeof matches.length == 'undefined' || matches.length <= 0){
+             break;
+         }else{
+
+             var repstr = '<span class="at-span">' + matches[0] + '&nbsp;</span>';
+             nstr = nstr.replace(matches[0], repstr);
+         }
+         
+    }
+
+    return nstr;
+}
 
 function get_text_from_html(html){
     var text = "";

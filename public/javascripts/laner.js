@@ -35,13 +35,18 @@ function add_diary(){
 }
 
 
-function del_diary(durl, delobj){
+function del_diary(durl, delobj, isadmin){
 	art.dialog({
 	    content: '确定删除该篇日志？',
 	    ok: function () {
           $.get(durl, {}, function(data){
                  if(data == 1){
-                    window.location.reload();
+                    if(isadmin){
+                        render_diarys();
+                    }else{
+                        window.location.reload();
+                    }
+                    
                  }
 
           });
@@ -53,8 +58,46 @@ function del_diary(durl, delobj){
 	});
 }
 
+function del_user(durl, delobj){
+    art.dialog({
+      content: '确定删除该用户？',
+      ok: function () {
+          $.get(durl, {}, function(data){
+                 if(data == 1){
+                    render_users(); 
+                 }
+
+          });
+          return true;
+      },
+      follow:delobj,
+      cancelVal: '取消',
+      cancel: true
+  });
+}
+
 function doCommentSubmit(url){
-    var param = {commenter:$("#commenter").val(),diary_id:$("#diary_id").val(),comment:$("#comment").val()};
+  var cmer = $("#commenter").val();
+  var cn = $("#cu_name").val() || "";
+  var cc = $("#cu_contact").val() || "";
+  var error_msg = [];
+  if(cmer == ""){
+     if(cn == ""){
+        error_msg[error_msg.length] = "评论人不能为空";
+     }
+     if(cc == ""){
+        error_msg[error_msg.length] = "邮箱或主页不能为空";
+     }
+  }
+  if(error_msg.length == 0){
+        var param = {
+        commenter:cmer,
+        diary_id:$("#diary_id").val(),
+        comment:$("#comment").val(),
+        cu_name:cn,
+        cu_contact:cc
+      };
+
     $.post(url, param,
         function(data){
            if(data == 1){
@@ -66,11 +109,16 @@ function doCommentSubmit(url){
            }
         }
     );
+  }else{
+
+     $("#alert-error").css({"display":"block"});
+     $("#alert-error").html(error_msg.join('，'));
+  }
+
     return false;
 }
 
 function dologin(url,ispage){
-
     var href = window.location.href;
     var pa = "";
     if(href.lastIndexOf('=') != -1){
@@ -179,20 +227,22 @@ function render_viewlist(diary_id){
           $.post("/comment/list", { "diary_id":diary_id},
             function(data){
               var dataObj = eval("("+data+")");
-            var html = new EJS({url: '/client_tmp/comment.ejs'}).render(dataObj);
-               $("#comment_div").html(html);
+              var html = new EJS({url: '/client_tmp/comment.ejs'}).render(dataObj);
+              $("#comment_div").html(html);
         });
 }
 
-function render_focus(email, diary_id, isload){
+function render_collect(email, diary_id, isload){
       if(email == "" && isload == 0){
           return false;
       }
-      $.post("/diary/focus", {"email":email, "diary_id":diary_id,"isload":isload},
+      $.post("/diary/collect", {"email":email, "diary_id":diary_id,"isload":isload},
             function(data){
               var dataObj = eval("("+data+")");
-              var html = new EJS({url: '/client_tmp/diary_focus.ejs'}).render(dataObj);
-               $("#focus_div").html(html);
+              
+              var html = new EJS({url: '/client_tmp/diary_collect.ejs'}).render(dataObj);
+
+              $("#collect_div").html(html);
         });
 }
 
@@ -206,27 +256,27 @@ function doupdate_avatar(url){
                  };
 
     $.post(url, param,
-        function(data){
-		   var tpos = data.indexOf(':');
-		   var tag = msg = "";
-		   if(tpos != -1){
-		   		tag = data.substring(0,tpos);
-		        msg = data.substring(tpos + 1);
-		   }else{
-		      tag = data;
-		   }
+    function(data){
+  		   var tpos = data.indexOf(':');
+  		   var tag = msg = "";
+  		   if(tpos != -1){
+  		   		tag = data.substring(0,tpos);
+  		        msg = data.substring(tpos + 1);
+  		   }else{
+  		      tag = data;
+  		   }
 
-           if(tag == 1){
+          if(tag == 1){
               $("#alert-error").css({"display":"none"});
-			  $("#alert-success").css({"display":"block"});
+  			      $("#alert-success").css({"display":"block"});
               $("#success_msg").html("更新成功");
-			  $("#avatar_img").attr({"src":msg});
-           }else{
+  			      $("#avatar_img").attr({"src":msg});
+          }else{
               $("#alert-error").css({"display":"block"});
-			  $("#alert-success").css({"display":"none"});
+  			      $("#alert-success").css({"display":"none"});
               $("#error_msg").html(data);
-           }
-        }
+          }
+       }
     );
     return false;
 }
@@ -291,3 +341,93 @@ function dosearch(formobj, action){
 
    return false;
 }
+
+function render_notice(){
+    $.post("/admin/notice", {},
+          function(data){
+            
+            var dataObj = eval("("+data+")");
+
+            var html = new EJS({url: '/client_tmp/notice.ejs'}).render(dataObj);
+
+            $("#notice-div").html(html);
+    });
+}
+
+
+function render_diarys(){
+    $.post("/admin/diarys", {},
+          function(data){
+            
+            var dataObj = eval("("+data+")");
+
+            var html = new EJS({url: '/client_tmp/admin_diarys.ejs'}).render(dataObj);
+
+            $("#diarys-div").html(html);
+    });
+}
+
+
+function render_users(){
+    $.post("/admin/users", {},
+          function(data){
+            
+            var dataObj = eval("("+data+")");
+
+            var html = new EJS({url: '/client_tmp/admin_users.ejs'}).render(dataObj);
+
+            $("#users-div").html(html);
+    });
+}
+
+function doupdate_notice(url){
+    var param = {
+               h1:$("#no_title").val(),
+               h2:$("#no_cont").val(),
+              };
+
+    $.post(url, param,
+    function(data){
+         var tpos = data.indexOf(':');
+         var tag = msg = "";
+         if(tpos != -1){
+            tag = data.substring(0,tpos);
+              msg = data.substring(tpos + 1);
+         }else{
+            tag = data;
+         }
+
+          if(tag == 1){
+              $("#alert-error").css({"display":"none"});
+              $("#alert-success").css({"display":"block"});
+              $("#success_msg").html("更新成功");
+              
+          }else{
+              $("#alert-error").css({"display":"block"});
+              $("#alert-success").css({"display":"none"});
+              $("#error_msg").html(data);
+          }
+       }
+    );
+    return false;
+}
+
+
+function render_index_notice(){
+    $.post("/admin/notice", {},
+          function(data){
+            
+            var dataObj = eval("("+data+")");
+            
+            var html = new EJS({url: '/client_tmp/index_notice.ejs'}).render(dataObj);
+            $("#index-notice").html(html);
+    });
+}
+
+
+function replyComment(reply_target){
+   $("#comment").val("");
+   $("#comment").textbox().insertText("@"+reply_target+": ");
+}
+
+

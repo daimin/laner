@@ -14,7 +14,7 @@
           <li><a href="/diary/list">所有日记</a></li>
           <% if(userinfo){%>
           <li><a href="/diary/<%= userinfo._id%>/mlist">我的日记</a></li>
-          <li><a href="/diary/attent">关注日记</a></li>
+          <li><a href="/diary/collection">我的收藏</a></li>
           <%}%>
         </ul>
       </div>
@@ -25,6 +25,9 @@
         <ul class="nav pull-right">
         <% if(userinfo){%>
         <li><a href="/user/setting">设置</a></li>
+        <% if(userinfo.email == config.admin_email ){%>
+        <li><a href="/user/admin">管理</a></li>
+        <% }%>
         <li><a href="/user/logout">退出</a></li>
         <%}else{%>
         <li><a href="/user/login">登录</a></li>

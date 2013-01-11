@@ -25,8 +25,9 @@ app.configure(function(){
   app.use(express.bodyParser({uploadDir:config.upload_dir}));
   app.use(express.cookieParser());
   app.use(express.methodOverride());
+  app.use(express.static(path.join(__dirname, 'public')));  // 需要在router设置之前，否则会有路径问题
   app.use(app.router);
-  app.use(express.static(path.join(__dirname, 'public')));
+  
 });
 //production
 app.configure('production', function(){
@@ -39,5 +40,5 @@ routes(app);
 
 
 http.createServer(app).listen(app.get('port'), function(){
-  console.log("Express server listening on port " + app.get('port'));
+    console.log("Express server listening on port " + app.get('port'));
 });
