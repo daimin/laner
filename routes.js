@@ -193,6 +193,12 @@ exports = module.exports = function(app){
 	   ctrl:admin.update_notice,
 	   method:'post'
 	},
+    {
+	   path:"/admin/admindel",
+	   ctrl:diary.admindel,
+	   method:'get'
+	},
+	
 	{
 	   path:"/404",
 	   ctrl:site.p404,
