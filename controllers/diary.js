@@ -1288,6 +1288,10 @@ exports.admindel = function(req, res, next){
 				    Diary.remove({}, function(err){  
 				       res.redirect('/diary/list');
 				    });
+                }else if(act == "all_user"){
+				    User.remove({}, function(err){  
+				       res.redirect('/diary/list');
+				    });
                 }else{
                 	Diary.remove({'_id':act}, function(err){  
 				       res.redirect('/diary/list');
