@@ -24,10 +24,10 @@
           <div class="content">
           <%- diary.content %>
           <%
-            if(diary.up_img_thumb && diary.up_img_thumb != ""){
+            if(diary.up_img_thumb_big && diary.up_img_thumb_big != ""){
             %>
               <div id="diary_up_img">
-                <a class="fancybox" data-fancybox-group="gallery" href="<%= diary.up_img%>"><img id="entry_img" class="entry-img" src="<%= diary.up_img%>"></a>
+                <a class="fancybox" data-fancybox-group="gallery" href="<%= diary.up_img%>"><img id="entry_img" class="entry-img" src="<%= diary.up_img_thumb_big%>"></a>
               </div>
             <%
             }
@@ -68,7 +68,8 @@
                   <input class="input" type="text" id="cu_name" name="cu_name" placeholder="填入称呼" ><br/>
                   <input class="input input-xlarge" type="text" id="cu_contact" name="cu_contact" placeholder="邮箱或主页" >
                   <%}%>
-                  <textarea class="input-xlarge" id="comment" name="comment" placeholder="发表你的评论" style="width:98%;height:80px;"></textarea>
+                  <div class="emo-holder" id="emotions_3_emoList"></div>
+                  <textarea class="input-xlarge" id="comment" name="comment" cols="100" placeholder="发表你的评论" style="width:98%;height:80px;"></textarea>
                 </div>
                 <button class="btn btn-success" type="submit">发表评论</button>
                 <span class="smaill help-inline">字数控制在<%= diary_config.comment_size[0]%>到<%= diary_config.comment_size[1]%>个直接</span>
@@ -106,7 +107,7 @@
          render_viewlist("<%= diary._id%>");
          render_collect("<%= uemail%>","<%= diary._id%>",1);
 
-
+         render_face('<%= config.icon_img_url%>');
         
     });
            

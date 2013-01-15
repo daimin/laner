@@ -7,7 +7,7 @@ exports.config = {
 	name       : '晓知+',
 	description: 'Diary',
 	version    : (function(){
-		  g_cfg.version = '0.1.0';
+		  g_cfg.version = '0.1.1';
 		  return g_cfg.version;
 	  })(),
 	// 配置网站头部
@@ -33,7 +33,7 @@ exports.config = {
 	},
 	meta: [
 		'<meta name="author" content="vagasnail@gmail.com">',
-		'<meta name="description" content="laner diary">'
+		'<meta name="description" content="心情记录，知识分享">'
 	]
 	},
 	ACCESS_PUBLIC : 1,
@@ -102,7 +102,7 @@ exports.config = {
 	diary_content_size : [2,4000],
     diary_summary_size : [2,80],
     comment_size       : [2,2000],
-	diary_img_size : 512 * 1024,
+	diary_img_size : 2 * 1024 * 1024,
 	// 上传日记说明图片的目录
 	diary_img : '/public/images/upload/',
 	// url中访问日记说明图片的目录
@@ -138,6 +138,7 @@ exports.config = {
 	},
 	// 程序是否是调试模式
 	DEBUG:true,
+	log_dir:"/public/log/",
 	PAGE_SIZE:10,
 
 	related_sites : [
@@ -147,8 +148,19 @@ exports.config = {
     // 由于appfog我们将图片保存到数据库中，这里是开关
     // file/db
 	IMG_PERSISTENT : "db",
-	admin_email:"admin@admin.com"
-	
+	admin_email:"admin@admin.com",
+	site_base  :"http://xiaode.cz.cc",
+	thumber_url:"http://dx.ap01.aws.af.cm/remote_thumb.php",
+	//site_base  :"http://192.168.211.91:3000",
+	//thumber_url:"http://192.168.211.91/dx/remote_thumb.php",
+	icon_img_url:"/images/statusface/",
+	face_imgs : [["\\(谄笑\\)","2.gif?ver=1"],["\\(吃饭\\)","3.gif?ver=1"],["\\(调皮\\)","4.gif?ver=1"],["\\(尴尬\\)","5.gif?ver=1"],
+	["\\(汗\\)","6.gif?ver=1"],["\\(惊恐\\)","7.gif?ver=1"],["\\(囧\\)","8.gif?ver=1"],["\\(可爱\\)","9.gif?ver=1"],
+	["\\(酷\\)","10.gif?ver=1"],["\\(流口水\\)","11.gif?ver=1"],["\\(生病\\)","14.gif"],["\\(叹气\\)","15.gif"],["\\(淘气\\)","16.gif"],
+	["\\(舔\\)","17.gif"],["\\(偷笑\\)","18.gif"],["\\(吐\\)","19.gif?ver=1"],["\\(吻\\)","20.gif"],["\\(晕\\)","21.gif?ver=1"],
+	["\\(住嘴\\)","23.gif"],["\\(大笑\\)","16.gif?ver=1"],["\\(害羞\\)","shy.gif"],["\\(口罩\\)","17.gif"],["\\(哭\\)","cry.gif"],
+	["\\(困\\)","sleepy.gif"],["\\(难过\\)","sad.gif"],["\\(生气\\)","5.gif?ver=1"],["\\(书呆子\\)","13.gif?ver=1"],
+	["\\(微笑\\)","1.gif?ver=1"],["\\(不\\)","1.gif"],["\\(惊讶\\)","surprise.gif"],["\\(kb\\)","kbz2.gif"],["\\(sx\\)","shaoxiang.gif"] ]
 };
 
 

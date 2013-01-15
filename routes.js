@@ -169,6 +169,11 @@ exports = module.exports = function(app){
 	   method:'get'
 	},
 	{
+       path:"/fsys/thumb_test",
+       ctrl:lfile.thumb_test,
+	   method:'get'
+	},
+	{
 	   path:"/user/admin",
 	   ctrl:admin.index,
 	   method:'get'

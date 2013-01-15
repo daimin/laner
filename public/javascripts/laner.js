@@ -430,4 +430,27 @@ function replyComment(reply_target){
    $("#comment").textbox().insertText("@"+reply_target+": ");
 }
 
+function drawStatusface(icon_img_url){
+  var faceImgs = '';
+}
+
+function render_face(face_url){
+    var data = '{"config":{"icon_img_url":"'+face_url+'"}}';
+    var dataObj = eval("("+data+")");
+    var html = new EJS({url: '/client_tmp/face.ejs'}).render(dataObj);
+    $("#emotions_3_emoList").html(html);
+
+    var imgs = $("#emotions_3_emoList0").find("li img");
+
+    imgs.each(function(i){
+        $(this).click(function(){
+            $("#comment").textbox().insertText($(this).attr('emotion'));
+        });
+    });
+
+    console.log(strs.join(','));
+
+}
+
+
 

@@ -20,6 +20,9 @@
              if(diary['comment_num']){
                  comment_num = diary['comment_num'];
              }
+             if(diary.up_img != "" && diary.up_img_thumb == ""){
+                continue;
+             }
          %>
           <div class="post">
             <div class="entry-title">

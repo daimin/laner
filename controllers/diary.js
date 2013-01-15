@@ -86,7 +86,6 @@ exports.add = function(req, res, next){
 			
 	        
 			var target_path = "";
-	        var target_path_thumb = "";
 	        var no_up_img = true;
 	        
 	        
@@ -101,6 +100,7 @@ exports.add = function(req, res, next){
 				
 				 // 获得文件的临时路径
 		        var tmp_path = req.files.up_img.path;
+
 		        
 		        var up_img_name = req.files.up_img.name;
 		        var fileext = path.extname(up_img_name);
@@ -121,13 +121,11 @@ exports.add = function(req, res, next){
 		           return;
 		        }
 		        target_path = "";
-		        target_path_thumb = "";
 		        target_path =  lutil.genId("g");
 		        if(config.IMG_PERSISTENT == "file"){
 		        	// 指定文件上传后的目录 
 			        // 不适用图片的扩展名
 			        
-			        target_path_thumb = target_path;
 			        var full_img_path = process.cwd() + config.diary_img + target_path;
 			        
 			        fs.rename(tmp_path, full_img_path, function (err) {
@@ -139,9 +137,8 @@ exports.add = function(req, res, next){
 		        }else{
 		        	// 这里解决保存到数据库中了
 		        	fs.readFile(tmp_path, function (err, data) {
-		        		
-                        target_path = data;
-                         target_path_thumb = "";
+                         target_path = data;
+                         
                          proxy.trigger('save');
                     });
 		        
@@ -160,7 +157,9 @@ exports.add = function(req, res, next){
 				    diary.create_date = new Date();
 				    diary.edit_date = new Date();
 				    diary.up_img = target_path;
-				    diary.up_img_thumb = target_path_thumb;
+				    diary.up_img_thumb = "";     // 100X100
+				    diary.up_img_thumb_big = ""; // 350X350
+				    diary.up_img_ext = fileext;
 				    diary.author = user.email;
 				    diary.view_num = 0;
 					diary.comment_num = 0;
@@ -169,6 +168,10 @@ exports.add = function(req, res, next){
 				    Diary.save(diary, function(err){
 				        if(err) return next(err);
 				        dbutil.update_user_score(user.email,2,function(){
+				        	if(diary.up_img){
+				        		lutil.thumb_img(diary.up_img, diary._id, fileext);
+				        	}
+				        	
 	                        res.redirect('/diary/'+user._id+'/mlist');
 	                    });
 				        
@@ -203,6 +206,7 @@ exports.edit = function(req, res, next){
 	        }); 
 	          
 		    proxy.once("torender", function (gdiary) {
+		    	gdiary.up_img = lutil.create_cache_img(gdiary);
 		        res.render('diary/edit', {
 		    	    title       :config.name,
 		    	    error_msg   :"",
@@ -254,13 +258,14 @@ exports.edit = function(req, res, next){
 		    return;
 		}
 		
-		var target_path = req.body.up_img;
-        var target_path_thumb = req.body.up_img_thumb;
-        var no_up_img = true;
+		var target_path = "";
         
+        var no_up_img = true;
+         var fileext = "";
         
 		if(req.files.up_img && req.files.up_img.size > 0){
 		    no_up_img = false;
+		    
 			// 验证文件的大小
 			if(req.files.up_img.size >= config.diary_img_size){
 			   err_msg += "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
@@ -272,7 +277,7 @@ exports.edit = function(req, res, next){
 	        var tmp_path = req.files.up_img.path;
 	        
 	        var up_img_name = req.files.up_img.name;
-	        var fileext = path.extname(up_img_name);
+	        fileext = path.extname(up_img_name);
 	        
 	        var is_allow_img = false;
 	        fileext = fileext.toLowerCase();
@@ -290,13 +295,15 @@ exports.edit = function(req, res, next){
 	           return;
 	        }
             target_path = "";
-	        target_path_thumb = "";
-	        target_path =  lutil.genId("g");
+	        
+	        
+	        var img_buff = null;
 	        if(config.IMG_PERSISTENT == "file"){
 	        	// 指定文件上传后的目录 
 		        // 不适用图片的扩展名
+		        target_path =  lutil.genId("g");
 		        
-		        target_path_thumb = target_path;
+		        
 		        var full_img_path = process.cwd() + config.diary_img + target_path;
 		        
 		        fs.rename(tmp_path, full_img_path, function (err) {
@@ -308,9 +315,9 @@ exports.edit = function(req, res, next){
 	        }else{
 	        	// 这里解决保存到数据库中了
 	        	fs.readFile(tmp_path, function (err, data) {
-	        		
-                    target_path = data;
-                     target_path_thumb = "";
+	        		 if(err) throw err;
+                     target_path = data;
+                     
                      proxy.trigger('update');
                 });
 	        
@@ -321,15 +328,21 @@ exports.edit = function(req, res, next){
             lutil.userinfo(req, function(user){
 	            //更新日志
 	            if(user){
-		            Diary.findOne({"_id":diary_id},function(diary){
-	                    if(diary.author == user.email){
+		            Diary.findOne({"_id":diary_id},function(err, diary){
+		            	if(err) return next(err);
+	                    if(diary && diary.author == user.email){
 						    Diary.update( {"_id":diary_id},{$set:
 						                    {
 						                      "title":title,"content":content,"summary":summary,"edit_date":new Date(),
-						                      "up_img":target_path,"up_img_thumb":target_path_thumb,"type":diary_type
+						                      "up_img":target_path,"up_img_thumb":"","type":diary_type
 						                    }
 						                  }, {},function(err){
 						        if(err) return next(err);
+
+						        if(target_path){
+						        	lutil.thumb_img(target_path, diary._id, fileext);
+						        }
+						        
 						        res.redirect('/diary/'+user._id+'/mlist');
 						    });
 	                    }else{
@@ -455,12 +468,7 @@ exports.list = function(req, res, next){
 		               diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
 		               var up_img = diarys[i].up_img;
 	                   if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
-	                   	   var tmp_file_name = lutil.genId('g');
-	                       var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
-	                   	   fd = fs.openSync(tmp_img_url, 'w+');
-	                   	   fs.writeSync(fd, up_img.buffer, 0, up_img.position, null);
-	                   	   fs.closeSync(fd);
-	                   	   diarys[i].up_img = config.diary_url + tmp_file_name;
+	                   	   diarys[i].up_img = lutil.create_cache_img(diarys[i]);
 	                   	   
 	                   }else{
 	                   	   if(diarys[i].up_img && diarys[i].up_img != ""){
@@ -468,13 +476,7 @@ exports.list = function(req, res, next){
 	                   	   }
 	                   }
 
-		               if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
-		                   
-		                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
-		               }else{
-	                   	   
-                           diarys[i].up_img_thumb = diarys[i].up_img;
-	                   }
+		              
 		               diarys[i].content = diarys[i].summary;
 		            }
 		       
@@ -561,12 +563,8 @@ exports.view = function(req, res, next){
                diary.edit_date = lutil.dateFormat(diary.edit_date);
                var up_img = diary.up_img;
                if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
-               	   var tmp_file_name = lutil.genId('g');
-                   var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
-               	   fd = fs.openSync(tmp_img_url, 'w+');
-               	   fs.writeSync(fd, up_img.buffer, 0, up_img.position, null);
-               	   fs.closeSync(fd);
-               	   diary.up_img = config.diary_url + tmp_file_name;
+               	  
+               	   diary.up_img = lutil.create_cache_img(diary);
                	   
                }else{
                	   	if(diary.up_img && diary.up_img != ""){
@@ -574,13 +572,7 @@ exports.view = function(req, res, next){
 	                }
                }
 
-		       if(diary.up_img_thumb && diary.up_img_thumb != ""){
-		                   
-		            diary.up_img_thumb = config.diary_url + diary.up_img_thumb;
-		       }else{
-	                   	   
-                    diary.up_img_thumb = diary.up_img;
-	           }
+		       
                gdiary = diary;
                get_nickname(gdiary);
                
@@ -896,24 +888,13 @@ exports.collection = function(req, res, next){
 		            s_diary.edit_date = lutil.dateFormat(s_diary.edit_date);
 		            var up_img = s_diary.up_img;
                     if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
-                   	   var tmp_file_name = lutil.genId('g');
-                       var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
-                   	   fd = fs.openSync(tmp_img_url, 'w+');
-                   	   fs.writeSync(fd, up_img.buffer, 0, up_img.position, null);
-                   	   fs.closeSync(fd);
-                   	   s_diary.up_img = config.diary_url + tmp_file_name;
+                   	    s_diary.up_img = lutil.create_cache_img(s_diary);
                     }else{
                     	  if(s_diary.up_img && s_diary.up_img != ""){
                                 s_diary.up_img = config.diary_url + s_diary.up_img;
 	                   	  }
                     }
-		            if(s_diary.up_img_thumb && s_diary.up_img_thumb != ""){
-		                   
-		                s_diary.up_img_thumb = config.diary_url + s_diary.up_img_thumb;
-		            }else{
-	                   	   
-                        s_diary.up_img_thumb = s_diary.up_img;
-	                }
+
 		            s_diary.content = s_diary.summary;
 
                     author_collect_diarys[author_collect_diarys.length] = s_diary;
@@ -956,7 +937,6 @@ exports.collection = function(req, res, next){
 
 
 exports.mlist = function(req, res, next){
-   lutil.log(req.path);
    var pageno = 1;
    if(req.params.page){
       pageno = parseInt(req.params.page);
@@ -1053,29 +1033,13 @@ exports.mlist = function(req, res, next){
 		            s_diary.edit_date = lutil.dateFormat(s_diary.edit_date);
 		            var up_img = s_diary.up_img;
                     if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
-                   	   var tmp_file_name = lutil.genId('g');
-                       var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
-                   	   fd = fs.openSync(tmp_img_url, 'w+');
-                   	   fs.writeSync(fd, up_img.buffer, 0, up_img.position, null);
-                   	   fs.closeSync(fd);
-                   	   s_diary.up_img = config.diary_url + tmp_file_name;
-                   	   
-
-                   	   s_diary.up_img = config.diary_url + tmp_file_name;
+                   	    s_diary.up_img = lutil.create_cache_img(s_diary);
                    	   
                     }else{
                    	      if(s_diary.up_img && s_diary.up_img != ""){
                                 s_diary.up_img = config.diary_url + s_diary.up_img;
 	                   	  }
                     }
-
-		            if(s_diary.up_img_thumb && s_diary.up_img_thumb != ""){
-		                   
-		                s_diary.up_img_thumb = config.diary_url + s_diary.up_img_thumb;
-		            }else{
-	                   	   
-                        s_diary.up_img_thumb = s_diary.up_img;
-	                }
 		            s_diary.content = s_diary.summary;
 				    author_diarys[author_diarys.length ] = s_diary;
                 }
@@ -1220,15 +1184,7 @@ exports.search = function(req, res, next){
 		               diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
 		               var up_img = diarys[i].up_img;
 	                   if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
-	                   	   var tmp_file_name = lutil.genId('g');
-	                       var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
-	                   	   fd = fs.openSync(tmp_img_url, 'w+');
-	                   	   fs.writeSync(fd, up_img.buffer, 0, up_img.position, null);
-	                   	   fs.closeSync(fd);
-	                   	   diarys[i].up_img = config.diary_url + tmp_file_name;
-	                   	   
-
-	                   	   diarys[i].up_img = config.diary_url + tmp_file_name;
+	                   	   diarys[i].up_img = lutil.create_cache_img(diarys[i]);
 	                   	   
 	                   }else{
 	                   	    if(diarys[i].up_img && diarys[i].up_img != ""){
@@ -1236,13 +1192,7 @@ exports.search = function(req, res, next){
 	                   	    }
 	                   }
 
-		               if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
-		                   
-		                   diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
-		               }else{
-	                   	   
-                           diarys[i].up_img_thumb = diarys[i].up_img;
-	                   }
+		               
 		               diarys[i].content = diarys[i].summary;
 		            }
 		       

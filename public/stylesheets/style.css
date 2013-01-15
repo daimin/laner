@@ -365,9 +365,41 @@ span .number{
 }
 
 .at-span{
-   background: #ffd;
+   /*background: #ff8;*/
    color: #22f;
    text-align: left;
    font-weight: bold;
    margin: 0 0 0 0;
+   margin-right: 2px;
+
+}
+
+.emo-list{
+  list-style:none;
+  
+  display:block;
+  float: left;
+  margin: 0 0 0 0;
+  padding-left: 4px;
+}
+.emo-list li{
+  display: inline;
+}
+
+.emo-list li img{
+  border: none;
+  cursor: pointer;
+}
+
+.emo-holder{
+  display: block;
+  float: left;
+  width:520px;
+  margin-bottom: 4px;
+
+}
+
+.view-face{
+  border:none;
+  margin-right:2px;
 }

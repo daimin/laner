@@ -4,10 +4,13 @@ var sys = require("sys")
     ,site = require('../controllers/site')
     ,DB = require("../models")
     ,User = DB.Table('User')
+    ,Diary = DB.Table('Diary')
     ,ObjID = DB.ObjID
     ,EventProxy = require("eventproxy").EventProxy
     ,htmlparser = require("htmlparser")
-    ,sys = require('util');
+    ,fs = require('fs')
+    ,sys = require('util')
+    ,http = require('http');
     
     
 exports.encrypt = function(str,secret) {
@@ -31,14 +34,13 @@ exports.md5 = function(str) {
   return str;
 };
 
-exports.genId = function(tag){
+var genId = function(tag){
     var d = new Date();
     var tmp_id = d.getTime();
-    if(tag == 'g'){
-      return tag + parseInt(tmp_id, 16) + exports.randomString(8) + '.png';
-    }
     return tag + parseInt(tmp_id, 16) + exports.randomString(8);
 };
+
+exports.genId = genId;
 
 exports.randomString = function (size) {
   size = size || 6;
@@ -65,6 +67,17 @@ var log = function(info){
     if(config.DEBUG == true){
         console.log(sys.inspect(info, true, null) + '\t' + exports.dateFormat(new Date()));
     }
+};
+
+var log_file = function(info){
+    var tmp_file_name = "info.log";
+    info = info + '\n';
+    var tmp_img_url = process.cwd() + config.log_dir + tmp_file_name;
+    
+    fd = fs.openSync(tmp_img_url, 'a+');
+    
+    fs.writeSync(fd, info, 0, info.length, null);
+    fs.closeSync(fd);
 };
 
 exports.log = log;
@@ -369,3 +382,114 @@ exports.get_summary = function(html){
     var len = text.length < config.diary_summary_size[1]?text.size:config.diary_summary_size[1];
     return text.substring(0, len);
 };
+
+var thumb = function(url, size, callback){
+    var img_data = "";
+    var url = config.thumber_url + "?u=" + url + "&size=" + size;
+    log_file(url);
+    http.get(url, function(res) {
+      
+      if(res.statusCode == 200){
+         res.on('data',function(chunk){
+           if(chunk){
+              img_data += chunk;
+           }
+           
+        });
+        res.on('end',function(){
+           
+           callback(img_data);
+        });
+      }
+      
+    }).on('error', function(e) {
+        log("Got error: " + e.message);
+    });
+};
+
+exports.create_cache_img = function(diary){
+    if(!diary.up_img || diary.up_img == "" || !diary.up_img_thumb || diary.up_img_thumb == "" || !diary.up_img_thumb_big || diary.up_img_thumb_big == ""){
+        return null;
+    }
+    var cache_img = null;
+    var imgID = genId('g');
+    // 原图 
+    var tmp_file_name = imgID + diary.up_img_ext;
+    var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+    fd = fs.openSync(tmp_img_url, 'w+');
+    fs.writeSync(fd, diary.up_img.buffer, 0, diary.up_img.position, null);
+    fs.closeSync(fd);
+    cache_img = config.diary_url + tmp_file_name;
+
+    return cache_img;
+};
+
+exports.thumb = thumb;
+
+
+exports.thumb_img = function(up_img,diary_id, file_ext){
+    // 源文件
+    // up_img buffer数据
+    var tmp_file_name = genId('g') + file_ext;
+    var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+    var http_img_url = config.site_base + config.diary_url + tmp_file_name;
+    fd = fs.openSync(tmp_img_url, 'w+');
+    
+    fs.writeSync(fd, up_img, 0, up_img.length, null);
+    fs.closeSync(fd);
+    
+    function getBase64Head(file_ext){
+          file_ext = file_ext.toLowerCase();
+          if(file_ext == '.jpeg' || file_ext == '.jpg')
+            return "data:image/jpeg;base64,";
+          if(file_ext == '.gif')
+            return "data:image/gif;base64,";
+          if(file_ext == '.png')
+            return "data:image/png;base64,";
+    }
+
+    var base64Head = getBase64Head(file_ext);
+
+    thumb(http_img_url,100,function(imgdata){
+          var imgdata = base64Head + imgdata;
+          
+          Diary.update( {"_id":diary_id},{$set:
+                                {
+                                  "up_img_thumb":imgdata
+                                }
+                              }, {},function(err){
+                    if(err) return next(err);          
+          });
+    });
+
+    thumb(http_img_url,350,function(imgdata){
+          var imgdata = base64Head + imgdata;
+          Diary.update( {"_id":diary_id},{$set:
+                                {
+                                  "up_img_thumb_big":imgdata
+                                }
+                              }, {},function(err){
+                    if(err) return next(err);           
+          });
+          
+     });
+
+};
+
+
+exports.filte_face_img = function(str){
+   if(!str) return "";
+
+   for(var k in config.face_imgs){
+       var varr = config.face_imgs[k];
+       var titlev = varr[0];
+       var facev = varr[1];
+       var title = titlev.substring(1,titlev.length-1);
+       var face_img = '<img class="view-face" src="'+ (config.icon_img_url + facev) +'" title="'+title+'" alt="' + title + '">';
+       var p = new RegExp(titlev,"ig");
+       str = str.replace(p, face_img);
+
+   }
+
+   return str;
+}

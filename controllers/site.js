@@ -120,6 +120,7 @@ exports.index = function(req, res, next){
 
 
 	                   var up_img = diarys[i].up_img;
+	                   /*
 	                   if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
 	                   	   var tmp_file_name = lutil.genId('g');
 	                       var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
@@ -137,6 +138,7 @@ exports.index = function(req, res, next){
 	                   	   }
 	                   	   
 	                   }
+
 	                   
 	                   
 	                   if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
@@ -146,8 +148,21 @@ exports.index = function(req, res, next){
 	                   	   
                            diarys[i].up_img_thumb = diarys[i].up_img;
 	                   }
-	                   diarys[i].content = diarys[i].summary;
+	                   */
+	                   	if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
+		                	var cache_imgs = lutil.create_cache_img(diarys[i]);
+		                	if(cache_imgs && cache_imgs.length == 1){
+		                		  diarys[i].up_img = cache_imgs[0];
+				                  //diarys[i].up_img_thumb = cache_imgs[1];
+				                  //diarys[i].up_img_thumb_big = cache_imgs[2];
+		                	}
+
+		                }
+	                    diarys[i].content = diarys[i].summary;
 	                }
+	                
+	              
+	                
 	               
 	                proxy.trigger('get_nickname',diarys);
 

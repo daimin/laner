@@ -126,6 +126,7 @@ exports.list = function(req, res, next){
 	         var comment = comments[idx];
 	         comment.comment_date = lutil.dateFormat(comment.comment_date); 
 	         comment.content = lutil.render_at(comment.content);
+	         comment.content = lutil.filte_face_img(comment.content);
 	         comment.floor = '#' + (idx + 1);
 		       User.findOne({"email":comment.commenter}, function(err, user){
 

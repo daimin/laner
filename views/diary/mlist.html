@@ -33,6 +33,10 @@
              if(diary.type == config.diary_type.private){
                  type_tag = '&nbsp;<span class="badge badge-warning">私 密</span>';
              }
+
+             if(diary.up_img != "" && diary.up_img_thumb == ""){
+                type_tag = '&nbsp;<span class="badge badge-warning">发布中</span>';
+             }
          %>
           <div class="post">
             <div class="entry-title">
