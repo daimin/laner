@@ -143,8 +143,8 @@ textarea {
 }
 body {
   margin: 0;
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-family: "Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
   line-height: 22px;
   color: #555555;
   /*background-color: #f7f7f7;*/
@@ -522,7 +522,7 @@ h4,
 h5,
 h6 {
   margin: 10px 0;
-  font-family:"Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:"Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
   line-height: 1;
   color: inherit;
@@ -700,7 +700,7 @@ address {
 code,
 pre {
   padding: 0 3px 2px;
-  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: "Microsoft Yahei",Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 12px;
   color: #333333;
   -webkit-border-radius: 3px;
@@ -717,7 +717,7 @@ pre {
   display: block;
   padding: 9.5px;
   margin: 0 0 10px;
-  font-size: 13px;
+  font-size: 12px;
   line-height: 20px;
   word-break: break-all;
   word-wrap: break-word;
@@ -779,7 +779,7 @@ input,
 button,
 select,
 textarea {
-  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 label {
   display: block;
@@ -806,7 +806,7 @@ input[type="color"],
   height: 20px;
   padding: 4px 6px;
   margin-bottom: 9px;
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   color: #555555;
   -webkit-border-radius: 4px;
@@ -3147,6 +3147,7 @@ input[type="submit"].btn.btn-mini {
   margin-left: 0;
   margin-bottom: 20px;
   list-style: none;
+  font-size: 13px;
 }
 .nav > li > a {
   display: block;
@@ -3594,8 +3595,8 @@ input[type="submit"].btn.btn-mini {
 .navbar-search .search-query {
   margin-bottom: 0;
   padding: 4px 14px;
-  font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-size: 13px;
+  font-family:"Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 12px;
   font-weight: normal;
   line-height: 1;
   -webkit-border-radius: 15px;
@@ -4889,7 +4890,7 @@ hr {
 }
 .navbar .brand {
   padding: 12px 20px 8px;
-  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
 }
 .navbar .brand:hover {
@@ -4897,7 +4898,7 @@ hr {
 }
 .navbar .nav > li > a {
   padding: 13px 15px 6px;
-  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
   text-shadow: none;
 }
@@ -4911,7 +4912,7 @@ hr {
 .navbar .navbar-text {
   padding: 13px 15px 7px;
   line-height: 19px;
-  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #999999;
 }
 .navbar .divider-vertical {
@@ -4925,7 +4926,7 @@ hr {
   margin-bottom: 5px;
 }
 .navbar .dropdown-menu a {
-  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .navbar-inverse .navbar-inner {
   -webkit-box-shadow: none;
@@ -4970,7 +4971,7 @@ div.subnav {
   -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 div.subnav.subnav-fixed {
   -webkit-box-shadow: inset 0 5px #ffffff , 1px 1px 1px rgba(0, 0, 0, 0.2);
@@ -5130,12 +5131,12 @@ div.subnav .nav > li.active > a:hover {
 }
 .btn {
   padding-top: .6em;
-  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
 }
 legend {
   border-bottom: 1px solid #ddd;
-  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .navbar-search .search-query {
   border: 1px solid #ddd;
@@ -5147,7 +5148,7 @@ legend {
 }
 .help-inline,
 .help-block {
-  font-size: 13px;
+  font-size: 12px;
 }
 .input-append .btn,
 .input-prepend .btn {

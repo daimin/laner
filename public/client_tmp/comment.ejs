@@ -12,6 +12,7 @@
 
                     if(!comment.commenter || comment.commenter == ""){
                           commenter_link = '<a target="_blank" href="' + comment.contact + '">' + comment.cu_name + '</a>';
+                          mlist_link = comment.contact;
                           reply_target = comment.cu_name;
                     }else{
                           mlist_link = "/diary/" + comment.commenter._id + "/mlist";

@@ -1,4 +1,6 @@
 <%- partial("head",{userinfo:userinfo,"config":config}) %>
+<link rel="stylesheet" type="text/css" href="/stylesheets/jquery.Jcrop.css" />
+<link href="/uploadify/uploadify.css" type="text/css" rel="stylesheet" />
 <%
 var motto = "";
 if(userinfo.motto){
@@ -17,7 +19,7 @@ if(userinfo.motto){
           <button class="close" data-dismiss="alert" onclick="close_alter_error()">x</button>
           <div id="error_msg"></div>
         </div>
-        <div class="tabbable"> <!-- Only required for left/right tabs -->
+        <div class="tabbable" id="setting_tab"> <!-- Only required for left/right tabs -->
 			  <ul class="nav nav-tabs">
 			    <li class="active"><a href="#tab1" data-toggle="tab">基本资料</a></li>
 			    <li><a href="#tab2" data-toggle="tab">修改密码</a></li>
@@ -100,15 +102,27 @@ if(userinfo.motto){
 							 }else{
 							    avatar_url = config.user_config.avatar_url+userinfo.avatar;
 							 }
+
+                             var test_url = config.diary_url + "0000.jpg";
 						  %>
 		                    <img id="avatar_img" src="<%= avatar_url%>">
 		                  </div>
 		              </div>
 		              <div class="control-group">
-		                  <label class="control-label" for="new_avatar">新头像URL地址</label>
+		                  <label class="control-label" for="new_avatar">上传新头像</label>
+                          <div class="controls">
+                             <input class="input-file" id="up_img"  name="up_img" placeholder="选择图片" type="file">
+                          </div>
 		                  <div class="controls">
-		                    <input class="input input-xxlarge" type="text" id="new_avatar" name="new_avatar" placeholder="新头像URL地址" value="">
-		                   <small class="help-block">填写可靠的图片URL地址，推荐在 <a href="http://en.gravatar.com/">Gravatar</a> 注册或更改您的头像。</small>
+                            <div style="float:left;max-width:auto;"><img style="display:none" id="target_img" src="<%=test_url %>"></div>
+                            <div style="width:48px;height:48px;margin:10px;overflow:hidden; float:left;">
+                              <img style="float:left;display:none;" id="preview" src="<%=test_url %>" ></div>
+                            <div style="width:190px;height:195px;margin:10px;overflow:hidden; float:left;">
+                              <img  style="float:left;display:none;" id="preview2" src="<%=test_url %>" ></div>
+                              <input type="hidden" id="x" name="x" />
+                              <input type="hidden" id="y" name="y" />
+                              <input type="hidden" id="w" name="w" />
+                              <input type="hidden" id="h" name="h" />
 		                  </div>
 		              </div>
 		  
@@ -128,7 +142,134 @@ if(userinfo.motto){
   <%- partial("footer",{"config":config}) %>
 </div>
 <script type="text/javascript" src="/javascripts/bootstrap-tab.js" charset="utf-8"> </script>
+<script type="text/javascript" src="/javascripts/jquery.Jcrop.min.js" charset="utf-8"> </script>
+<script type="text/javascript" src="/uploadify/swfobject.js"></script>
+<script type="text/javascript" src="/uploadify/jquery.uploadify.v2.1.4.min.js"></script>
 <script type="text/javascript">
+
+var has_init_jcrop = false;
+var jcrop_api = null;
+
+ jQuery(function($){
+    $('#setting_tab a').click(function (e) {
+     e.preventDefault();
+     if($(this).attr('href') == "#tab3" && has_init_jcrop == false){
+        init_jcrop();
+        has_init_jcrop = true;
+     }
+     
+    $(this).tab('show');
+  });
+
+   $('#up_img').uploadify({
+                'uploader'  : '/uploadify/uploadify.swf?var='+(new Date()).getTime(),
+                'script'    : '/user/uploadpic',
+                'folder'    : '<%= config.diary_url%>',
+                'auto'      : true,
+                'multi'     : false,
+                'simUploadLimit' : 1,
+                'queueSizeLimit' : 1,
+                'sizeLimit' : 1024 * 1024,
+                'fileExt'   : '*.png;*.jpg;*.jpeg',
+                'fileDesc'  : '请选择图片文件', 
+                'simUploadLimit':1,
+                'width'     : 175,
+                'height'    : 27,
+                'onComplete'  : function(event, ID, fileObj, response, data) {
+                    //|/public/images/upload/a341016378284328TubnpelC.jpg| 
+                    var newPic = response;
+                    var p1 = response.indexOf('|');
+                    var p2 = response.lastIndexOf('|');
+                    if(p1 == -1 || p2 == -1){
+                      $("#alert-error").css({"display":"block"});
+                      $("#error_msg").html(response);
+                    }else{
+                      newPic = response.substring(p1+1, p2);
+                      newPic = newPic.substr(7);
+                      $("#target_img").attr({'src':newPic});
+                      $("#preview").attr({'src':newPic});
+                      $("#preview2").attr({'src':newPic});
+
+                      $("#target_img").show();
+                      $("#preview").show();
+                      $("#preview2").show();
+                       
+                      if(jcrop_api){
+                        jcrop_api.destroy();
+                      }
+                      
+                      init_jcrop();
+                    }
+
+                    
+               }
+    });
+
+});
+
+    
+
+var init_jcrop = function(){
+      // Create variables (in this scope) to hold the API and image size
+
+      var boundx, boundy;
+      
+      $('#target_img').Jcrop({
+        minSize: [48,48],
+        setSelect: [0,0,190,190],
+        onChange: updatePreview,
+        onSelect: updatePreview,
+        onSelect: updateCoords,
+        aspectRatio: 0
+      },
+    function(){
+        // Use the API to get the real image size
+        var bounds = this.getBounds();
+        boundx = bounds[0];
+        boundy = bounds[1];
+        // Store the API in the jcrop_api variable
+        jcrop_api = this;
+    });
+
+    function updateCoords(c)
+    {
+        $('#x').val(c.x);
+        $('#y').val(c.y);
+        $('#w').val(c.w);
+        $('#h').val(c.h);
+    };
+    function checkCoords()
+    {
+        if (parseInt($('#w').val())) return true;
+        alert('Please select a crop region then press submit.');
+        return false;
+    };
+      function updatePreview(c){
+        if (parseInt(c.w) > 0)
+        {
+          var rx = 48 / c.w;        //小头像预览Div的大小
+          var ry = 48 / c.h;
+
+          $('#preview').css({
+            width: Math.round(rx * boundx) + 'px',
+            height: Math.round(ry * boundy) + 'px',
+            marginLeft: '-' + Math.round(rx * c.x) + 'px',
+            marginTop: '-' + Math.round(ry * c.y) + 'px'
+          });
+        }
+        {
+          var rx = 199 / c.w;       //大头像预览Div的大小
+          var ry = 199 / c.h;
+          $('#preview2').css({
+            width: Math.round(rx * boundx) + 'px',
+            height: Math.round(ry * boundy) + 'px',
+            marginLeft: '-' + Math.round(rx * c.x) + 'px',
+            marginTop: '-' + Math.round(ry * c.y) + 'px'
+          });
+        }
+      };
+
+};
 
 </script>
           

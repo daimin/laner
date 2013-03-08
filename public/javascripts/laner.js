@@ -249,11 +249,20 @@ function render_collect(email, diary_id, isload){
 function doupdate_avatar(url){
     var actionVal = url.substring(url.lastIndexOf('/')+1);
 	  url = url.substring(0,url.lastIndexOf('/'));
+    var newimg_url = $("#target_img").attr('src');
+    var xval = $("#x").val();
+    var yval = $("#y").val();
+    var wval = $("#w").val();
+    var hval = $("#h").val();
     var param = {
-	             email:$("#email").val(),
-    		     new_avatar:$("#new_avatar").val(),
-                 action:actionVal
-                 };
+	           email:$("#email").val(),
+    		     'newimg_url':newimg_url,
+             'x':xval,
+             'y':yval,
+             'w':wval,
+             'h':hval,
+             action:actionVal
+    };
 
     $.post(url, param,
     function(data){

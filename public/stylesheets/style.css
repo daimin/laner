@@ -334,14 +334,6 @@ span .number{
 }
 
 
-#preview{
-    display:block;
-    width:100px;
-    height:100px;
-    border:1px solid #000;
-    overflow:hidden;
-}
-
 .cursor-hand{
   cursor: pointer;
 }
@@ -403,3 +395,26 @@ span .number{
   border:none;
   margin-right:2px;
 }
+
+.active-user{
+   list-style: none;
+   margin: 0px 0px 0px 0px;
+   clear: both;
+   display: block;
+   text-align: left;
+   min-height: 68px;
+   height: 100%;
+   overflow:auto;
+}
+
+.active-user li{
+  text-align: center;
+  margin: 0 0 10px 10px;
+  float: left;
+  display: block;
+  width: 48px;
+  height: 68px;
+  overflow: hidden;
+}
+
+

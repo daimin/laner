@@ -14,20 +14,28 @@
 		  %>
         </ul>       
     </div>
-    <div class="panel">
+   <div class="panel">
       <div class="header">活跃用户 </div>
-          <ul class="unstyled">
+          <ul class="active-user" >
     <% 
           if(active_users && active_users.length > 0){
           for(var i = 0; i < active_users.length; i++) {
              var user = active_users[i];
+             var avatar_url = "";
+    
+             if(user.avatar.indexOf("default") == -1){
+                 avatar_url = user.avatar; 
+             }else{
+                 avatar_url = config.user_config.avatar_url+user.avatar;
+             }
              
          %>
-          <li><i class="icon-flag"></i>&nbsp;<a href="/diary/<%= user._id %>/mlist"><%= user.nickname%></a></li>
+          <li><a href="/diary/<%= user._id %>/mlist"><img src="<%= avatar_url%>"></a><p><small><a href="/diary/<%= user._id %>/mlist"><%= user.nickname%></a></small></p></li>
       <%
         }
       }
       %>
+      </ul>
     </div>
     <div class="panel">
       <div class="header">关于本站</div>

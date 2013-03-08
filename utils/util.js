@@ -65,7 +65,9 @@ exports.isint = function(val){
 
 var log = function(info){
     if(config.DEBUG == true){
-        console.log(sys.inspect(info, true, null) + '\t' + exports.dateFormat(new Date()));
+        var log_info = sys.inspect(info, true, null) + '\t' + exports.dateFormat(new Date());
+        console.log(log_info);
+        log_file(log_info)
     }
 };
 
@@ -84,6 +86,9 @@ exports.log = log;
 
 exports.dateFormat = function(cd){
    if(cd){
+      var tz = cd.getTimezoneOffset();
+      var off = config.time_zone + tz;
+      cd.setHours(cd.getHours() + off);
       var m = (cd.getMonth()+1);
       if(m < 10) m = '0'+m;
       var d = cd.getDate();
@@ -385,25 +390,96 @@ exports.get_summary = function(html){
 
 var thumb = function(url, size, callback){
     var img_data = "";
-    var url = config.thumber_url + "?u=" + url + "&size=" + size;
-    log_file(url);
-    http.get(url, function(res) {
-      
-      if(res.statusCode == 200){
-         res.on('data',function(chunk){
+    //var url = config.thumber_url + "?u=" + url + "&size=" + size;
+
+
+    var thumber_url = config.thumber_url;
+    var dslash_pos = -1;
+    var rhost = "";
+    var rpath = "";
+    dslash_pos = thumber_url.indexOf('//');
+    var sub_thumber_url = thumber_url;
+    
+    if(dslash_pos != -1){
+        
+        sub_thumber_url = thumber_url.substring(dslash_pos + 2);
+        
+    }
+    log(sub_thumber_url);
+    rhost = sub_thumber_url.substring(0, sub_thumber_url.indexOf('/'));
+    rpath = sub_thumber_url.substring(sub_thumber_url.indexOf('/'));
+ 
+    if(typeof size == 'object'){
+        rpath = rpath + "?u=" + url + "&size=" + size.psize + "&w=" + size.pw + "&h=" + size.ph + "&x=" + size.px + "&y=" + size.py;
+    }else{
+        rpath = rpath + "?u=" + url + "&size=" + size;
+    }
+    
+    var options = {
+        host: rhost,
+        port: 80,
+        path: rpath,
+        method: 'GET'
+    };
+    log(options);
+    var req = http.request(options, function(res) {
+         log('STATUS: ' + res.statusCode);
+         log('HEADERS: ' + JSON.stringify(res.headers));
+         res.setEncoding('utf8');
+         res.on('data', function (chunk) {
            if(chunk){
               img_data += chunk;
            }
-           
-        });
-        res.on('end',function(){
+         });
+         res.on('end',function(){
            
            callback(img_data);
-        });
-      }
-      
-    }).on('error', function(e) {
-        log("Got error: " + e.message);
+         });
+    });
+
+    req.on('error', function(e) {
+       log('problem with request: ' + e.message)
+    });
+
+    req.end();
+};
+
+
+exports.thumb_avatar = function(user_email, img_path, size, callback){
+    var file_ext = img_path.substr(img_path.lastIndexOf('.'));
+    var tmp_file_name = genId('a') + file_ext;
+    
+    var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+    var http_img_url = config.site_base + config.diary_url + tmp_file_name;
+    var img_buff = fs.readFileSync(process.cwd() + '/public/' + img_path);
+    fd = fs.openSync(tmp_img_url, 'w+');
+    
+    fs.writeSync(fd, img_buff, 0, img_buff.length, null);
+    fs.closeSync(fd);
+    
+    function getBase64Head(file_ext){
+          file_ext = file_ext.toLowerCase();
+          if(file_ext == '.jpeg' || file_ext == '.jpg')
+            return "data:image/jpeg;base64,";
+          if(file_ext == '.gif')
+            return "data:image/gif;base64,";
+          if(file_ext == '.png')
+            return "data:image/png;base64,";
+    }
+
+    var base64Head = getBase64Head(file_ext);
+
+    thumb(http_img_url,size,function(imgdata){
+          var imgdata = base64Head + imgdata;
+          
+          User.update( {"email":user_email},{$set:
+                                {
+                                  "avatar":imgdata
+                                }
+                              }, {},function(err){
+                    if(err) return next(err);  
+                    callback(imgdata);      
+          });
     });
 };
 

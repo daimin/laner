@@ -7,7 +7,7 @@ exports.config = {
 	name       : '晓知+',
 	description: 'Diary',
 	version    : (function(){
-		  g_cfg.version = '0.1.1';
+		  g_cfg.version = '0.1.5';
 		  return g_cfg.version;
 	  })(),
 	// 配置网站头部
@@ -53,7 +53,8 @@ exports.config = {
 		"/user/login"    : 1,
 		"/user/register" : 1,
 		"/comment/add"   : 1,
-		"/user/admin"    : 2
+		"/user/admin"    : 2,
+		"/user/setting"  : 2
 	}
 	,
 	host: '', // host 结尾不要添加'/'
@@ -91,6 +92,8 @@ exports.config = {
 	session_secret  : 'WOWILOVEYOU',
 	auth_cookie_name: 'lanerdiarycookiename',
 	port            : 3000,
+    // 时区，正为东，负为西，我们是东八区
+	time_zone : 8,
 	
 	// admin 可删除话题，编辑标签
 	admins    : { admin: true },
@@ -149,10 +152,10 @@ exports.config = {
     // file/db
 	IMG_PERSISTENT : "db",
 	admin_email:"admin@admin.com",
-	site_base  :"http://xiaode.cz.cc",
-	thumber_url:"http://dx.ap01.aws.af.cm/remote_thumb.php",
-	//site_base  :"http://192.168.211.91:3000",
-	//thumber_url:"http://192.168.211.91/dx/remote_thumb.php",
+	site_base  :"http://laner.ap01.aws.af.cm",
+	thumber_url:"http://1.lanlog.duapp.com/remote_thumb.php",
+	//site_base  :"http://192.168.211.157:3000",
+	//thumber_url:"http://192.168.211.157/dx/remote_thumb.php",
 	icon_img_url:"/images/statusface/",
 	face_imgs : [["\\(谄笑\\)","2.gif?ver=1"],["\\(吃饭\\)","3.gif?ver=1"],["\\(调皮\\)","4.gif?ver=1"],["\\(尴尬\\)","5.gif?ver=1"],
 	["\\(汗\\)","6.gif?ver=1"],["\\(惊恐\\)","7.gif?ver=1"],["\\(囧\\)","8.gif?ver=1"],["\\(可爱\\)","9.gif?ver=1"],

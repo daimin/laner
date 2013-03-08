@@ -51,6 +51,7 @@ exports.add = function(req, res, next){
 		
 		if(err_msg != ""){
 		    res.send(err_msg);
+            DB.close();
 		    return;
 		}
 		// 检验文本的长度
@@ -61,6 +62,7 @@ exports.add = function(req, res, next){
 		
 		if(err_msg != ""){
 		    res.send(err_msg);
+            DB.close();
 		    return;
 		}
 
@@ -79,6 +81,7 @@ exports.add = function(req, res, next){
 		    Comment.save(comment, function(err){
 		        if(err) return next(err);
 		        res.send("1");
+                DB.close();
 		    });		
 		});
 		
@@ -115,6 +118,7 @@ exports.list = function(req, res, next){
    proxy.once("renderto",function(comments){
 	    var comments_obj = {"comments":comments, "config":config};
 	    res.send(JSON.stringify(comments_obj));
+        DB.close();
    });
 
    Comment.find({'diary_id':diary_id},{sort:[['comment_date', 1]]}).toArray(function(err, comments){

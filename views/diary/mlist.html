@@ -1,7 +1,7 @@
 <%- partial("head",{userinfo:userinfo,"config":config}) %>
 <link rel="stylesheet" href="/stylesheets/skins/simple.css"></link>
 <script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
-<script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script>
+<!-- <script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script> -->
 <div class="container">
   <div class="row show-grid">    
     <div class="row">
@@ -44,17 +44,15 @@
             </div>
             <div class="entry-meta">
               <span class="author vcard">
-                <a class="url fn n" title="查看所有admin发布的文章" href="#"><%= diary['author_nickname'] %></a>于
-                <a href="bookmark" title="<%= diary['create_date'] %>" href="#">
+                <%= diary['author_nickname'] %>于
                    <span class="entry-date"><%= diary['create_date'] %></span>
-                </a>
                 说到
               </span>
             </div>
             <div class="entry-content">
               <% if(diary['up_img_thumb'] ){ %>
                 <div class="nailthumb-container" style="float:left;">
-                  <a href="javascript:void(0)"><img class="entry-img" src="<%- diary['up_img_thumb'] %>"></a>
+                  <img class="entry-img" src="<%- diary['up_img_thumb'] %>">
                 </div>
               <%}%>
               <%- diary['summary'] %>
@@ -102,7 +100,7 @@
 
 <script type="text/javascript" src="/javascripts/jquery.artDialog.js"></script>
 <script type="text/javascript">
-     jQuery('.nailthumb-container').nailthumb({width:100,height:100,method:'resize',fitDirection:'top left'});
+   //  jQuery('.nailthumb-container').nailthumb({width:100,height:100,method:'resize',fitDirection:'top left'});
 </script>
 
 

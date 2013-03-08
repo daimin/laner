@@ -203,6 +203,11 @@ exports = module.exports = function(app){
 	   ctrl:diary.admindel,
 	   method:'get'
 	},
+	{
+	   path:"/user/uploadpic",
+	   ctrl:user.uploadpic,
+	   method:'post'
+	},
 	
 	{
 	   path:"/404",

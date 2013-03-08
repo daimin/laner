@@ -334,7 +334,7 @@ exports.edit = function(req, res, next){
 						    Diary.update( {"_id":diary_id},{$set:
 						                    {
 						                      "title":title,"content":content,"summary":summary,"edit_date":new Date(),
-						                      "up_img":target_path,"up_img_thumb":"","type":diary_type
+						                      "up_img":target_path,"up_img_thumb":"","type":diary_type,"up_img_ext":fileext
 						                    }
 						                  }, {},function(err){
 						        if(err) return next(err);
@@ -1025,7 +1025,12 @@ exports.mlist = function(req, res, next){
    
    
 	proxy.once("get_list",function(){
-		Diary.find({"author":author_info.email},{sort:[['create_date', -1]], skip: config.PAGE_SIZE * (pageno - 1),limit:config.PAGE_SIZE}).toArray(function(err, s_diarys){
+		var s_obj = {"author":author_info.email,"type":"public"};
+    	if(userinfo && userinfo.email == author_info.email){
+            s_obj = {"author":author_info.email};
+    	}
+
+		Diary.find(s_obj,{sort:[['create_date', -1]], skip: config.PAGE_SIZE * (pageno - 1),limit:config.PAGE_SIZE}).toArray(function(err, s_diarys){
            if(err) return next(err);
                for(var i = 0 ; i < s_diarys.length;i++){
                	    var s_diary = s_diarys[i]
@@ -1052,28 +1057,34 @@ exports.mlist = function(req, res, next){
     proxy.once("get_login_userinfo", function(){
 	    lutil.userinfo(req, function(uinfo){
 	       userinfo = uinfo;
-           proxy.trigger('get_list');
+	       proxy.trigger('get_total');
+           
 	    });
     });
 
-    dbutil.find_user_by_id(uid, function(ainfo){
-       author_info = ainfo;
-       
-	   proxy.once("get_total",function(){
-	      Diary.find({"author":author_info.email}).toArray(function(err, s_diarys){
-	      	  var total_items = 0;
-	      	  if(s_diarys){
-	      	  	  total_items = s_diarys.length;
-	      	  }
+    proxy.once("get_total",function(){
+    	var s_obj = {"author":author_info.email,"type":"public"};
+    	if(userinfo && userinfo.email == author_info.email){
+            s_obj = {"author":author_info.email};
+    	}
+	    Diary.find(s_obj).toArray(function(err, s_diarys){
+	      	var total_items = 0;
+	      	if(s_diarys){
+	      	    total_items = s_diarys.length;
+	      	}
 	          
-	          total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
+	        total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
 	          
-	          proxy.trigger('get_login_userinfo');
-	      });
-
+	        proxy.trigger('get_list');
 	    });
 
-	    proxy.trigger('get_total');
+	});
+
+    dbutil.find_user_by_id(uid, function(ainfo){
+        author_info = ainfo;
+
+        proxy.trigger('get_login_userinfo');
+	    
     });
 	   
 	

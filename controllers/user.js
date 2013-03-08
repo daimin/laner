@@ -30,23 +30,27 @@ exports.login = function(req, res, next){
             check(email,'Email不能是空的! ').notEmpty();
         }catch(e){
             res.send(e.message);
+            return;
         }
         try{
             check(password,'密码不能是空的!').notEmpty();
         }catch(e){
             res.send(e.message);
+            return;
         }
         
         try{
             check(email,"email 格式不正确!").isEmail();
         }catch(e){
             res.send(e.message);
+            return;
         }
 		
 		User.findOne({"email":email,"password":lutil.md5(password)}, function(err, user){
 		    if(err) return next(err);
 		    if(user == null){
 		       res.send('0:用户名或密码错误!');
+               return;
 		    }else{
 		       gen_session(user, res);
 		       lutil.log(req.body.p);
@@ -100,6 +104,7 @@ exports.register = function(req, res, next){
             check(email,'Email不能是空的! ').notEmpty();
         }catch(e){
             res.send(e.message);
+            return;
         }
         try{
             check(password,'密码不能是空的!').notEmpty();
@@ -110,6 +115,7 @@ exports.register = function(req, res, next){
             check(nickname,'昵称不能是空的!').notEmpty();
         }catch(e){
             res.send(e.message);
+            return;
         }
         
         // 检测长度
@@ -118,34 +124,40 @@ exports.register = function(req, res, next){
             .len(config.user_config.email_size[0],config.user_config.email_size[1]);
         }catch(e){
             res.send(e.message);
+            return;
         }
         try{
             check(nickname,'昵称长度必须在'+config.user_config.nickname_size[0]+'到'+config.user_config.nickname_size[1]+'个之间!')
             .len(config.user_config.nickname_size[0],config.user_config.nickname_size[1]);
         }catch(e){
             res.send(e.message);
+            return;
         }
         try{
             check(password,'密码长度必须在'+config.user_config.password_size[0]+'到'+config.user_config.password_size[1]+'个之间!')
             .len(config.user_config.password_size[0],config.user_config.password_size[1]);
         }catch(e){
             res.send(e.message);
+            return;
         }
 
         try{
            check(password,"输入重复密码错误").equals(repassword);
         }catch(e){
            res.send(e.message);
+           return;
         }
         
         try{
             check(email,"email 格式不正确!").isEmail();
         }catch(e){
             res.send(e.message);
+            return;
         }
 	   User.findOne({"email":email}, function(err, user){
 	    if(user != null){
 		        res.send('邮箱已存在，请登录');
+                return;
 		}else{
 		        //保存日志
 			var user = {};
@@ -280,23 +292,25 @@ exports.setting = function(req, res, next){
     	 }else if(action == "update_avatar"){
 		 
 		     var email = sanitize(req.body.email).trim();
-    		 var new_avatar = sanitize(req.body.new_avatar).trim();
+    		 var newimg_url = sanitize(req.body.newimg_url).trim();
+             
+             var x = sanitize(req.body.x).trim();
+             var y = sanitize(req.body.y).trim();
+             var w = sanitize(req.body.w).trim();
+             var h = sanitize(req.body.h).trim();
+
     		 try{
-    			 check(new_avatar,'新头像地址不能为空！').notEmpty();
+    			 check(newimg_url,'新头像地址不能为空！').notEmpty();
     	     }catch(e){
     	           res.send(e.message);
     	     }
+
+
+             lutil.thumb_avatar(email, newimg_url, {'px':x,'py':y,'pw':w,'ph':h, 'psize':48},function(new_avatar){
+
+                 res.send("1:" + new_avatar);
+             });
 			 
-			
-			User.update( {"email":email},{$set:
-			                {
-			                  "avatar":new_avatar,
-			                }
-			             }, {},function(err){
-			    if(err) 
-					return next(err);
-			    res.send("1:" + new_avatar);
-			});
 		 }
      }
 }
@@ -325,4 +339,43 @@ exports.del = function(req, res, next){
 
 };
 
+exports.uploadpic = function(req, res, next){
+    if(req.files.Filedata && req.files.Filedata.size > 0){
+        if(req.files.Filedata.size >= config.diary_img_size){
+            var err_msg = "上传图片的大小应小于" + (config.diary_img_size / 1024 / 1024)+"M";
+            res.send(err_msg);  
+            return;
+        }
+        var tmp_path = req.files.Filedata.path;
+
+        var up_img_name = req.files.Filedata.name;
+        var fileext = path.extname(up_img_name);
+        var is_allow_img = false;
+        fileext = fileext.toLowerCase();
+        for(var i = 0; i < config.allow_img.length;i++){
+            var aimg = config.allow_img[i].toLowerCase();
+            if(fileext == aimg){
+                is_allow_img = true;
+            }
+                    
+        }
+                
+        if(is_allow_img == false){
+            var err_msg = "上传图片类型只能是" + config.allow_img.join(",")+"之一";
+            res.send(err_msg);  
+            return;
+        }
+
+        var target_path = "";
+        target_path =  lutil.genId("a") + fileext;
+        var full_img_path = process.cwd() + config.diary_img + target_path;
+                    
+        fs.rename(tmp_path, full_img_path, function (err) {
+            if (err) {
+                return next(err);
+            }
+            res.send( "|" + (config.diary_img + target_path) + "|");
+        });
+    }
+};
 
