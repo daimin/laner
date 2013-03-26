@@ -178,8 +178,7 @@ exports.userinfo = function(req, callback){
                 
                 if(email){
 	                User.findOne({"email":email}, function(err, user){
-	                    if(err) return next(err);
-	                    
+	          	                    
                         proxy.trigger('callback', user);
 	                });   
 	            }

@@ -62,7 +62,7 @@ exports.config = {
 	    var mongo = null;
 	    if(process.env.VCAP_SERVICES){
 	        var env = JSON.parse(process.env.VCAP_SERVICES);
-	        mongo = env['mongodb-1.8'][0]['credentials'];
+	        mongo = env['mongodb-2.0'][0]['credentials'];
 	    }
 	    else{
 	        mongo = {
@@ -80,11 +80,11 @@ exports.config = {
 	        obj.port = (obj.port || 27017);
 	        obj.db = (obj.db || 'test');
 	        if(obj.username && obj.password){
-	            return "mongodb://" + obj.username + ":" + obj.password + "@" + obj.hostname + ":" + obj.port + "/" + obj.db + "?auto_reconnect=true";
-	        }
-	        else{
-	            return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db + "?auto_reconnect=true";
-	        }
+                return "mongodb://" + obj.username + ":" + obj.password + "@" + obj.hostname + ":" + obj.port + "/" + obj.db + "?auto_reconnect=true";
+            }
+            else{
+                return "mongodb://" + obj.hostname + ":" + obj.port + "/" + obj.db + "?auto_reconnect=true";
+            }
 	    };
 	    
 	    return generate_mongo_url(mongo);;

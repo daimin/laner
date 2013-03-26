@@ -1,0 +1,14 @@
+---
+applications:
+- name: xiaozhi
+  framework: node
+  runtime: node08
+  memory: 256M
+  instances: 1
+  url: xiaozhi.${target-base}
+  path: .
+  services:
+    mongodb-b3c8:
+      vendor: mongodb
+      version: '2.0'
+      tier: free

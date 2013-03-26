@@ -16,7 +16,8 @@ app.use(partials());
 
 
 app.configure(function(){
-  app.set('port', process.env.PORT || config.port);
+  app.set('port', process.env.VMC_APP_PORT || config.port);
+  app.set('host', process.env.VCAP_APP_HOST || config.host);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'html');
   app.engine('.html', require('ejs').__express);
@@ -30,7 +31,7 @@ app.configure(function(){
   
 });
 //production
-app.configure('production', function(){
+app.configure('development', function(){
   app.use(express.errorHandler());
 });
 

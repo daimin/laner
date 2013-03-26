@@ -90,11 +90,12 @@ exports.notice = function(req, res, next){
 	    
 
 	});*/
-
+    
     Notice.findOne({"notice":"notice"},function(err, notice){
-	    if(notice == null){
+	    if(err || notice == null){
 	    	notice = config.announcement;
 	    	notice.notice = "notice";
+            lutil.log(Notice);
 	    	Notice.save(notice, function(err){
 			    if(err) return next(err);
 			    res.send(JSON.stringify({"notice":notice}));
