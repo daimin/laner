@@ -95,15 +95,11 @@ if(userinfo.motto){
 		                  <label class="control-label" for="email">当前头像</label>
 		                  <div class="controls">
 						  <%
-						    var avatar_url = "";
+						    var avatar_url = config.diary_url+userinfo.avatar;;
 							
-						     if(userinfo.avatar.indexOf("default") == -1){
-							    avatar_url = userinfo.avatar; 
-							 }else{
-							    avatar_url = config.user_config.avatar_url+userinfo.avatar;
-							 }
+						     
 
-                             var test_url = config.diary_url + "0000.jpg";
+                var test_url = config.diary_url + "0000.jpg";
 						  %>
 		                    <img id="avatar_img" src="<%= avatar_url%>">
 		                  </div>

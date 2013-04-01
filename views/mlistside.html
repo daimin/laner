@@ -4,9 +4,9 @@
     var avatar_url = "";
     
      if(author_info.avatar && author_info.avatar.indexOf("default") == -1){
-      avatar_url = author_info.avatar; 
+       avatar_url = config.diary_url + author_info.avatar; 
      }else{
-      avatar_url = config.user_config.avatar_url+author_info.avatar;
+       avatar_url = config.diary_url + author_info.avatar;
      }
   %>
       <div style="height:50px;">
@@ -50,5 +50,5 @@
         </ul>  
 </div>
 <script type="text/javascript">
-    jQuery('#uinfo_div').nailthumb({width:48,height:48,method:'resize',fitDirection:'top center'});
+   // jQuery('#uinfo_div').nailthumb({width:48,height:48,method:'resize',fitDirection:'top center'});
 </script>

@@ -25,9 +25,10 @@
           <%- diary.content %>
           <%
             if(diary.up_img_thumb_big && diary.up_img_thumb_big != ""){
+               var up_img_thumb_big = config.diary_url + diary.up_img_thumb_big
             %>
               <div id="diary_up_img">
-                <a class="fancybox" data-fancybox-group="gallery" href="<%= diary.up_img%>"><img id="entry_img" class="entry-img" src="<%= diary.up_img_thumb_big%>"></a>
+                <a class="fancybox" data-fancybox-group="gallery" href="<%= diary.up_img%>"><img id="entry_img" class="entry-img" src="<%= up_img_thumb_big%>"></a>
               </div>
             <%
             }

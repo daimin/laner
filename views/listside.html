@@ -24,9 +24,9 @@
              var avatar_url = "";
     
              if(user.avatar.indexOf("default") == -1){
-                 avatar_url = user.avatar; 
+                 avatar_url = config.diary_url + user.avatar; 
              }else{
-                 avatar_url = config.user_config.avatar_url+user.avatar;
+                 avatar_url = config.diary_url+user.avatar;
              }
              
          %>

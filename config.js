@@ -129,7 +129,6 @@ exports.config = {
 	    password_size:[2,20],
 	    motto_size   :[0,70],
 	    avatar_size  :128*1024,
-	    avatar_url : '/images/avatar/',
 	    default_avatar:"default.jpg"
 	},
 	INDEX_ITEM_SIZE : 100,
@@ -150,12 +149,12 @@ exports.config = {
 	         ],
     // 由于appfog我们将图片保存到数据库中，这里是开关
     // file/db
-	IMG_PERSISTENT : "db",
+	IMG_PERSISTENT : "file",
 	admin_email:"admin@admin.com",
-	site_base  :"http://laner.ap01.aws.af.cm",
-	thumber_url:"http://1.lanlog.duapp.com/remote_thumb.php",
-	//site_base  :"http://192.168.211.157:3000",
-	//thumber_url:"http://192.168.211.157/dx/remote_thumb.php",
+	//site_base  :"http://xiaozhi.cloudfoundry.com",
+	//thumber_url:"http://1.lanlog.duapp.com/remote_thumb.php",
+	site_base  :"http://192.168.211.91:3000",
+	thumber_url:"http://192.168.211.91/dx/remote_thumb.php",
 	icon_img_url:"/images/statusface/",
 	face_imgs : [["\\(谄笑\\)","2.gif?ver=1"],["\\(吃饭\\)","3.gif?ver=1"],["\\(调皮\\)","4.gif?ver=1"],["\\(尴尬\\)","5.gif?ver=1"],
 	["\\(汗\\)","6.gif?ver=1"],["\\(惊恐\\)","7.gif?ver=1"],["\\(囧\\)","8.gif?ver=1"],["\\(可爱\\)","9.gif?ver=1"],

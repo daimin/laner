@@ -15,17 +15,20 @@
 }
 
 .ul{
-   border-bottom: 1px dashed #DDDDDD;
+   border-bottom: 1px solid #EFEFEF;
    clear: both;
+   margin-right: auto;
+   margin-left: auto;
+   width:95%;
    line-height: 100%;
-   margin-bottom:6px;
-   margin-top:6px;
+   margin-bottom:10px;
+   margin-top:10px;
 }
 .post{
 }
 .entry-title {
 	color: #0C7823;
-	text-decoration: none;
+	  text-decoration: none;
     font-size: 14px;
     padding-top:2px;
     padding-bottom:2px;

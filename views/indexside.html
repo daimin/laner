@@ -19,9 +19,9 @@
 		var avatar_url = "";
 		
 		 if(userinfo.avatar.indexOf("default") == -1){
-			avatar_url = userinfo.avatar; 
+			  avatar_url = config.diary_url + userinfo.avatar; 
 		 }else{
-			avatar_url = config.user_config.avatar_url+userinfo.avatar;
+			  avatar_url = config.diary_url + userinfo.avatar;
 		 }
 	%>
       <div style="height:50px;">
@@ -68,13 +68,7 @@
           if(active_users && active_users.length > 0){
           for(var i = 0; i < active_users.length; i++) {
              var user = active_users[i];
-             var avatar_url = "";
-    
-             if(user.avatar.indexOf("default") == -1){
-                 avatar_url = user.avatar; 
-             }else{
-                 avatar_url = config.user_config.avatar_url+user.avatar;
-             }
+             var avatar_url = config.diary_url+user.avatar;
              
          %>
           <li><a href="/diary/<%= user._id %>/mlist"><img src="<%= avatar_url%>"></a><p><small><a href="/diary/<%= user._id %>/mlist"><%= user.nickname%></a></small></p></li>

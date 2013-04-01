@@ -250,6 +250,7 @@ function doupdate_avatar(url){
     var actionVal = url.substring(url.lastIndexOf('/')+1);
 	  url = url.substring(0,url.lastIndexOf('/'));
     var newimg_url = $("#target_img").attr('src');
+    
     var xval = $("#x").val();
     var yval = $("#y").val();
     var wval = $("#w").val();

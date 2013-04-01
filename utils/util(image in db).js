@@ -387,9 +387,9 @@ exports.get_summary = function(html){
     return text.substring(0, len);
 };
 
-var thumb = function(url, size,prefix,file_ext, callback){
-    var tmp_file_name = genId(prefix) + size.psize + file_ext;
-    var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+var thumb = function(url, size, callback){
+    var img_data = "";
+    //var url = config.thumber_url + "?u=" + url + "&size=" + size;
 
 
     var thumber_url = config.thumber_url;
@@ -424,15 +424,15 @@ var thumb = function(url, size,prefix,file_ext, callback){
     var req = http.request(options, function(res) {
          log('STATUS: ' + res.statusCode);
          log('HEADERS: ' + JSON.stringify(res.headers));
-         //res.setEncoding('utf8');
+         res.setEncoding('utf8');
          res.on('data', function (chunk) {
            if(chunk){
-              fs.appendFileSync(tmp_img_url,chunk);
+              img_data += chunk;
            }
          });
          res.on('end',function(){
            
-           callback(tmp_file_name);
+           callback(img_data);
          });
     });
 
@@ -444,20 +444,40 @@ var thumb = function(url, size,prefix,file_ext, callback){
 };
 
 
-exports.thumb_avatar = function(user_email, img_path, size, file_ext, callback){
+exports.thumb_avatar = function(user_email, img_path, size, callback){
+    var file_ext = img_path.substr(img_path.lastIndexOf('.'));
+    var tmp_file_name = genId('a') + file_ext;
     
-    var tmp_img_url = process.cwd() + config.diary_img + img_path;
-    var http_img_url = config.site_base + config.diary_url + img_path;
+    var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+    var http_img_url = config.site_base + config.diary_url + tmp_file_name;
+    var img_buff = fs.readFileSync(process.cwd() + '/public/' + img_path);
+    fd = fs.openSync(tmp_img_url, 'w+');
+    
+    fs.writeSync(fd, img_buff, 0, img_buff.length, null);
+    fs.closeSync(fd);
+    
+    function getBase64Head(file_ext){
+          file_ext = file_ext.toLowerCase();
+          if(file_ext == '.jpeg' || file_ext == '.jpg')
+            return "data:image/jpeg;base64,";
+          if(file_ext == '.gif')
+            return "data:image/gif;base64,";
+          if(file_ext == '.png')
+            return "data:image/png;base64,";
+    }
 
-    thumb(http_img_url,size,'a',file_ext,function(imgurl){
+    var base64Head = getBase64Head(file_ext);
 
-              User.update( {"email":user_email},{$set:
+    thumb(http_img_url,size,function(imgdata){
+          var imgdata = base64Head + imgdata;
+          
+          User.update( {"email":user_email},{$set:
                                 {
-                                  "avatar":imgurl
+                                  "avatar":imgdata
                                 }
                               }, {},function(err){
                     if(err) return next(err);  
-                    callback(imgurl);      
+                    callback(imgdata);      
           });
     });
 };
@@ -466,8 +486,15 @@ exports.create_cache_img = function(diary){
     if(!diary.up_img || diary.up_img == "" || !diary.up_img_thumb || diary.up_img_thumb == "" || !diary.up_img_thumb_big || diary.up_img_thumb_big == ""){
         return null;
     }
-
-    var  cache_img = config.diary_url + config.diary_img;
+    var cache_img = null;
+      var imgID = genId('g');
+      // 原图 
+      var tmp_file_name = imgID + diary.up_img_ext;
+      var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+      fd = fs.openSync(tmp_img_url, 'w+');
+      fs.writeSync(fd, diary.up_img.buffer, 0, diary.up_img.position, null);
+      fs.closeSync(fd);
+      cache_img = config.diary_url + tmp_file_name;
 
     return cache_img;
 };
@@ -478,28 +505,46 @@ exports.thumb = thumb;
 exports.thumb_img = function(up_img,diary_id, file_ext){
     // 源文件
     // up_img buffer数据
+    var tmp_file_name = genId('g') + file_ext;
+    var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
+    var http_img_url = config.site_base + config.diary_url + tmp_file_name;
+    fd = fs.openSync(tmp_img_url, 'w+');
     
-    var tmp_img_url = process.cwd() + config.diary_img + up_img;
-    var http_img_url = config.site_base + config.diary_url + up_img;
+    fs.writeSync(fd, up_img, 0, up_img.length, null);
+    fs.closeSync(fd);
     
-    thumb(http_img_url,100,'g',file_ext,function(imgurl){
+    function getBase64Head(file_ext){
+          file_ext = file_ext.toLowerCase();
+          if(file_ext == '.jpeg' || file_ext == '.jpg')
+            return "data:image/jpeg;base64,";
+          if(file_ext == '.gif')
+            return "data:image/gif;base64,";
+          if(file_ext == '.png')
+            return "data:image/png;base64,";
+    }
+
+    var base64Head = getBase64Head(file_ext);
+
+    thumb(http_img_url,100,function(imgdata){
+          var imgdata = base64Head + imgdata;
           
           Diary.update( {"_id":diary_id},{$set:
                                 {
-                                  "up_img_thumb":imgurl
+                                  "up_img_thumb":imgdata
                                 }
                               }, {},function(err){
                     if(err) return next(err);          
           });
     });
 
-    thumb(http_img_url,350,'g',file_ext,function(imgurl){
+    thumb(http_img_url,350,function(imgdata){
+          var imgdata = base64Head + imgdata;
           Diary.update( {"_id":diary_id},{$set:
                                 {
-                                  "up_img_thumb_big":imgurl
+                                  "up_img_thumb_big":imgdata
                                 }
                               }, {},function(err){
-                    if(err) return next(err);          
+                    if(err) return next(err);           
           });
           
      });

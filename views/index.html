@@ -26,6 +26,8 @@
              }
              if(diary.up_img != "" && diary.up_img_thumb == ""){
                 continue;
+             }else{
+                diary.up_img_thumb = config.diary_url + diary.up_img_thumb;
              }
          %>
           <div class="post">

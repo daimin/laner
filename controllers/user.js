@@ -294,6 +294,8 @@ exports.setting = function(req, res, next){
 		     var email = sanitize(req.body.email).trim();
     		 var newimg_url = sanitize(req.body.newimg_url).trim();
              
+
+
              var x = sanitize(req.body.x).trim();
              var y = sanitize(req.body.y).trim();
              var w = sanitize(req.body.w).trim();
@@ -304,9 +306,11 @@ exports.setting = function(req, res, next){
     	     }catch(e){
     	           res.send(e.message);
     	     }
+             var newimg_fname = newimg_url.substring(newimg_url.lastIndexOf('/')+1);
 
+             var fileext = path.extname(newimg_fname);
 
-             lutil.thumb_avatar(email, newimg_url, {'px':x,'py':y,'pw':w,'ph':h, 'psize':48},function(new_avatar){
+             lutil.thumb_avatar(email, newimg_fname, {'px':x,'py':y,'pw':w,'ph':h, 'psize':48},fileext,function(new_avatar){
 
                  res.send("1:" + new_avatar);
              });

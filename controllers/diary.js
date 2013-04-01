@@ -44,7 +44,6 @@ exports.add = function(req, res, next){
 	}
 	
 	if(method == "post"){
-	    lutil.log("Add diary post begin.");
 	    lutil.userinfo(req, function(user){
 			var title = sanitize(req.body.title).trim();
 			var content = sanitize(req.body.content).xss();
@@ -121,7 +120,7 @@ exports.add = function(req, res, next){
 		           return;
 		        }
 		        target_path = "";
-		        target_path =  lutil.genId("g");
+		        target_path =  lutil.genId("g") + fileext;
 		        if(config.IMG_PERSISTENT == "file"){
 		        	// 指定文件上传后的目录 
 			        // 不适用图片的扩展名

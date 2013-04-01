@@ -50,9 +50,11 @@
               </span>
             </div>
             <div class="entry-content">
-              <% if(diary['up_img_thumb'] ){ %>
+              <% if(diary['up_img_thumb'] ){ 
+                    var up_img_thumb = config.diary_url + diary['up_img_thumb'];
+              %>
                 <div class="nailthumb-container" style="float:left;">
-                  <img class="entry-img" src="<%- diary['up_img_thumb'] %>">
+                  <img class="entry-img" src="<%- up_img_thumb %>">
                 </div>
               <%}%>
               <%- diary['summary'] %>
