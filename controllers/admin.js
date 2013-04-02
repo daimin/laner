@@ -95,7 +95,7 @@ exports.notice = function(req, res, next){
 	    if(err || notice == null){
 	    	notice = config.announcement;
 	    	notice.notice = "notice";
-            lutil.log(Notice);
+            
 	    	Notice.save(notice, function(err){
 			    if(err) return next(err);
 			    res.send(JSON.stringify({"notice":notice}));

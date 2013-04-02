@@ -388,7 +388,13 @@ exports.get_summary = function(html){
 };
 
 var thumb = function(url, size,prefix,file_ext, callback){
-    var tmp_file_name = genId(prefix) + size.psize + file_ext;
+    var tmp_file_name = "";
+    if (typeof size == 'object'){
+        tmp_file_name = genId(prefix) + size.psize + file_ext;
+    }else{
+        tmp_file_name = genId(prefix) + size + file_ext;
+    }
+    
     var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
 
 
@@ -404,7 +410,7 @@ var thumb = function(url, size,prefix,file_ext, callback){
         sub_thumber_url = thumber_url.substring(dslash_pos + 2);
         
     }
-    log(sub_thumber_url);
+
     rhost = sub_thumber_url.substring(0, sub_thumber_url.indexOf('/'));
     rpath = sub_thumber_url.substring(sub_thumber_url.indexOf('/'));
  
@@ -432,7 +438,7 @@ var thumb = function(url, size,prefix,file_ext, callback){
          });
          res.on('end',function(){
            
-           callback(tmp_file_name);
+            
          });
     });
 
@@ -462,6 +468,7 @@ exports.thumb_avatar = function(user_email, img_path, size, file_ext, callback){
     });
 };
 
+/*
 exports.create_cache_img = function(diary){
     if(!diary.up_img || diary.up_img == "" || !diary.up_img_thumb || diary.up_img_thumb == "" || !diary.up_img_thumb_big || diary.up_img_thumb_big == ""){
         return null;
@@ -472,6 +479,7 @@ exports.create_cache_img = function(diary){
     return cache_img;
 };
 
+*/
 exports.thumb = thumb;
 
 

@@ -100,7 +100,7 @@ exports.index = function(req, res, next){
 					      if(idx < diarys_len){
 					          proxy.trigger('get_sub_nickname',idx);
 					      }else{
-
+                              
 					          proxy.trigger('get_hot_diarys',diarys);
 					      }
 					   });
@@ -117,47 +117,7 @@ exports.index = function(req, res, next){
 	               for(var i = 0 ; i < diarys.length;i++){
 	                   diarys[i].create_date = lutil.dateFormat(diarys[i].create_date);
 	                   diarys[i].edit_date = lutil.dateFormat(diarys[i].edit_date);
-
-
-	                   var up_img = diarys[i].up_img;
-	                   /*
-	                   if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
-	                   	   var tmp_file_name = lutil.genId('g');
-	                       var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
-	                   	   fd = fs.openSync(tmp_img_url, 'w+');
-	                   	   fs.writeSync(fd, up_img.buffer, 0, up_img.position, null);
-	                   	   fs.closeSync(fd);
-	                   	   diarys[i].up_img = config.diary_url + tmp_file_name;
-	                   	   
-
-	                   	   diarys[i].up_img = config.diary_url + tmp_file_name;
-	                   	   
-	                   }else{
-	                   	   if(diarys[i].up_img && diarys[i].up_img != ""){
-                                diarys[i].up_img = config.diary_url + diarys[i].up_img;
-	                   	   }
-	                   	   
-	                   }
-
 	                   
-	                   
-	                   if(diarys[i].up_img_thumb && diarys[i].up_img_thumb != ""){
-	                       
-	                       diarys[i].up_img_thumb = config.diary_url + diarys[i].up_img_thumb;
-	                   }else{
-	                   	   
-                           diarys[i].up_img_thumb = diarys[i].up_img;
-	                   }
-	                   */
-	                   	if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
-		                	var cache_imgs = lutil.create_cache_img(diarys[i]);
-		                	if(cache_imgs && cache_imgs.length == 1){
-		                		  diarys[i].up_img = cache_imgs[0];
-				                  //diarys[i].up_img_thumb = cache_imgs[1];
-				                  //diarys[i].up_img_thumb_big = cache_imgs[2];
-		                	}
-
-		                }
 	                    diarys[i].content = diarys[i].summary;
 	                }
 	                
@@ -181,6 +141,7 @@ exports.index = function(req, res, next){
 	            
 	            total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );
 	            proxy.trigger('get_list');
+
 	        });
 	   });
 	   

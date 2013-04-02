@@ -52,6 +52,6 @@ KindEditor.ready(function(K) {
 						'source','|','bold','italic','underline','code','fontname','fontsize','forecolor','hilitecolor','plug-align','plug-order','plug-indent', 'link'
 					],
 					newlineTag:'br',
-					pasteType : 1,
+					//pasteType : 1,
 				});
 			});

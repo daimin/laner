@@ -8,6 +8,7 @@ var  diary       = require('./controllers/diary')
     ,user       = require('./controllers/user')
     ,lfile       = require('./controllers/lfile')
     ,admin       = require('./controllers/admin')
+    ,fetch       = require('./controllers/fetch')
     ,partials  = require('express-partials')
     ,filter     = require('./utils/util').filter;
 
@@ -207,6 +208,11 @@ exports = module.exports = function(app){
 	   path:"/user/uploadpic",
 	   ctrl:user.uploadpic,
 	   method:'post'
+	},
+	{
+	   path:"/fetch/get",
+	   ctrl:fetch.index,
+	   method:'get'
 	},
 	
 	{

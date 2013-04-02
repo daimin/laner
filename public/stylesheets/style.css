@@ -144,8 +144,8 @@ body.page .edit-link {
    padding-left:2px;
    padding-right:2px;
 }
-.entry-img{
-  margin: 0 10px 10px 0;
+img{
+  max-width: 560px;
 }
 .entry-date{
   padding-right:2px;

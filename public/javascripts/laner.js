@@ -250,10 +250,12 @@ function doupdate_avatar(url){
     var actionVal = url.substring(url.lastIndexOf('/')+1);
 	  url = url.substring(0,url.lastIndexOf('/'));
     var newimg_url = $("#target_img").attr('src');
+    ///images/upload/a341160147419987V5WD2Sf.jpg 
+    var avatar_dir = newimg_url.substring(0, newimg_url.lastIndexOf('/'));
     
     var xval = $("#x").val();
     var yval = $("#y").val();
-    var wval = $("#w").val();
+    var wval = $("#w").val(); 
     var hval = $("#h").val();
     var param = {
 	           email:$("#email").val(),
@@ -276,11 +278,12 @@ function doupdate_avatar(url){
   		      tag = data;
   		   }
 
+
           if(tag == 1){
               $("#alert-error").css({"display":"none"});
   			      $("#alert-success").css({"display":"block"});
               $("#success_msg").html("更新成功");
-  			      $("#avatar_img").attr({"src":msg});
+  			      $("#avatar_img").attr({"src":avatar_dir + '/' + msg});
           }else{
               $("#alert-error").css({"display":"block"});
   			      $("#alert-success").css({"display":"none"});
@@ -458,7 +461,7 @@ function render_face(face_url){
         });
     });
 
-    console.log(strs.join(','));
+    //console.log(strs.join(','));
 
 }
 

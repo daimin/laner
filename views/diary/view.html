@@ -7,8 +7,6 @@
 %>
 <link rel="stylesheet" type="text/css" href="/stylesheets/jquery.fancybox.css" />
 <script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
-<script type="text/javascript" src="/javascripts/jquery.metadata.js"></script>
-<!-- <script type="text/javascript" src="/javascripts/jquery.nailthumb.1.0.min.js"></script> -->
 <div class="container">
   <div class="row show-grid">    
     <div class="row">
@@ -25,10 +23,11 @@
           <%- diary.content %>
           <%
             if(diary.up_img_thumb_big && diary.up_img_thumb_big != ""){
-               var up_img_thumb_big = config.diary_url + diary.up_img_thumb_big
+               var up_img_thumb_big = config.diary_url + diary.up_img_thumb_big;
+               var up_img = config.diary_url +  diary.up_img;
             %>
               <div id="diary_up_img">
-                <a class="fancybox" data-fancybox-group="gallery" href="<%= diary.up_img%>"><img id="entry_img" class="entry-img" src="<%= up_img_thumb_big%>"></a>
+                <a class="fancybox" data-fancybox-group="gallery" href="<%= up_img%>"><img id="entry_img" class="entry-img" src="<%= up_img_thumb_big%>"></a>
               </div>
             <%
             }
@@ -67,7 +66,7 @@
                 <div class="controls">
                   <% if(userinfo == null){%>
                   <input class="input" type="text" id="cu_name" name="cu_name" placeholder="填入称呼" ><br/>
-                  <input class="input input-xlarge" type="text" id="cu_contact" name="cu_contact" placeholder="邮箱或主页" >
+                  <input class="input input-xlarge" type="text" value="http://" id="cu_contact" name="cu_contact" placeholder="邮箱或主页" >
                   <%}%>
                   <div class="emo-holder" id="emotions_3_emoList"></div>
                   <textarea class="input-xlarge" id="comment" name="comment" cols="100" placeholder="发表你的评论" style="width:98%;height:80px;"></textarea>
@@ -94,7 +93,6 @@
 
 <script type="text/javascript">
     $(function(){
-       // jQuery('#diary_up_img').nailthumb({width:350,height:350,method:'resize',fitDirection:'top left'});
         $('.fancybox').fancybox({
                closeClick : true,
                openEffect : 'elastic',

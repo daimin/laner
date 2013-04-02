@@ -22,9 +22,9 @@
                     var avatar_url = "";
                     
                      if(comment.commenter && comment.commenter.avatar.indexOf("default") == -1){
-                        avatar_url = comment.commenter.avatar; 
+                        avatar_url = config.diary_url + comment.commenter.avatar; 
                      }else{
-                        avatar_url = config.user_config.avatar_url + config.user_config.default_avatar;
+                        avatar_url = config.diary_url + config.user_config.default_avatar;
                      }
                     %>
                       <div class="comment-item row">
@@ -54,9 +54,3 @@
             %>
 
 </div>
-<script type="text/javascript">
-    jQuery('#diary_up_img').nailthumb({width:350,height:350,method:'resize',fitDirection:'top left'});
-    jQuery('.nailthumb-container').nailthumb({width:48,height:48,method:'resize',fitDirection:'top center'});
-    
-
-</script>
