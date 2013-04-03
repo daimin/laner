@@ -57,9 +57,15 @@ sub {
   bottom: -0.25em;
 }
 img {
+
   /* Responsive images (ensure images don't scale beyond their parents) */
 
-  max-width: 100%;
+  /*max-width: 100%;*/
+  max-width:auto;
+  border-radius:4px;
+  -moz-box-shadow:1px 1px 1px #999;
+  -webkit-box-shadow:1px 1px 1px #999;
+  box-shadow:1px 1px 1px #999;
   /* Part 1: Set a maxium relative to the parent */
 
   width: auto\9;
@@ -143,7 +149,7 @@ textarea {
 }
 body {
   margin: 0;
-  font-family: "Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 12px;
   line-height: 22px;
   color: #555555;
@@ -522,7 +528,7 @@ h4,
 h5,
 h6 {
   margin: 10px 0;
-  font-family:"Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:"Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
   line-height: 1;
   color: inherit;
@@ -700,7 +706,7 @@ address {
 code,
 pre {
   padding: 0 3px 2px;
-  font-family: "Microsoft Yahei",Menlo, Monaco, Consolas, "Courier New", monospace;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
   font-size: 12px;
   color: #333333;
   -webkit-border-radius: 3px;
@@ -779,7 +785,7 @@ input,
 button,
 select,
 textarea {
-  font-family: "Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 label {
   display: block;
@@ -3477,13 +3483,14 @@ input[type="submit"].btn.btn-mini {
   min-height: 40px;
   padding-left: 20px;
   padding-right: 20px;
-  background-color: #fefefe;
-  background-image: -moz-linear-gradient(top, #fefefe, #fefefe);
-  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#fefefe), to(#fefefe));
-  background-image: -webkit-linear-gradient(top, #fefefe, #fefefe);
-  background-image: -o-linear-gradient(top, #fefefe, #fefefe);
-  background-image: linear-gradient(to bottom, #fefefe, #fefefe);
+  background-color: #008840;
+  background-image: -moz-linear-gradient(top, #008840, #008800);
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#008840), to(#008800));
+  background-image: -webkit-linear-gradient(top, #008840, #008800);
+  background-image: -o-linear-gradient(top, #008840, #008800);
+  background-image: linear-gradient(to bottom, #008840, #008800);
   background-repeat: repeat-x;
+  
   filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#fffefefe', endColorstr='#fffefefe', GradientType=0);
   border: 1px solid #dfdfdf;
   -webkit-border-radius: 4px;
@@ -3493,6 +3500,7 @@ input[type="submit"].btn.btn-mini {
   -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
   *zoom: 1;
+
 }
 .navbar-inner:before,
 .navbar-inner:after {
@@ -3516,12 +3524,12 @@ input[type="submit"].btn.btn-mini {
   margin-left: -20px;
   font-size: 20px;
   font-weight: 200;
-  color: inherit;
+  color: #fff;
   text-shadow: 0 1px 0 #fefefe;
+  font-family: 'Telex',sans-serif;
+  /*text-shadow: 1px 1px 0 rgba(0,0,0,0.2);*/
 }
-.navbar .brand:hover {
-  text-decoration: none;
-}
+
 .navbar-text {
   margin-bottom: 0;
   line-height: 40px;
@@ -3595,7 +3603,7 @@ input[type="submit"].btn.btn-mini {
 .navbar-search .search-query {
   margin-bottom: 0;
   padding: 4px 14px;
-  font-family:"Microsoft Yahei","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family:"Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 12px;
   font-weight: normal;
   line-height: 1;
@@ -3677,7 +3685,7 @@ input[type="submit"].btn.btn-mini {
 .navbar .nav > li > a {
   float: none;
   padding: 10px 15px 10px;
-  color: #555555;
+  color: #fff;
   text-decoration: none;
   text-shadow: 0 1px 0 #fefefe;
 }
@@ -3686,9 +3694,9 @@ input[type="submit"].btn.btn-mini {
 }
 .navbar .nav > li > a:focus,
 .navbar .nav > li > a:hover {
-  background-color: transparent;
-  color: #23890f;
+  color: #fff;
   text-decoration: none;
+  background-color: #006600;
 }
 .navbar .nav > .active > a,
 .navbar .nav > .active > a:hover,
@@ -4890,15 +4898,15 @@ hr {
 }
 .navbar .brand {
   padding: 12px 20px 8px;
-  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  font-weight: bold;
+  font-family: 'Telex',sans-serif, Helvetica, Arial, sans-serif;
 }
 .navbar .brand:hover {
-  color: #23890f;
+  color: #fff;
+  text-decoration: none;
 }
 .navbar .nav > li > a {
   padding: 13px 15px 6px;
-  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
   text-shadow: none;
 }
@@ -4912,7 +4920,7 @@ hr {
 .navbar .navbar-text {
   padding: 13px 15px 7px;
   line-height: 19px;
-  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   color: #999999;
 }
 .navbar .divider-vertical {
@@ -4926,7 +4934,7 @@ hr {
   margin-bottom: 5px;
 }
 .navbar .dropdown-menu a {
-  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .navbar-inverse .navbar-inner {
   -webkit-box-shadow: none;
@@ -4938,7 +4946,7 @@ hr {
 }
 @media (max-width: 979px) {
   .navbar .nav-collapse .nav li > a {
-    color: #555555;
+    color: #fff;
   }
   .navbar .nav-collapse .nav li > a:hover {
     background-image: none;
@@ -4971,7 +4979,7 @@ div.subnav {
   -webkit-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   -moz-box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
-  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 div.subnav.subnav-fixed {
   -webkit-box-shadow: inset 0 5px #ffffff , 1px 1px 1px rgba(0, 0, 0, 0.2);
@@ -5131,12 +5139,12 @@ div.subnav .nav > li.active > a:hover {
 }
 .btn {
   padding-top: .6em;
-  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-weight: bold;
 }
 legend {
   border-bottom: 1px solid #ddd;
-  font-family: "Microsoft Yahei","Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "Josefin Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 .navbar-search .search-query {
   border: 1px solid #ddd;
