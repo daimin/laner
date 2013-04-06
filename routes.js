@@ -9,6 +9,7 @@ var  diary       = require('./controllers/diary')
     ,lfile       = require('./controllers/lfile')
     ,admin       = require('./controllers/admin')
     ,fetch       = require('./controllers/fetch')
+    ,imageCtrl   = require('./controllers/imageCtrl')
     ,partials  = require('express-partials')
     ,filter     = require('./utils/util').filter;
 
@@ -214,7 +215,11 @@ exports = module.exports = function(app){
 	   ctrl:fetch.index,
 	   method:'get'
 	},
-	
+	{   
+		path:'/images/upload/:img',
+        ctrl:imageCtrl.index,
+		method:'get'
+	},
 	{
 	   path:"/404",
 	   ctrl:site.p404,

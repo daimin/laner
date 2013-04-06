@@ -30,8 +30,8 @@ app.configure(function(){
   app.use(app.router);
   
 });
-//production
-app.configure('development', function(){
+//production|development
+app.configure('production', function(){
   app.use(express.errorHandler());
 });
 

@@ -3,8 +3,6 @@ var DB = require("../models")
     ,User = DB.Table('User')
     ,Comment = DB.Table('Comment')
     ,UserCollectDiary = DB.Table('UserCollectDiary')
-    //,GridStore = DB.GridStore
-    ,ObjID = DB.ObjID
     ,config = require('../config').config
     ,check = require('validator').check
     ,sanitize = require('validator').sanitize
@@ -136,9 +134,15 @@ exports.add = function(req, res, next){
 		        }else{
 		        	// 这里解决保存到数据库中了
 		        	fs.readFile(tmp_path, function (err, data) {
-                         target_path = data;
+		              
+		        		 DB.GridFS(function(gfs, db){
+                           var writestream = gfs.createWriteStream(target_path, 'w');
+                           fs.createReadStream(tmp_path).pipe(writestream);
+                           proxy.trigger('save');
+                           db.close();
+		        		 });
                          
-                         proxy.trigger('save');
+                          
                     });
 		        
 		        }
@@ -192,7 +196,7 @@ exports.edit = function(req, res, next){
     
 	var method = req.method.toLowerCase();
 	var proxy = new EventProxy();
-	var diary_id = ObjID(req.params.did);
+	var diary_id = req.params.did;
 	if(method == "get"){
 	    lutil.userinfo(req, function(user){
 	       

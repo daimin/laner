@@ -1,0 +1,9 @@
+<br />
+<b>Fatal error</b>:  Uncaught exception 'Exception' with message 'Could not determine format of remote image: http://192.168.0.120:3000/images/upload/g341201952801365wdkBkzLX.jpg' in D:\www\dx\ThumbLib\ThumbBase.inc.php:193
+Stack trace:
+#0 D:\www\dx\ThumbLib\GdThumb.inc.php(1077): ThumbBase-&gt;triggerError('Could not deter...')
+#1 D:\www\dx\ThumbLib\GdThumb.inc.php(98): GdThumb-&gt;determineFormat()
+#2 D:\www\dx\ThumbLib\ThumbLib.inc.php(127): GdThumb-&gt;__construct('http://192.168....', Array, false)
+#3 D:\www\dx\remote_thumb.php(34): PhpThumbFactory::create('http://192.168....')
+#4 {main}
+  thrown in <b>D:\www\dx\ThumbLib\ThumbBase.inc.php</b> on line <b>193</b><br />
