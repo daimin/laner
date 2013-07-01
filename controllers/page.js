@@ -8,80 +8,83 @@ exports.createPage = function(pageno,pagecount){
         var page_view = [];
         
         //先考虑页码
-        if(pagecount <= 8){
+        if(pagecount <= 6){
         	for(var i = 1; i <= pagecount;i++){
         	    page_view[page_view.length] = [""+i,i]; // 显示,页码
         	}
-        }else if(pagecount > 8 &&  pagecount <= 15) { //大于8会根据当前页面的变化，显示...
+        }else if(pagecount > 6 &&  pagecount <= 12) { //大于8会根据当前页面的变化，显示...
         	// 处理当前页面前的显示
-        	if(pageno <= 8){
-	        	for(var i = 1; i <= pageno+5;i++){ // 最多显示15
+        	if(pageno <= 6){
+	        	for(var i = 1; i <= pageno+3;i++){ // 最多显示15
 	        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
 	        	}
         	}else{//否则还需显示前5
 	        	for(var i = 1; i <= 3;i++){
 	        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
 	        	}
-	        	page_view[page_view.length] = ["...",0];
-	        	for(var i = pageno-4; i < pageno;i++){
+	        	//page_view[page_view.length] = ["...",0];
+	        	/*for(var i = pageno-4; i < pageno;i++){
 	        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
-	        	}
+	        	}*/
 
         	}
         	
         	// 处理当前页面后的显示
         	if(pageno + 5 < pagecount-2){
-        		if(pageno > 8){
-		        	for(var i = pageno; i <= pageno+5;i++){
+        		if(pageno > 6){
+		        	for(var i = pageno; i <= pageno+3;i++){
 		        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
 		        	}
         		}
-        	    page_view[page_view.length] = ["...",0];
-            	for(var i = pagecount-2; i <= pagecount;i++){
+        	    //page_view[page_view.length] = ["...",0];
+            	/*for(var i = pagecount-2; i <= pagecount;i++){
             	    page_view[page_view.length] = [""+i,i]; // 显示,页码
-            	}
+            	}*/
         	}else{
         		// 小于等于8时需要先显示后五与尾页后三的冲突
-        		if(pageno <= 8){
+        		if(pageno <= 6){
 	        		//var off = 10 - pagecount + pageno;
-		        	for(var i = pageno + 5; i <= 2 * pageno + 15 - pagecount;i++){
+		        	for(var i = pageno + 3; i <= 2 * pageno + 12 - pagecount;i++){
 		        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
 		        	}
         		}else{
+                    /*
 		        	for(var i = pageno; i <= pagecount;i++){
 		        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
-		        	}
+		        	}*/
         		}
         	}
 
         }else{ // > 15
         	// 处理当前页面前的显示
-        	if(pageno <= 8){
-	        	for(var i = 1; i <= pageno+5;i++){ // 最多显示15
+            
+        	if(pageno <= 6){
+	        	for(var i = 1; i <= pageno+3;i++){ // 最多显示15
 	        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
 	        	}
         	}else{//否则还需显示前5
 	        	for(var i = 1; i <= 3;i++){
 	        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
 	        	}
-	        	page_view[page_view.length] = ["...",0];
-	        	for(var i = pageno-4; i < pageno;i++){
+	        	//page_view[page_view.length] = ["...",0];
+                
+	        	for(var i = pageno-2; i < pageno;i++){
 	        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
 	        	}
 
         	}
         	
         	// 处理当前页面后的显示
-        	if(pageno + 5 < pagecount-2){
-        		if(pageno > 8){
-		        	for(var i = pageno; i <= pageno+5;i++){
+        	if(pageno + 2 < pagecount-1){
+        		if(pageno > 6){
+		        	for(var i = pageno; i <= pageno+1;i++){
 		        	    page_view[page_view.length] = [""+i,i]; // 显示,页码
 		        	}
         		}
-        	    page_view[page_view.length] = ["...",0];
-            	for(var i = pagecount-2; i <= pagecount;i++){
+        	    //page_view[page_view.length] = ["...",0];
+            	/*for(var i = pagecount-2; i <= pagecount;i++){
             	    page_view[page_view.length] = [""+i,i]; // 显示,页码
-            	}
+            	}*/
         	}else{
 	        	for(var i = pageno; i <= pagecount;i++){
 	        	    page_view[page_view.length] = [""+i,i]; // 显示,页码

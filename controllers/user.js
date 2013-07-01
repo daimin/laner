@@ -373,12 +373,21 @@ exports.uploadpic = function(req, res, next){
         var target_path = "";
         target_path =  lutil.genId("a") + fileext;
         var full_img_path = process.cwd() + config.diary_img + target_path;
-                    
+        /*        
         fs.rename(tmp_path, full_img_path, function (err) {
             if (err) {
                 return next(err);
             }
             res.send( "|" + (config.diary_img + target_path) + "|");
+        });
+        */
+        fs.readFile(tmp_path, function (err, data) {
+                         target_path = 'gf/' + target_path;
+                         lutil.write_gridfs_img(tmp_path, target_path,function(){
+                               //proxy.trigger('save');
+                               res.send( "|" + (config.diary_img + target_path) + "|");
+                         });
+                          
         });
     }
 };

@@ -7,7 +7,7 @@ exports.config = {
 	name       : '晓知+',
 	description: 'Diary',
 	version    : (function(){
-		  g_cfg.version = '0.1.6';
+		  g_cfg.version = '0.1.8';
 		  return g_cfg.version;
 	  })(),
 	// 配置网站头部
@@ -33,7 +33,7 @@ exports.config = {
 	},
 	meta: [
 		'<meta name="author" content="vagasnail@gmail.com">',
-		'<meta name="description" content="心情记录，知识分享">'
+		'<meta name="description" content="心情记录, 知识分享, 趣味轶事, 笑话百科">'
 	]
 	},
 	ACCESS_PUBLIC : 1,
@@ -87,7 +87,7 @@ exports.config = {
             }
 	    };
 	    
-	    return generate_mongo_url(mongo);;
+	    return [mongo, generate_mongo_url(mongo)];
 	})(),
 	session_secret  : 'WOWILOVEYOU',
 	auth_cookie_name: 'lanerdiarycookiename',
@@ -149,7 +149,7 @@ exports.config = {
 	         ],
     // 由于appfog我们将图片保存到数据库中，这里是开关
     // file/db
-	IMG_PERSISTENT : "file",
+	IMG_PERSISTENT : "db",
 	admin_email:"admin@admin.com",
 	site_base  :"http://xiaozhi.cloudfoundry.com",
 	thumber_url:"http://1.lanlog.duapp.com/remote_thumb.php",

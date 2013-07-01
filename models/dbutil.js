@@ -72,7 +72,6 @@ exports.find_user_by_email = function(email,callback){
 };
 
 exports.find_user_by_id = function(uid,callback){
-    uid = ObjID('' + uid);
 
     User.findOne({"_id":uid},function(err, user){
         callback(user);
@@ -81,7 +80,7 @@ exports.find_user_by_id = function(uid,callback){
 
 exports.find_diary_by_id = function(did,callback){
 	did = '' + did;
-    var diary_id = ObjID(did);
+    var diary_id = did;
     Diary.findOne({"_id":diary_id},function(err, diary){
         callback(diary);
     });

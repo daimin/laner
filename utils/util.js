@@ -395,6 +395,7 @@ var thumb = function(url, size,prefix,file_ext, callback){
         tmp_file_name = genId(prefix) + size + file_ext;
     }
     
+    var gf_file_name = "gf/" + tmp_file_name;
     var tmp_img_url = process.cwd() + config.diary_img + tmp_file_name;
 
 
@@ -419,6 +420,7 @@ var thumb = function(url, size,prefix,file_ext, callback){
     }else{
         rpath = rpath + "?u=" + url + "&size=" + size;
     }
+
     
     var options = {
         host: rhost,
@@ -430,15 +432,18 @@ var thumb = function(url, size,prefix,file_ext, callback){
     var req = http.request(options, function(res) {
          log('STATUS: ' + res.statusCode);
          log('HEADERS: ' + JSON.stringify(res.headers));
-         //res.setEncoding('utf8');
+         
          res.on('data', function (chunk) {
            if(chunk){
               fs.appendFileSync(tmp_img_url,chunk);
            }
          });
          res.on('end',function(){
-           
-            
+
+            __write_gridfs_img(tmp_img_url,gf_file_name, function(){
+
+                 callback(gf_file_name);
+            });
          });
     });
 
@@ -452,8 +457,8 @@ var thumb = function(url, size,prefix,file_ext, callback){
 
 exports.thumb_avatar = function(user_email, img_path, size, file_ext, callback){
     
-    var tmp_img_url = process.cwd() + config.diary_img + img_path;
-    var http_img_url = config.site_base + config.diary_url + img_path;
+    //var tmp_img_url = process.cwd() + config.diary_img + img_path;
+    var http_img_url = config.site_base + config.diary_url + 'gf/' + img_path;
 
     thumb(http_img_url,size,'a',file_ext,function(imgurl){
 
@@ -463,7 +468,12 @@ exports.thumb_avatar = function(user_email, img_path, size, file_ext, callback){
                                 }
                               }, {},function(err){
                     if(err) return next(err);  
-                    callback(imgurl);      
+                    __remove_gridfs_img('gf/' + img_path,function(err){
+                        if(err) throw err;
+                        log("remove file " + 'gf/' + img_path + " ================== ");
+                        callback(imgurl);      
+                    });
+                    
           });
     });
 };
@@ -489,7 +499,22 @@ exports.thumb_img = function(up_img,diary_id, file_ext){
     
     var tmp_img_url = process.cwd() + config.diary_img + up_img;
     var http_img_url = config.site_base + config.diary_url + up_img;
-    
+    //var proxy = new EventProxy();
+    //proxy.once("up_img_thumb_big",function(){
+
+    //});
+
+    thumb(http_img_url,350,'g',file_ext,function(imgurl){
+        Diary.update( {"_id":diary_id},{$set:
+                              {
+                                "up_img_thumb_big":imgurl
+                              }
+                            }, {},function(err){
+                  if(err) return next(err);          
+        });
+        
+    });
+
     thumb(http_img_url,100,'g',file_ext,function(imgurl){
           
           Diary.update( {"_id":diary_id},{$set:
@@ -497,20 +522,13 @@ exports.thumb_img = function(up_img,diary_id, file_ext){
                                   "up_img_thumb":imgurl
                                 }
                               }, {},function(err){
-                    if(err) return next(err);          
+                    if(err) return next(err);  
+                    //proxy.trigger("up_img_thumb_big");        
           });
     });
 
-    thumb(http_img_url,350,'g',file_ext,function(imgurl){
-          Diary.update( {"_id":diary_id},{$set:
-                                {
-                                  "up_img_thumb_big":imgurl
-                                }
-                              }, {},function(err){
-                    if(err) return next(err);          
-          });
-          
-     });
+    
+
 
 };
 
@@ -531,3 +549,96 @@ exports.filte_face_img = function(str){
 
    return str;
 }
+
+
+exports.getImgHeader = function(img_name){
+    var tex = img_name.substring(img_name.lastIndexOf('.')+1);
+    tex = tex.toLowerCase();
+    if(tex == 'jpg' || tex == 'jpe' || tex == 'jpeg'){
+        return "image/jpeg";
+    }else if(tex == 'bmp'){
+        return "image/bmp";
+    }else if(tex == 'png'){
+        return "image/png";
+    }
+};
+
+var __getImgHeader = exports.getImgHeader;
+
+exports.read_gridfs_img = function(img_name,callback){
+   DB.GridFS(function(gfs, db){
+        try{
+           var buffers = [];
+           var nread = 0;
+           var rs = gfs.createReadStream(img_name);
+           rs.on('data',function(chunk){
+               //fs.appendFileSync(img_name, data);
+               //lutil.log(data);
+               nread += chunk.length;
+               buffers.push(chunk);
+           });
+           rs.on('end',function(){
+               var buffer = null;
+                switch(buffers.length) {
+                    case 0: buffer = new Buffer(0);
+                        break;
+                    case 1: buffer = buffers[0];
+                        break;
+                    default:
+                        buffer = new Buffer(nread);
+                        for (var i = 0, pos = 0, l = buffers.length; i < l; i++) {
+                            var chunk = buffers[i];
+                            chunk.copy(buffer, pos);
+                            pos += chunk.length;
+                        }
+                    break;
+                }
+
+            callback(buffer);
+           
+               
+           });
+           
+        }catch(e){
+
+        }
+});
+
+};
+
+
+
+exports.write_gridfs_img = function(src_path, target_path, callback){
+  
+    DB.GridFS(function(gfs, db){
+                           
+                           var writestream = gfs.createWriteStream(target_path, 'w');
+                           fs.createReadStream(src_path).pipe(writestream);
+                           
+                           writestream.on('close', function (file) {
+                               log("=============write filename= " + file.filename );
+                               callback();
+                           });
+
+                           writestream.on('error',function(err){
+                                   log(err);
+
+                           });
+
+                 });
+};
+
+var __write_gridfs_img = exports.write_gridfs_img;
+
+
+exports.remove_gridfs_img = function(ipath, callback){
+
+     DB.GridFS(function(gfs, db){
+         
+          gfs.remove({filename:ipath},function(err){
+              callback(err);
+          });
+     });
+};
+
+var __remove_gridfs_img = exports.remove_gridfs_img;

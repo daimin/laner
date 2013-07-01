@@ -1,10 +1,9 @@
 var DB = require("../models")
     ,Diary = DB.Table('Diary')
     ,User = DB.Table('User')
+    ,ObjID = DB.ObjID
     ,Comment = DB.Table('Comment')
     ,UserCollectDiary = DB.Table('UserCollectDiary')
-    //,GridStore = DB.GridStore
-    ,ObjID = DB.ObjID
     ,config = require('../config').config
     ,check = require('validator').check
     ,sanitize = require('validator').sanitize
@@ -136,9 +135,11 @@ exports.add = function(req, res, next){
 		        }else{
 		        	// 这里解决保存到数据库中了
 		        	fs.readFile(tmp_path, function (err, data) {
-                         target_path = data;
-                         
-                         proxy.trigger('save');
+		                 target_path = 'gf/' + target_path;
+		        		 lutil.write_gridfs_img(tmp_path, target_path,function(){
+                               proxy.trigger('save');
+		        		 });
+                          
                     });
 		        
 		        }
@@ -192,7 +193,7 @@ exports.edit = function(req, res, next){
     
 	var method = req.method.toLowerCase();
 	var proxy = new EventProxy();
-	var diary_id = ObjID(req.params.did);
+	var diary_id = req.params.did;
 	if(method == "get"){
 	    lutil.userinfo(req, function(user){
 	       
@@ -311,11 +312,13 @@ exports.edit = function(req, res, next){
 	        }else{
 	        	// 这里解决保存到数据库中了
 	        	fs.readFile(tmp_path, function (err, data) {
-	        		 if(err) throw err;
-                     target_path = data;
-                     
-                     proxy.trigger('update');
+		                 target_path = 'gf/' + target_path;
+		        		 lutil.write_gridfs_img(tmp_path, target_path,function(){
+                               proxy.trigger('update');
+		        		 });
+                          
                 });
+		        
 	        
 	        }
         }
@@ -510,8 +513,7 @@ exports.view = function(req, res, next){
 	   var gdiary = null;
 	   var proxy = new EventProxy();
        var nickname = "";
-       var diary_id_p = req.params.did;
-       var diary_id = ObjID(req.params.did);
+       var diary_id = req.params.did;
        var author_diarys = [];
        var author_collect_diarys = [];
        var author_info = null;
@@ -557,17 +559,6 @@ exports.view = function(req, res, next){
 	           
 	           diary.create_date = lutil.dateFormat(diary.create_date);
                diary.edit_date = lutil.dateFormat(diary.edit_date);
-               /*
-               var up_img = diary.up_img;
-               if(up_img && up_img._bsontype && up_img._bsontype == 'Binary'){
-               	  
-               	   diary.up_img = lutil.create_cache_img(diary);
-               	   
-               }else{
-               	   	if(diary.up_img && diary.up_img != ""){
-                        diary.up_img = config.diary_url + diary.up_img;
-	                }
-               }*/
 
 		       
                gdiary = diary;
@@ -683,6 +674,21 @@ exports.del = function(req, res, next){
 		        if (err) throw err;
 		        console.log('remove img ' + tar_img_path);
 		    });
+
+
+	    }else{
+	    	lutil.remove_gridfs_img(diary.up_img,function(err){
+                if (err) throw err;
+                lutil.log('remove img ' + diary.up_img);
+            });
+            lutil.remove_gridfs_img(diary.up_img_thumb,function(err){
+                if (err) throw err;
+                lutil.log('remove img ' + diary.up_img_thumb);
+            });
+            lutil.remove_gridfs_img(diary.up_img_thumb_big,function(err){
+                if (err) throw err;
+                lutil.log('remove img ' + diary.up_img_thumb_big);
+            });
 	    }
 	    if(diary){
 	    	lutil.userinfo(req, function(uinfo){
@@ -948,6 +954,7 @@ exports.mlist = function(req, res, next){
    var author_collect_diarys = [];
    var author_info = null;
    var userinfo = null;
+   var total_diarys = 0;
    
    proxy.once("renderto",function(diarys){
    	   
@@ -960,6 +967,7 @@ exports.mlist = function(req, res, next){
             pageData    :pageData,
             req_path    :req.path,
             userinfo    :userinfo,
+            total_diarys:total_diarys,
             "author_info":author_info,
             "author_collect_diarys"  :author_collect_diarys
 	    });
@@ -1072,6 +1080,7 @@ exports.mlist = function(req, res, next){
 	      	var total_items = 0;
 	      	if(s_diarys){
 	      	    total_items = s_diarys.length;
+	      	    total_diarys = total_items;
 	      	}
 	          
 	        total_page = Math.floor ( (total_items + config.PAGE_SIZE - 1) / config.PAGE_SIZE );

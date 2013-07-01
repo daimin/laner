@@ -48,9 +48,12 @@ KindEditor.ready(function(K) {
 				});
 				K.create('#content', {
 					themeType : 'simple',
+					allowPreviewEmoticons : false,
+					allowImageUpload : false,
 					items : [
-						'source','|','bold','italic','underline','code','fontname','fontsize','forecolor','hilitecolor','plug-align','plug-order','plug-indent', 'link'
-					],
+						'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold', 'italic', 'underline',
+						'removeformat', '|', 'justifyleft', 'justifycenter', 'justifyright', 'insertorderedlist',
+						'insertunorderedlist', '|', 'emoticons', 'image', 'link'],
 					newlineTag:'br',
 					//pasteType : 1,
 				});

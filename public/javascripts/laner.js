@@ -251,8 +251,8 @@ function doupdate_avatar(url){
 	  url = url.substring(0,url.lastIndexOf('/'));
     var newimg_url = $("#target_img").attr('src');
     ///images/upload/a341160147419987V5WD2Sf.jpg 
-    var avatar_dir = newimg_url.substring(0, newimg_url.lastIndexOf('/'));
-    
+    //var avatar_dir = newimg_url.substring(0, newimg_url.lastIndexOf('/'));
+    var avatar_dir = "/images/upload";
     var xval = $("#x").val();
     var yval = $("#y").val();
     var wval = $("#w").val(); 
